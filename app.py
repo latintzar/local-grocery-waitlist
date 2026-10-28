@@ -58,6 +58,7 @@ GUEST_LEGAL="Demo sessions are held privately in server memory for up to one hou
 @app.get(prefix+'/',response_class=HTMLResponse)
 def home():
     html=(PUBLIC/'live/index.html').read_text()
+    html=html.replace('</head>', '<style>@media(max-width:560px){.hero-title{font-size:clamp(25px,8vw,44px)}}</style></head>',1)
     if guest:
         html=html.replace('<body>', '<body>'+GUEST_NOTICE,1)
         html=html.replace('function openLegal(kind){', 'function openLegal(kind){ alert('+repr(GUEST_LEGAL)+'); return;')
@@ -66,7 +67,7 @@ def home():
 def waitlist_page():
     html=(PUBLIC/'waitlist/index.html').read_text()
     if guest:
-        html=html.replace('<body>', '<body>'+GUEST_NOTICE,1)
+        html=html.replace('<main class="stage" id="stage">', '<main class="stage" id="stage">'+GUEST_NOTICE,1)
         html=html.replace('</head>', '<style>#climb-call,#climb-follow-ig,.climb-card.invite{display:none!important}</style></head>',1)
         html=html.replace('async function geocodeForward(q, lang) {','async function geocodeForward(q, lang) { return {error:true,suggestions:[]};')
         html=html.replace('async function geocodeReverse(lng, lat, lang) {','async function geocodeReverse(lng, lat, lang) { return {error:true};')
