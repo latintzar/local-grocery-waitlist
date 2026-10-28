@@ -1,0 +1,1018 @@
+{
+  "common.cta.access": {
+    "en": "Get access",
+    "bg": "Запиши се"
+  },
+  "common.cta.next": {
+    "en": "Next →",
+    "bg": "Напред →"
+  },
+  "common.cta.back": {
+    "en": "← Back",
+    "bg": "← Назад"
+  },
+  "common.cta.submit": {
+    "en": "Submit →",
+    "bg": "Готово →"
+  },
+  "common.cta.skip": {
+    "en": "Skip",
+    "bg": "Пропусни"
+  },
+  "ticker.left": {
+    "en": "Sofia waitlist · open",
+    "bg": "Списъкът за София · отворен"
+  },
+  "ticker.right.short": {
+    "en": "Sofia",
+    "bg": "София"
+  },
+  "ticker.right.long": {
+    "en": "· personalised · pre-ordered · pickup",
+    "bg": "· по твоя вкус · поръчано предварително · от квартала"
+  },
+  "home.meta.title": {
+    "en": "Vitrina · High-quality food at near-wholesale prices.",
+    "bg": "Vitrina · Качествена храна на цени, близки до едро."
+  },
+  "home.hero.eyebrow": {
+    "en": "Sofia · personalised grocery",
+    "bg": "София · хранителни стоки по твоя вкус"
+  },
+  "home.hero.title": {
+    "en": "Grocery from <em>small farms</em>,<br/>personalised to <em>your taste</em>,<br/>delivered to <em>your local shop.</em>",
+    "bg": "Храна от <em>малки ферми</em>,<br/>по твоя <em>вкус</em>,<br/>доставена до <em>местния ти магазин.</em>"
+  },
+  "home.hero.sub": {
+    "en": "<strong>High-quality food</strong>. Without the boutique markup.",
+    "bg": "<strong>Качествена храна</strong>. Без бутиковата надценка."
+  },
+  "home.hero.cta": {
+    "en": "Get access",
+    "bg": "Запиши се"
+  },
+  "home.hero.fineprint": {
+    "en": "Sofia waitlist is open. We're starting small. <strong>One neighbourhood at a time.</strong> Sign up free, climb the queue, order first.",
+    "bg": "Списъкът за София е отворен. Започваме внимателно. <strong>Квартал по квартал.</strong> Запиши се безплатно, качи се в опашката и поръчай преди останалите."
+  },
+  "home.hero.scrollhint": {
+    "en": "How it works ↓",
+    "bg": "Как работи ↓"
+  },
+  "home.how.eyebrow": {
+    "en": "How it works",
+    "bg": "Как работи"
+  },
+  "home.how.title": {
+    "en": "How it works.",
+    "bg": "Как работи."
+  },
+  "home.how.sub": {
+    "en": "You can order anything on Vitrina. It ships when enough other people sign up for the same slot. That's how the small farm fills their truck. If the slot doesn't fill in time, it rolls and your card isn't charged.",
+    "bg": "Можеш да поръчаш всичко на Vitrina. Получаваш го, щом достатъчно други хора се запишат за същия слот. Така малката ферма пълни камиона си. Ако слотът не се напълни навреме, се прехвърля, а картата ти не се таксува."
+  },
+  "home.stepa.title": {
+    "en": "Browse by <em>product</em>, not brand.",
+    "bg": "Избираш по <em>продукт</em>, не по марка."
+  },
+  "home.stepa.lede": {
+    "en": "Small farms can only ship so much each week. So instead of asking you to pick a brand, we route the order to the best farm for what you want. You just tell us the <strong>style</strong> you like and the <strong>quantity</strong>.",
+    "bg": "Малките ферми не могат да доставят неограничено количество всяка седмица. Затова, вместо да избираш марка, ние насочваме поръчката към най-подходящата ферма. Ти казваш само <strong>как го харесваш</strong> и <strong>колко ти трябва</strong>."
+  },
+  "home.stepb.title": {
+    "en": "Delivery happens <em>when enough people in the city order.</em>",
+    "bg": "Ако се съберат достатъчно поръчки, <em>изпълняваме твоята.</em>"
+  },
+  "home.stepb.lede": {
+    "en": "Each small farm needs a minimum number of orders before their truck rolls. Yours counts toward the goal. Hit it in time and the truck leaves; miss it and the slot rolls to the next one. Your card isn't charged until the truck rolls.",
+    "bg": "Таксуваме картата ти само при потвърдена поръчка."
+  },
+  "home.stepb.cat": {
+    "en": "White cheese",
+    "bg": "Сирене"
+  },
+  "home.stepb.left": {
+    "en": "left",
+    "bg": "остават"
+  },
+  "home.stepb.peopleleft": {
+    "en": "orders to hit the goal",
+    "bg": "поръчки до целта"
+  },
+  "home.stepb.minimum": {
+    "en": "minimum to ship",
+    "bg": "минимум за изпращане"
+  },
+  "home.stepb.wholesale": {
+    "en": "producer's price",
+    "bg": "цената на фермата"
+  },
+  "home.stepb.retail": {
+    "en": "boutique",
+    "bg": "бутик"
+  },
+  "home.stepb.boutique": {
+    "en": "boutique",
+    "bg": "бутик"
+  },
+  "home.stepb.foot": {
+    "en": "",
+    "bg": ""
+  },
+  "home.stepc.title": {
+    "en": "Pick up at <em>your local shop.</em>",
+    "bg": "Вземи си поръчката <em>от местния ти магазин.</em>"
+  },
+  "home.stepc.lede": {
+    "en": "We tell you the pickup spot. <strong>You walk in, show your order, and walk out.</strong> We rent fridge space in a corner shop a few streets away.",
+    "bg": "Казваме ти къде да го вземеш. <strong>Влизаш, показваш поръчката, излизаш.</strong> Наели сме място в хладилника на кварталния магазин на няколко улици от теб."
+  },
+  "home.stepd.title": {
+    "en": "We learn what you <em>like.</em>",
+    "bg": "Учим какво <em>обичаш.</em>"
+  },
+  "home.stepd.lede": {
+    "en": "Ten seconds of feedback after each pickup. <strong>Mouthfeel, flavour, order again?</strong> We learn about what you like with each new order, and shape the next match around your taste.",
+    "bg": "Десет секунди обратна връзка след всяко вземане. <strong>Текстура, вкус, още веднъж?</strong> Учим какво обичаш с всяка нова поръчка и нагласяме следващото съвпадение спрямо твоя вкус."
+  },
+  "home.staples.eyebrow": {
+    "en": "What we stock",
+    "bg": "Какво имаме"
+  },
+  "home.staples.title": {
+    "en": "Staples, <em>cleanly sourced.</em>",
+    "bg": "Основни продукти, <em>с прозрачен произход.</em>"
+  },
+  "home.staples.sub": {
+    "en": "Things you actually buy every week, grouped by category. Each category has small producers behind it; you see the standard, not the supplier.",
+    "bg": "Това, което купуваш всяка седмица, групирано по категории. Във всяка категория стоят малки производители. Виждаш стандарта, не марката."
+  },
+  "home.staples.dairy.cat": {
+    "en": "Dairy",
+    "bg": "Мляко и сирена"
+  },
+  "home.staples.dairy.title": {
+    "en": "Sirene, kashkaval, milk",
+    "bg": "Сирене, кашкавал, мляко"
+  },
+  "home.staples.dairy.desc": {
+    "en": "Cow, sheep or mixed. Aged or young.",
+    "bg": "Краве, овче или смесено. Зряло или младо."
+  },
+  "home.staples.meat.cat": {
+    "en": "Cured meats",
+    "bg": "Сухомесни изделия"
+  },
+  "home.staples.meat.title": {
+    "en": "Lukanka, sudzhuk, fillet",
+    "bg": "Луканка, суджук, филе"
+  },
+  "home.staples.meat.desc": {
+    "en": "Slow-air-dried, family recipes.",
+    "bg": "Бавно сушени, по семейни рецепти."
+  },
+  "home.staples.honey.cat": {
+    "en": "Honey",
+    "bg": "Мед"
+  },
+  "home.staples.honey.title": {
+    "en": "Mountain &amp; acacia",
+    "bg": "Планински и акациев"
+  },
+  "home.staples.honey.desc": {
+    "en": "Single-apiary, raw, by aroma.",
+    "bg": "От един пчелин, суров, по аромат."
+  },
+  "home.staples.eggs.cat": {
+    "en": "Eggs",
+    "bg": "Яйца"
+  },
+  "home.staples.eggs.title": {
+    "en": "Free-range eggs",
+    "bg": "От свободни кокошки"
+  },
+  "home.staples.eggs.desc": {
+    "en": "Free-roaming hens, deep-yellow yolks.",
+    "bg": "Свободно отглеждани кокошки, наситено жълти жълтъци."
+  },
+  "home.staples.veg.cat": {
+    "en": "Fruit &amp; veg",
+    "bg": "Плодове и зеленчуци"
+  },
+  "home.staples.veg.title": {
+    "en": "Seasonal fruit &amp; veg",
+    "bg": "Сезонни плодове и зеленчуци"
+  },
+  "home.staples.veg.desc": {
+    "en": "Whatever's ripening in Bulgaria that week.",
+    "bg": "Каквото зрее в България точно тази седмица."
+  },
+  "home.staples.pantry.cat": {
+    "en": "Turshia &amp; pantry",
+    "bg": "Туршия и буркани"
+  },
+  "home.staples.pantry.title": {
+    "en": "Turshia, lyutenitsa &amp; ferments",
+    "bg": "Туршия, лютеница и ферментирали зеленчуци"
+  },
+  "home.staples.pantry.desc": {
+    "en": "Naturally fermented Bulgarian classics. Small-batch, no vinegar shortcuts.",
+    "bg": "Естествено ферментирали български класики. Малки партиди, без оцет за бързина."
+  },
+  "home.tri.eyebrow": {
+    "en": "Why it works",
+    "bg": "Защо работи"
+  },
+  "home.tri.title": {
+    "en": "A model that <em>everyone</em> wins from.",
+    "bg": "Модел, от който <em>всички</em> печелят."
+  },
+  "home.tri.you.who": {
+    "en": "For you",
+    "bg": "За теб"
+  },
+  "home.tri.you.h": {
+    "en": "Better food, fairer price.",
+    "bg": "По-добра храна, по-честна цена."
+  },
+  "home.tri.you.p": {
+    "en": "Quality you'd find at a boutique. At a price <strong>between supermarket and boutique.</strong> Personalised to your taste, never a brand you didn't pick.",
+    "bg": "Качество като в бутик. На цена <strong>между супермаркета и бутика.</strong> По твоя вкус. Никога марка, която не си избрал."
+  },
+  "home.tri.prod.who": {
+    "en": "For small producers",
+    "bg": "За малките производители"
+  },
+  "home.tri.prod.h": {
+    "en": "A direct route to consumers.",
+    "bg": "Пряк път до клиенти."
+  },
+  "home.tri.prod.p": {
+    "en": "No supermarket negotiations, no boutique cutting your margin. <strong>Sell what you make.</strong> And get real taste feedback so you keep getting better.",
+    "bg": "Без преговори със супермаркети, без бутик да реже маржа ти. <strong>Продаваш това, което произвеждаш.</strong> И получаваш реална обратна връзка за вкуса, за да ставаш все по-добър."
+  },
+  "home.tri.shop.who": {
+    "en": "For corner shops",
+    "bg": "За кварталните магазини"
+  },
+  "home.tri.shop.h": {
+    "en": "Footfall and data on what people want.",
+    "bg": "Трафик и данни за това, което хората искат."
+  },
+  "home.tri.shop.p": {
+    "en": "We rent a fridge from your nearest indie shop. <strong>They earn rent, gain footfall, and see weekly demand data</strong> on what their neighbourhood actually wants.",
+    "bg": "Наемаме хладилник от най-близкия независим магазин. <strong>Те получават наем, трафик и седмични данни за търсенето</strong> в квартала."
+  },
+  "home.wl.eyebrow": {
+    "en": "Sofia · waitlist open",
+    "bg": "София · списъкът е отворен"
+  },
+  "home.wl.h": {
+    "en": "First in line.",
+    "bg": "Бъди от първите."
+  },
+  "home.wl.lede": {
+    "en": "We're opening Sofia <strong>one neighbourhood at a time</strong>. The earlier you're in line, the earlier you order. And you can climb the queue by inviting a friend or telling us about your taste.",
+    "bg": "Отваряме София <strong>квартал по квартал</strong>. Колкото по-рано си в опашката, толкова по-рано поръчваш. А можеш да се качваш нагоре, като поканиш приятел или ни разкажеш за вкуса си."
+  },
+  "home.wl.note": {
+    "en": "Free · no card required.",
+    "bg": "Безплатно · без карта."
+  },
+  "footer.tagline": {
+    "en": "Personalised grocery from small producers, picked up around the corner.",
+    "bg": "Храна по вкус от малки производители, взимана от ъгъла."
+  },
+  "footer.commitment": {
+    "en": "<strong>We're committed to doing this properly.</strong>",
+    "bg": "<strong>Ангажирани сме да го направим както трябва.</strong>"
+  },
+  "footer.registration": {
+    "en": "We're actively talking with producers and corner shops, lining up the supply chain, and going through registration with the Bulgarian Food Safety Agency (БАБХ) and the Commission for Consumer Protection (КЗП). The first cohort opens the moment everything's ready. We'd rather take the time to set this up well than start before it's right.",
+    "bg": "Активно говорим с производители и квартални магазини, изграждаме веригата на доставки и преминаваме регистрация пред Българската агенция по безопасност на храните (БАБХ) и Комисията за защита на потребителите (КЗП). Първата група отваря в мига, в който всичко е готово. Предпочитаме да отделим време да го настроим добре, отколкото да тръгнем преди това."
+  },
+  "footer.privacy": {
+    "en": "Privacy",
+    "bg": "Поверителност"
+  },
+  "footer.terms": {
+    "en": "Terms",
+    "bg": "Общи условия"
+  },
+  "footer.founder.eyebrow": {
+    "en": "About the founder, Peter",
+    "bg": "За основателя, Питър"
+  },
+  "footer.founder.name": {
+    "en": "",
+    "bg": ""
+  },
+  "footer.founder.bio": {
+    "en": "Bulgarian-Peruvian. Two cultures where food is everything. The flavour, the variety, what it does for people sitting around a table. I've spent years working with producers and small operators, and I'm a fanatic about cooking (lately, sandwich-engineering). I'm building Vitrina because the produce I want at home isn't easy to find without paying main-street markups. And the small farms making it deserve a real route to people who care.",
+    "bg": "Българо-перуанец. Две култури, в които храната е всичко. Вкусът, разнообразието, това, което прави на хората около една маса. Работил съм години с производители и малки оператори, и съм фанатик по готвене (напоследък по сандвич-инженерство). Правя Vitrina, защото храната, която искам у дома, не се намира лесно без надценката на големите вериги. А малките ферми, които я произвеждат, заслужават реален път до хората, които ги ценят."
+  },
+  "wl.phone.title": {
+    "en": "What's your phone number?",
+    "bg": "Дай си телефона."
+  },
+  "wl.phone.sub": {
+    "en": "We use it to find you if you're already on the list, and to text you when your wave opens. International numbers welcome.",
+    "bg": "По него те намираме, ако вече си в списъка, и ти пишем, когато вълната ти се отвори. Международните номера са добре дошли."
+  },
+  "wl.phone.label": {
+    "en": "Phone",
+    "bg": "Телефон"
+  },
+  "wl.phone.placeholder": {
+    "en": "888 123 456",
+    "bg": "888 123 456"
+  },
+  "wl.name.title": {
+    "en": "What should we call you?",
+    "bg": "Как да те наричаме?"
+  },
+  "wl.name.placeholder": {
+    "en": "First name",
+    "bg": "Име"
+  },
+  "wl.email.title": {
+    "en": "Where can we email you?",
+    "bg": "На коя поща да ти пишем?"
+  },
+  "wl.email.placeholder": {
+    "en": "you@email.com",
+    "bg": "ti@example.com"
+  },
+  "wl.home.title": {
+    "en": "Where do you live?",
+    "bg": "Къде живееш?"
+  },
+  "wl.home.sub": {
+    "en": "We open neighbourhood by neighbourhood. Your address tells us when we're getting to you. Type freely. If Sofia recognises it, we'll snap it.",
+    "bg": "Отваряме квартал по квартал. Адресът ни казва кога ще стигнем до теб. Пиши свободно. Ако София го разпознае, ще го залепим."
+  },
+  "wl.home.placeholder": {
+    "en": "Street and number, Sofia",
+    "bg": "Улица и номер, София"
+  },
+  "wl.work.ask": {
+    "en": "Want a pickup near work, too?",
+    "bg": "Искаш ли взимане и близо до работата?"
+  },
+  "wl.work.yes": {
+    "en": "Yes, add work",
+    "bg": "Да, добави работа"
+  },
+  "wl.work.no": {
+    "en": "Skip",
+    "bg": "Пропусни"
+  },
+  "wl.consent": {
+    "en": "By submitting you agree to our <a href=\"#\" onclick=\"event.preventDefault();VitrinaLegal.open('privacy')\">Privacy Notice</a> and <a href=\"#\" onclick=\"event.preventDefault();VitrinaLegal.open('terms')\">Terms</a>. We'll only contact you on the channels you picked.",
+    "bg": "С изпращането се съгласяваш с нашата <a href=\"#\" onclick=\"event.preventDefault();VitrinaLegal.open('privacy')\">Политика за поверителност</a> и <a href=\"#\" onclick=\"event.preventDefault();VitrinaLegal.open('terms')\">Общи условия</a>. Ще се свързваме с теб само по каналите, които си избрал/а."
+  },
+  "wl.footer.privacy": {
+    "en": "Privacy",
+    "bg": "Поверителност"
+  },
+  "wl.footer.terms": {
+    "en": "Terms",
+    "bg": "Общи условия"
+  },
+  "wl.footer.tagline": {
+    "en": "Vitrina · operated by Leo Casa Ltd · Sofia closed beta",
+    "bg": "Vitrina · оперирано от Leo Casa Ltd · затворена бета в София"
+  },
+  "wl.work.company": {
+    "en": "Where do you work? (company name)",
+    "bg": "Къде работиш? (име на фирмата)"
+  },
+  "wl.work.address": {
+    "en": "Work address",
+    "bg": "Адрес на работата"
+  },
+  "wl.q1.label": {
+    "en": "Where do you buy most of your groceries?",
+    "bg": "Откъде пазаруваш повечето храна?"
+  },
+  "wl.q1.opt.super": {
+    "en": "Big supermarket (Billa, Kaufland, Lidl)",
+    "bg": "Голям супермаркет (Billa, Kaufland, Lidl)"
+  },
+  "wl.q1.opt.corner": {
+    "en": "Corner shop / quartier shop",
+    "bg": "Квартален магазин"
+  },
+  "wl.q1.opt.market": {
+    "en": "Farmers market",
+    "bg": "Пазар от фермери"
+  },
+  "wl.q1.opt.bio": {
+    "en": "boutique",
+    "bg": "бутик"
+  },
+  "wl.q1.opt.ebag": {
+    "en": "eBag",
+    "bg": "eBag"
+  },
+  "wl.q1.opt.glovo": {
+    "en": "Glovo",
+    "bg": "Glovo"
+  },
+  "wl.q1.opt.wolt": {
+    "en": "Wolt",
+    "bg": "Wolt"
+  },
+  "wl.q1.opt.takeaway": {
+    "en": "Takeaway",
+    "bg": "Готова храна"
+  },
+  "wl.q1.opt.shopee": {
+    "en": "Shopee",
+    "bg": "Shopee"
+  },
+  "wl.q1.opt.zoya": {
+    "en": "Zoya",
+    "bg": "Зоя"
+  },
+  "wl.q1.opt.balev": {
+    "en": "Balev",
+    "bg": "Балев"
+  },
+  "wl.q1.opt.direct": {
+    "en": "Direct from a producer",
+    "bg": "Пряко от производител"
+  },
+  "wl.q.multi": {
+    "en": "Pick all that apply.",
+    "bg": "Избери всички, които важат за теб."
+  },
+  "wl.q.multiadd": {
+    "en": "Pick all that apply, or add your own.",
+    "bg": "Избери всички, които важат, или добави свои."
+  },
+  "wl.community.tooltip": {
+    "en": "Suggested by another waitlist signup",
+    "bg": "Предложено от друг записал се"
+  },
+  "wl.q1.add": {
+    "en": "Add another",
+    "bg": "Добави още"
+  },
+  "wl.q1.add.prompt": {
+    "en": "Add another option:",
+    "bg": "Добави още вариант:"
+  },
+  "wl.chip_add.title": {
+    "en": "Add your own answer",
+    "bg": "Добави свой отговор"
+  },
+  "wl.chip_add.hint": {
+    "en": "A short phrase — a few words is plenty. We'll group similar answers from other people.",
+    "bg": "Кратка фраза — няколко думи стигат. Ще групираме подобни отговори от други хора."
+  },
+  "wl.chip_add.submit": {
+    "en": "Add",
+    "bg": "Добави"
+  },
+  "wl.chip_add.cancel": {
+    "en": "Cancel",
+    "bg": "Отказ"
+  },
+  "wl.q2.label": {
+    "en": "Have you ever felt ripped off shopping for food in Sofia?",
+    "bg": "Случвало ли ти се е да преплатиш за храна в София?"
+  },
+  "wl.q2.placeholder": {
+    "en": "Free text. A sentence is plenty",
+    "bg": "Свободен текст. Едно изречение стига"
+  },
+  "wl.q2.opt.overpriced": {
+    "en": "Yes — overpriced for what it was",
+    "bg": "Да — твърде скъпо за това, което е"
+  },
+  "wl.q2.opt.bad_quality": {
+    "en": "Yes — quality didn't match the price",
+    "bg": "Да — качеството не отговаряше на цената"
+  },
+  "wl.q2.opt.cheaper_elsewhere": {
+    "en": "Yes — found it cheaper somewhere else right after",
+    "bg": "Да — намерих го по-евтино другаде малко след това"
+  },
+  "wl.q2.opt.fees_at_checkout": {
+    "en": "Yes — fees and surprises at checkout",
+    "bg": "Да — добавки и изненади на касата"
+  },
+  "wl.q2.opt.delivery_markup": {
+    "en": "Yes — the delivery markup felt unfair",
+    "bg": "Да — наценката за доставка не беше честна"
+  },
+  "wl.q2.opt.tourist_pricing": {
+    "en": "Yes — felt like 'tourist pricing'",
+    "bg": "Да — усещах го като 'цени за туристи'"
+  },
+  "wl.q2.opt.sometimes": {
+    "en": "Sometimes, but rarely",
+    "bg": "Понякога, но рядко"
+  },
+  "wl.q2.opt.never": {
+    "en": "No, never really",
+    "bg": "Не, не съм"
+  },
+  "wl.q3.label": {
+    "en": "What do you wish was better near you?",
+    "bg": "Какво ти се иска да бъде по-добро около теб?"
+  },
+  "wl.q3.opt.cheese": {
+    "en": "Real white cheese",
+    "bg": "Истинско бяло сирене"
+  },
+  "wl.q3.opt.meat": {
+    "en": "Honest meat",
+    "bg": "Честно месо"
+  },
+  "wl.q3.opt.tomato": {
+    "en": "Tomatoes that smell of tomato",
+    "bg": "Домати с вкус на домати"
+  },
+  "wl.q3.opt.bread": {
+    "en": "Bread",
+    "bg": "Хляб"
+  },
+  "wl.q3.opt.honey": {
+    "en": "Honey",
+    "bg": "Мед"
+  },
+  "wl.q3.opt.eggs": {
+    "en": "Eggs",
+    "bg": "Яйца"
+  },
+  "wl.q3.opt.lyutenitsa": {
+    "en": "Lyutenitsa &amp; turshia",
+    "bg": "Лютеница и туршия"
+  },
+  "wl.q4.label": {
+    "en": "When do you cook the most?",
+    "bg": "Кога готвиш най-много?"
+  },
+  "wl.q4.opt.weekends": {
+    "en": "Weekends",
+    "bg": "Събота-неделя"
+  },
+  "wl.q4.opt.weeknights": {
+    "en": "Weeknights",
+    "bg": "Вечер през седмицата"
+  },
+  "wl.q4.opt.most": {
+    "en": "Most days",
+    "bg": "Почти всеки ден"
+  },
+  "wl.q4.opt.rare": {
+    "en": "Rarely. Mostly eat out",
+    "bg": "Рядко. Повече се храня навън"
+  },
+  "wl.q5.label": {
+    "en": "How often do you shop for groceries?",
+    "bg": "Колко често пазаруваш храна?"
+  },
+  "wl.q5.opt.daily": {
+    "en": "Most days",
+    "bg": "Почти всеки ден"
+  },
+  "wl.q5.opt.2-3": {
+    "en": "2–3 times a week",
+    "bg": "2–3 пъти седмично"
+  },
+  "wl.q5.opt.weekly": {
+    "en": "Weekly big shop",
+    "bg": "Голям пазар веднъж седмично"
+  },
+  "wl.q5.opt.rare": {
+    "en": "Rarely. Mostly eat out",
+    "bg": "Рядко. Повече се храня навън"
+  },
+  "wl.position.title": {
+    "en": "You're on the list.",
+    "bg": "Вече си в списъка."
+  },
+  "wl.position.behind": {
+    "en": "people are behind you in the queue.",
+    "bg": "хора са зад теб в опашката."
+  },
+  "wl.position.spot": {
+    "en": "Your spot on the Sofia waitlist",
+    "bg": "Твоето място в списъка за София"
+  },
+  "wl.position.share.title": {
+    "en": "Move up the queue",
+    "bg": "Качи се нагоре в опашката"
+  },
+  "wl.climb.heading": {
+    "en": "A few ways to move up:",
+    "bg": "Начини да се качиш нагоре:"
+  },
+  "wl.lb.title": {
+    "en": "Area Leaderboard",
+    "bg": "Класация"
+  },
+  "wl.lb.foot": {
+    "en": "The neighbourhood with the most signups gets delivery first.",
+    "bg": "Кварталът с най-много записани получава доставка пръв."
+  },
+  "wl.lb.foot.you": {
+    "en": "Your neighbourhood is <strong>{nb}</strong>. Invite more friends to move it up the leaderboard.",
+    "bg": "Твоят квартал е <strong>{nb}</strong>. Покани още приятели, за да го качиш по-нагоре в класацията."
+  },
+  "wl.lb.empty": {
+    "en": "Be the first in your neighbourhood.",
+    "bg": "Бъди първи в твоя квартал."
+  },
+  "wl.lb.you": {
+    "en": "(you)",
+    "bg": "(ти)"
+  },
+  "wl.lb.seeAll": {
+    "en": "See all",
+    "bg": "Виж всички"
+  },
+  "wl.climb.invite": {
+    "en": "Invite friends",
+    "bg": "Покани приятели"
+  },
+  "wl.climb.invite.desc": {
+    "en": "+25 each",
+    "bg": "+25 за всеки"
+  },
+  "wl.invite.title": {
+    "en": "Invite 3 friends",
+    "bg": "Покани 3 приятели"
+  },
+  "wl.invite.sub": {
+    "en": "When 3 friends sign up with your link, you jump up 25 spots.",
+    "bg": "Когато 3 приятели се запишат с твоя линк, се качваш с 25 места."
+  },
+  "wl.climb.call": {
+    "en": "Chat with Peter about your grocery habits",
+    "bg": "Говори с Питър за твоите хранителни навици"
+  },
+  "wl.climb.call.desc": {
+    "en": "+15",
+    "bg": "+15"
+  },
+  "wl.climb.quiz": {
+    "en": "60-second taste quiz",
+    "bg": "60-секунден вкусов тест"
+  },
+  "wl.climb.quiz.desc": {
+    "en": "+5",
+    "bg": "+5"
+  },
+  "wl.climb.followIg": {
+    "en": "Follow us on Instagram @vitrinalocalshop",
+    "bg": "Последвай ни в Instagram @vitrinalocalshop"
+  },
+  "wl.climb.followIg.desc": {
+    "en": "+2",
+    "bg": "+2"
+  },
+  "wl.invite.cta": {
+    "en": "Invite friends",
+    "bg": "Покани приятели"
+  },
+  "wl.copy": {
+    "en": "Copy",
+    "bg": "Копирай"
+  },
+  "wl.copied": {
+    "en": "Copied ✓",
+    "bg": "Копирано ✓"
+  },
+  "chat.title": {
+    "en": "Chat with us",
+    "bg": "Поговорете с нас"
+  },
+  "chat.sub": {
+    "en": "Pick the channel that's easiest for you. We'll reply within a few hours.",
+    "bg": "Избери канала, който ти е най-удобен. Отговаряме в рамките на няколко часа."
+  },
+  "chat.whatsapp": {
+    "en": "Chat with us on WhatsApp",
+    "bg": "Чат с нас в WhatsApp"
+  },
+  "chat.viber": {
+    "en": "Chat with us on Viber",
+    "bg": "Чат с нас във Viber"
+  },
+  "chat.whatsapp.body": {
+    "en": "Hi. I'm on the Vitrina waitlist and want a quick chat about how I shop.",
+    "bg": "Здравейте. В списъка на Vitrina съм и искам да поговорим за начина, по който пазарувам."
+  },
+  "wl.share.body": {
+    "en": "I'm on the Sofia waitlist for Vitrina. Small Bulgarian farms, direct to your neighbourhood. Use my link so we both move up:",
+    "bg": "В списъка на Vitrina съм. Малки български ферми, директно в квартала ти. Използвай линка ми, за да се качим и двамата:"
+  },
+  "wl.position.share.sub": {
+    "en": "Each friend who signs up with your link bumps you up.",
+    "bg": "Всеки приятел, който се запише с твоя линк, те качва нагоре."
+  },
+  "wl.share.more": {
+    "en": "More…",
+    "bg": "Още…"
+  },
+  "wl.share.cta": {
+    "en": "Share &amp; invite",
+    "bg": "Сподели и покани"
+  },
+  "wl.step": {
+    "en": "Step",
+    "bg": "Стъпка"
+  },
+  "wl.quiz.label": {
+    "en": "Quick survey",
+    "bg": "Кратък въпросник"
+  },
+  "wl.submitting": {
+    "en": "Saving your spot…",
+    "bg": "Записваме мястото ти…"
+  },
+  "home.stepa.cured": {
+    "en": "Cured meats",
+    "bg": "Колбаси"
+  },
+  "home.stepa.oil": {
+    "en": "Olive & sunflower oil",
+    "bg": "Зехтин и слънчогледово олио"
+  },
+  "home.stepa.tap": {
+    "en": "Tap to choose your style",
+    "bg": "Натисни, за да избереш"
+  },
+  "footer.founder.linkedin": {
+    "en": "LinkedIn",
+    "bg": "LinkedIn"
+  },
+  "wl.home.nomatch": {
+    "en": "No matches. Try a different spelling, or tap 'Use my current location' below.",
+    "bg": "Няма съвпадения. Опитай с различен правопис или натисни „Използвай текущото ми местоположение“ по-долу."
+  },
+  "wl.home.hint": {
+    "en": "Pick a suggestion from the list, or tap the button below to detect your location.",
+    "bg": "Избери предложение от списъка или натисни бутона по-долу, за да засечем местоположението ти."
+  },
+  "wl.home.freetext": {
+    "en": "Address lookup is temporarily unavailable. Type your full address and tap Next — we will sort it out manually.",
+    "bg": "Търсенето на адреси временно не е налично. Въведи пълния си адрес и натисни Напред — ще го уточним ръчно."
+  },
+  "wl.home.geo.coords": {
+    "en": "Pinned location",
+    "bg": "Маркирано местоположение"
+  },
+  "wl.home.locate": {
+    "en": "Current location",
+    "bg": "Моето местоположение"
+  },
+  "wl.home.geo.unsupported": {
+    "en": "Your browser cannot detect location. Type your address instead.",
+    "bg": "Браузърът не може да засече местоположение. Въведи адреса ръчно."
+  },
+  "wl.home.geo.denied": {
+    "en": "Location permission denied. Type your address instead.",
+    "bg": "Достъпът до местоположение е отказан. Въведи адреса ръчно."
+  },
+  "wl.home.geo.fail": {
+    "en": "Could not look up your location. Type your address instead.",
+    "bg": "Не можахме да намерим местоположението ти. Въведи адреса ръчно."
+  },
+  "wl.home.geo.ok": {
+    "en": "Location picked. You can edit and re-select if it is off.",
+    "bg": "Местоположението е избрано. Можеш да го редактираш и преизбереш, ако не е точно."
+  },
+  "home.stepa.minced": {
+    "en": "Minced meat",
+    "bg": "Кайма"
+  },
+  "home.stepa.tomatoes": {
+    "en": "Tomatoes",
+    "bg": "Домати"
+  },
+  "home.stepa.whitecheese": {
+    "en": "White cheese",
+    "bg": "Сирене"
+  },
+  "home.stepb.timeleft": {
+    "en": "next delivery Wednesday",
+    "bg": "следваща доставка сряда"
+  },
+  "home.stepa.addtocart": {
+    "en": "Add to cart",
+    "bg": "Добави в количката"
+  },
+  "home.stepa.cfg.milk": {
+    "en": "Milk",
+    "bg": "Мляко"
+  },
+  "home.stepa.cfg.cow": {
+    "en": "Cow",
+    "bg": "Краве"
+  },
+  "home.stepa.cfg.sheep": {
+    "en": "Sheep",
+    "bg": "Овче"
+  },
+  "home.stepa.cfg.goat": {
+    "en": "Goat",
+    "bg": "Козе"
+  },
+  "home.stepa.cfg.aging": {
+    "en": "Aging",
+    "bg": "Зряло"
+  },
+  "home.stepa.cfg.young": {
+    "en": "Young &amp; mild",
+    "bg": "Младо и меко"
+  },
+  "home.stepa.cfg.aged": {
+    "en": "Aged",
+    "bg": "Отлежало"
+  },
+  "home.stepa.cfg.fat": {
+    "en": "Fat content",
+    "bg": "Масленост"
+  },
+  "home.stepa.cfg.lean": {
+    "en": "Lean",
+    "bg": "Постно"
+  },
+  "home.stepa.cfg.medium": {
+    "en": "Medium",
+    "bg": "Средно"
+  },
+  "home.stepa.cfg.rich": {
+    "en": "Rich",
+    "bg": "Тлъсто"
+  },
+  "home.stepa.cfg.salt": {
+    "en": "Saltiness",
+    "bg": "Соленост"
+  },
+  "home.stepa.cfg.mild": {
+    "en": "Mild",
+    "bg": "Меко"
+  },
+  "home.stepa.cfg.classic": {
+    "en": "Classic",
+    "bg": "Класическо"
+  },
+  "home.stepa.cfg.sharp": {
+    "en": "Sharp",
+    "bg": "Силно"
+  },
+  "home.sticky.left": {
+    "en": "Sofia waitlist · <strong>open</strong>",
+    "bg": "Списъкът за София · <strong>отворен</strong>"
+  },
+  "home.stepa.qty": {
+    "en": "Quantity",
+    "bg": "Количество"
+  },
+  "home.stepa.qty250": {
+    "en": "250 g",
+    "bg": "250 г"
+  },
+  "home.stepa.qty500": {
+    "en": "500 g",
+    "bg": "500 г"
+  },
+  "home.stepa.qty1kg": {
+    "en": "1 kg",
+    "bg": "1 кг"
+  },
+  "home.stepb.yourorder": {
+    "en": "Your order · 250 g",
+    "bg": "Поръчката ти · 250 г"
+  },
+  "home.stepb.unit": {
+    "en": "/ kg",
+    "bg": "/ кг"
+  },
+  "home.stepb.config": {
+    "en": "Cow · Aged · Medium · Classic · 250 g",
+    "bg": "Краве · Отлежало · Средно · Класическо · 250 г"
+  },
+  "home.stepb.timerlbl": {
+    "en": "Time left",
+    "bg": "Остават"
+  },
+  "home.stepb.youpay": {
+    "en": "you pay",
+    "bg": "плащаш"
+  },
+  "home.stepb.priceper": {
+    "en": "for 250 g · €4.80 / kg",
+    "bg": "за 250 г · €4.80 / кг"
+  },
+  "home.stepb.goalmsg": {
+    "en": "Hit the goal before midnight for delivery&nbsp;tomorrow.",
+    "bg": "При достигане → доставка в сряда.<br/>Ако не → за неделя."
+  },
+  "home.stepb.countlbl": {
+    "en": "orders",
+    "bg": "поръчки"
+  },
+  "wl.work.sub": {
+    "en": "Optional. Sometimes the corner shop near work is more convenient than home.",
+    "bg": "По избор. Понякога кварталният магазин до работата е по-удобен от този до вкъщи."
+  },
+  "home.stepc.row1": {
+    "en": "<strong>Packed by the producer.</strong><span class=\"sub\">Labelled with your name.</span>",
+    "bg": "<strong>Опакована от производителя.</strong><span class=\"sub\">С твоето име на етикета.</span>"
+  },
+  "home.stepc.row2": {
+    "en": "<strong>Sent to your corner shop.</strong><span class=\"sub\">They get footfall, you get fewer steps.</span>",
+    "bg": "<strong>Доставена в кварталния магазин.</strong><span class=\"sub\">Те печелят посетители, ти ходиш по-малко.</span>"
+  },
+  "home.stepc.row3": {
+    "en": "<strong>Pop in on the way home.</strong><span class=\"sub\">Two pickup windows a week.</span>",
+    "bg": "<strong>Минаваш на път за вкъщи.</strong><span class=\"sub\">Два слота за вземане в седмицата.</span>"
+  },
+  "home.stepd.head": {
+    "en": "After pickup · 10 seconds",
+    "bg": "След вземането · 10 секунди"
+  },
+  "home.stepd.qhead": {
+    "en": "How was the <em>cheese?</em>",
+    "bg": "Как беше <em>сиренето?</em>"
+  },
+  "home.stepd.q1": {
+    "en": "Mouthfeel",
+    "bg": "Текстура"
+  },
+  "home.stepd.q1.a1": {
+    "en": "Creamy",
+    "bg": "Кремообразно"
+  },
+  "home.stepd.q1.a2": {
+    "en": "Crumbly",
+    "bg": "Ронливо"
+  },
+  "home.stepd.q1.a3": {
+    "en": "Pasty",
+    "bg": "Лепкаво"
+  },
+  "home.stepd.q2": {
+    "en": "Saltiness",
+    "bg": "Соленост"
+  },
+  "home.stepd.q2.a1": {
+    "en": "Too mild",
+    "bg": "Прекалено блудкаво"
+  },
+  "home.stepd.q2.a2": {
+    "en": "Spot on",
+    "bg": "Точно колкото трябва"
+  },
+  "home.stepd.q2.a3": {
+    "en": "Too salty",
+    "bg": "Прекалено солено"
+  },
+  "home.stepd.q3": {
+    "en": "Order again?",
+    "bg": "Ще поръчаш ли пак?"
+  },
+  "home.stepd.q3.a1": {
+    "en": "Yes please",
+    "bg": "Да, моля"
+  },
+  "home.stepd.q3.a2": {
+    "en": "Maybe",
+    "bg": "Може би"
+  },
+  "wl.welcome.title": {
+    "en": "You're in.",
+    "bg": "Вече си вътре."
+  },
+  "wl.welcome.body1": {
+    "en": "We open neighbourhood by neighbourhood, starting with the ones where the most people have signed up. The best way to bring us to yours sooner is to invite friends and neighbours who live nearby — every new signup pulls your area closer to launch.",
+    "bg": "Отваряме квартал по квартал, като започваме оттам, където най-много хора са се записали. Най-сигурният начин да дойдем по-скоро при теб е да поканиш приятели и съседи, които живеят наблизо — всяко ново записване приближава квартала ти до старт."
+  },
+  "wl.welcome.body2": {
+    "en": "We'll get in touch when your area is up — through whichever channel suits you. The first customers in each neighbourhood get our full attention, so the first drop is genuinely good when it lands.",
+    "bg": "Ще се свържем с теб, когато дойде ред на твоя квартал — по канала, който ти е най-удобен. На първите клиенти във всеки квартал отделяме цялото си внимание, за да е първата доставка наистина добра."
+  },
+  "wl.welcome.footer": {
+    "en": "Density wins. The more of your block joins, the sooner we're at your door.",
+    "bg": "Гъстотата печели. Колкото повече съседи се запишат, толкова по-скоро сме на вратата ти."
+  },
+  "wl.welcome.cta": {
+    "en": "Got it",
+    "bg": "Ясно"
+  },
+  "wl.welcome.help": {
+    "en": "What does this mean?",
+    "bg": "Какво означава това?"
+  },
+  "wl.welcome.close": {
+    "en": "Close",
+    "bg": "Затвори"
+  }
+}

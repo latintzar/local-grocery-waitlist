@@ -1,0 +1,2171 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title data-i18n-title="wl.position.title">Vitrina · Waitlist</title>
+<meta name="robots" content="noindex" />
+<!-- Vitrina analytics — PostHog EU cloud -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#ffffff;--paper-warm:#f5f7f2;--paper-card:#ffffff;--paper-deep:#dfe3da;
+  --ink:#0e1a14;--ink-soft:#1f2a23;--ink-mid:rgba(14,26,20,0.62);--ink-faint:rgba(14,26,20,0.34);
+  --rule:rgba(28,28,26,0.16);--rule-strong:rgba(28,28,26,0.4);
+  --rust:#ee6c2c;--rust-deep:#c95216;--gold:#f3b94d;
+  --moss:#1a4d2e;--moss-soft:#2d6f43;--forest:#143521;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+/* 100dvh (not 100vh) so the dynamic mobile-Chrome URL bar doesn't push
+   the action button below the fold and force a scroll. Falls back to
+   100vh on the (rare) browsers without dvh support. */
+html,body{background:var(--paper);color:var(--ink);min-height:100vh;min-height:100dvh}
+body{font-family:'Archivo',sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
+::selection{background:var(--gold);color:var(--ink)}
+
+/* Faux-bold Cyrillic — Archivo's BG glyphs run thinner than Latin at matched weight.
+   Headings get a heavier stroke; inline strong/em get a lighter one; buttons in
+   between. */
+html[lang="bg"] h1,
+html[lang="bg"] h2,
+html[lang="bg"] h3,
+html[lang="bg"] h4,
+html[lang="bg"] .q-title,
+html[lang="bg"] .climb-heading,
+html[lang="bg"] .climb-card-title,
+html[lang="bg"] .pos-num,
+html[lang="bg"] .logo{letter-spacing:-0.02em;-webkit-text-stroke:0.7px currentColor}
+html[lang="bg"] strong,
+html[lang="bg"] b,
+html[lang="bg"] em,
+html[lang="bg"] .label,
+html[lang="bg"] .eyebrow{-webkit-text-stroke:0.45px currentColor}
+html[lang="bg"] .btn,
+html[lang="bg"] .chat-btn .lbl{-webkit-text-stroke:0.45px currentColor}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:140;padding:12px 22px;display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
+.logo{font-family:'Archivo',sans-serif;font-weight:900;font-size:24px;letter-spacing:-0.04em;color:var(--ink);text-transform:lowercase;text-decoration:none}
+.logo .dot{color:var(--rust)}
+.nav-right{display:flex;align-items:center;gap:14px}
+.lang-toggle{display:inline-flex;border:1.5px solid var(--ink);background:var(--paper);overflow:hidden}
+.lang-pill{font-family:'Archivo',sans-serif;font-weight:800;font-size:11px;letter-spacing:0.1em;color:var(--ink);background:transparent;border:0;padding:7px 11px;cursor:pointer;text-transform:uppercase}
+.lang-pill[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+
+/* MAIN STAGE — every screen is a flex column the height of the viewport. The
+   action row at the bottom uses margin-top:auto, so it sits flush at the
+   bottom on short forms and slides naturally with the keyboard on long ones.
+   No fixed/sticky positioning, no visualViewport JS — the keyboard simply
+   shrinks the available area and the browser auto-scrolls the focused input
+   above it. This is the boring, bulletproof mobile-form pattern. */
+.stage{flex:1;display:flex;flex-direction:column;align-items:stretch;padding:78px 0 0;max-width:680px;margin:0 auto;width:100%;min-height:100dvh}
+/* Tighter side padding on phones (16px) so the dark INVITE card and
+   form fields can breathe edge-to-edge. Desktop gets 24px back via the
+   media query at the bottom of the file. */
+.screen{width:100%;flex:1;display:none;flex-direction:column;gap:18px;padding:0 16px calc(env(safe-area-inset-bottom, 0px) + 24px);box-sizing:border-box;animation:fadeUp 0.32s ease both}
+.screen.active{display:flex}
+/* Auto-scroll focused inputs above the action bar (which is ~90px tall in
+   flow) when the keyboard opens. */
+.input,.select,.textarea{scroll-margin-bottom:140px;scroll-margin-top:90px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--rust);font-weight:700}
+.q-title{font-family:'Archivo',sans-serif;font-weight:900;font-size:clamp(28px,5vw,46px);line-height:1.04;letter-spacing:-0.03em;color:var(--ink)}
+.q-sub{font-family:'Archivo',sans-serif;font-weight:500;font-size:16px;line-height:1.5;color:var(--ink-soft);max-width:560px}
+
+.field{display:grid;gap:6px}
+.label{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-mid);font-weight:600}
+.input,.select,.textarea{width:100%;padding:14px 16px;background:var(--paper-card);border:1.5px solid var(--ink);font-family:'Archivo',sans-serif;font-size:16px;color:var(--ink);outline:none;font-weight:500;transition:box-shadow 0.16s ease, transform 0.12s ease, background 0.16s ease}
+/* Focus state: a tactile orange "lift" — the rust shadow pops,
+   the input nudges 1px up-left, and the background warms slightly so
+   it feels actively held, not just bordered. Mirrors how the .btn
+   shadow behaves on hover so the language is consistent. */
+.input:focus,.select:focus,.textarea:focus{box-shadow:4px 4px 0 var(--rust);transform:translate(-1px,-1px);background:#fff}
+.input:hover:not(:focus),.select:hover:not(:focus),.textarea:hover:not(:focus){background:#fff}
+.textarea{min-height:120px;resize:vertical;line-height:1.45}
+.row-phone{display:grid;grid-template-columns:120px 1fr;gap:8px}
+/* Country-dial trigger — looks like .select but opens a searchable modal
+   so we can list every country without a giant native dropdown. */
+.dial-trigger{display:inline-flex;align-items:center;justify-content:flex-start;gap:6px;text-align:left;cursor:pointer;font-family:'Archivo',sans-serif;font-weight:600;font-size:14px;color:var(--ink)}
+.dial-trigger .dial-flag{font-size:18px;line-height:1}
+.dial-trigger .dial-code{flex:1;font-variant-numeric:tabular-nums}
+.dial-trigger .dial-caret{font-size:11px;color:var(--ink-mid)}
+/* Country picker modal — reuses the .lb-modal skeleton (same overlay,
+   card, head, body styles) but adds a search row + a long scrollable
+   list of countries. */
+.dial-search-row{padding:10px 14px 8px;border-bottom:1px solid var(--rule)}
+.dial-search{width:100%;padding:11px 14px;border:1.5px solid var(--ink);background:var(--paper);font-family:'Archivo',sans-serif;font-size:14px;color:var(--ink);box-sizing:border-box}
+.dial-search:focus{outline:none;box-shadow:3px 3px 0 var(--rust);transform:translate(-1px,-1px);background:#fff}
+.dial-list{list-style:none;padding:0;margin:0}
+.dial-item{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:11px 16px;border-bottom:1px solid var(--rule);cursor:pointer;font-family:'Archivo',sans-serif;font-size:14px;color:var(--ink)}
+.dial-item:hover,.dial-item.active{background:var(--paper-warm)}
+.dial-item .di-flag{font-size:18px;line-height:1}
+.dial-item .di-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.dial-item .di-code{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px;color:var(--ink-mid);font-variant-numeric:tabular-nums}
+.dial-empty{padding:20px;text-align:center;font-family:'Archivo',sans-serif;font-style:italic;color:var(--ink-mid);font-size:13px}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.chip{padding:9px 14px;border:1.5px solid var(--ink);background:var(--paper);font-family:'Archivo',sans-serif;font-weight:600;font-size:13.5px;color:var(--ink);cursor:pointer;transition:all 0.15s}
+.chip:hover{background:var(--paper-deep)}
+.chip.on{background:var(--ink);color:var(--paper)}
+.chip.add{border-style:dashed;color:var(--ink-mid)}
+/* Community-contributed chips — answers other waitlist signups wrote
+   in. Visually softer than presets so they read as "stuff your
+   neighbours said" rather than "official options". Tap behaviour is
+   identical to a preset chip — selecting one moves it into the
+   user's quiz state, exactly like a custom-add. */
+/* Community-learned chips use the same surface as presets — one evolving list. */
+.chip.add:hover{color:var(--ink);border-color:var(--ink)}
+.chip-add-open{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border:1.5px dashed var(--ink);background:var(--paper);font-family:'Archivo',sans-serif;font-weight:600;font-size:13.5px;color:var(--ink-mid);cursor:pointer;transition:all 0.15s}
+.chip-add-open:hover{color:var(--ink);border-color:var(--rust);background:var(--paper-warm)}
+.chip-add-overlay{display:none;position:fixed;inset:0;z-index:400;background:rgba(14,26,20,0.45);align-items:center;justify-content:center;padding:20px;box-sizing:border-box}
+.chip-add-modal{background:var(--paper-card);border:2px solid var(--ink);max-width:420px;width:100%;padding:24px 22px;box-shadow:10px 10px 0 var(--rust)}
+.chip-add-modal-title{font-family:'Archivo',sans-serif;font-weight:900;font-size:20px;text-transform:uppercase;letter-spacing:-0.02em;margin-bottom:8px;color:var(--ink)}
+.chip-add-modal-hint{font-family:'Archivo',sans-serif;font-size:14px;color:var(--ink-mid);margin-bottom:14px;line-height:1.45}
+.chip-add-field{width:100%;margin-bottom:18px}
+.chip-add-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+
+/* Action row — pushed to the bottom of the .screen flex column via
+   margin-top:auto. On a short form the bar sits flush at the viewport
+   bottom; on a long form it lands after the content.
+
+   On mobile, when an input is focused the soft keyboard opens. Android
+   Chrome (unlike iOS Safari) does NOT shrink the layout viewport, so a
+   plain in-flow bar gets hidden behind the keyboard. We use the
+   VisualViewport API to detect keyboard height and pin the actions row
+   above it as a fixed bar while any input is focused (see the
+   `.screen.kb-open` styles + JS at the bottom of this file). */
+.actions{margin-top:auto;width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:24px}
+/* When the soft keyboard is up:
+ *   - .actions becomes fixed, anchored exactly at the keyboard top via
+ *     bottom: var(--kb-offset). Bottom padding is tight (10px) — no
+ *     env(safe-area-inset-bottom) because the keyboard covers the home
+ *     indicator anyway, that inset would just create a phantom gap.
+ *   - .screen needs enough bottom-padding that scrolling content
+ *     doesn't slide under the actions bar; ~80px (bar height) is
+ *     plenty.
+ *   - The persistent Privacy/Terms legal-footer and any inline
+ *     consent-line are hidden — both ate real estate the form needs
+ *     and the legal-footer renders BEHIND the keyboard on Android
+ *     Chrome, which reads as a fake gap above the keyboard. */
+.screen.kb-open .actions{position:fixed;left:0;right:0;bottom:var(--kb-offset,0px);margin:0;padding:8px 16px 0;background:var(--paper);border-top:1px solid var(--rule-strong);box-shadow:0 -8px 24px rgba(0,0,0,0.08);z-index:50}
+/* Big bottom padding when the keyboard is up. NOT cosmetic — without
+ * it the document is shorter than the layout viewport and window
+ * cannot actually scroll, so the focused input has nowhere to scroll
+ * UP to. 50vh gives every focusable field room to land at the top of
+ * the viewport with the suggestion list + locate button below. */
+.screen.kb-open{padding-bottom:50vh}
+/* When the keyboard is up, hide page-level chrome that competes with
+ * the form for vertical space: the persistent Privacy/Terms footer,
+ * any inline consent line, AND the fixed nav (the BG/EN toggle isn't
+ * useful mid-typing). With nav gone the focused input can land flush
+ * at the top of the viewport. */
+body.kb-open .legal-footer,
+body.kb-open .consent-line,
+body.kb-open .nav{display:none}
+body.kb-open .stage{padding-top:0}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:16px 24px;background:var(--ink);color:var(--paper);border:1.5px solid var(--ink);cursor:pointer;font-family:'Archivo',sans-serif;font-weight:800;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;transition:all 0.18s;box-shadow:5px 5px 0 var(--rust)}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:7px 7px 0 var(--rust)}
+.btn:disabled{opacity:0.4;cursor:not-allowed;box-shadow:none}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:none;border-color:var(--rule-strong);font-weight:600}
+.btn.ghost:hover{transform:none;box-shadow:none;border-color:var(--ink)}
+
+/* GDPR consent micro-text under submit buttons + persistent legal footer.
+   Tiny, neutral, never blocks the form, but always reachable. */
+.consent-line{font-size:11.5px;line-height:1.45;color:var(--ink-mid);margin-top:14px;text-align:center;max-width:520px;margin-left:auto;margin-right:auto}
+.consent-line a{color:var(--ink-soft);text-decoration:underline;font-weight:600}
+.legal-footer{position:fixed;left:0;right:0;bottom:0;padding:8px 14px;background:rgba(255,255,255,0.92);backdrop-filter:blur(8px);border-top:1px solid var(--rule);z-index:120;display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:11px;color:var(--ink-mid);font-family:'JetBrains Mono',monospace}
+.legal-footer .lf-tagline{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.legal-footer a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:1px;cursor:pointer}
+.legal-footer a:hover{color:var(--rust)}
+@media (max-width:520px){
+  .legal-footer{font-size:10px;padding:6px 12px}
+  .legal-footer .lf-tagline{display:none}
+}
+.btn.full{width:100%;justify-content:center}
+.back-link{background:transparent;border:0;cursor:pointer;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;letter-spacing:0.06em;color:var(--ink-mid);padding:6px 8px}
+.back-link:hover{color:var(--ink)}
+
+/* address autocomplete
+ * Layout: input → suggestion list → confirm pill → "Use my current location"
+ * button (full-width, below the input). The button used to live inside the
+ * input as a tiny crosshair icon; moving it to its own row makes the affordance
+ * obvious — nobody on mobile knows what an inline crosshair means. */
+.addr-wrap{position:relative;display:block}
+.addr-locate{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:13px 16px;background:var(--paper-warm);color:var(--ink);border:1.5px solid var(--ink);cursor:pointer;font-family:'Archivo',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.10em;text-transform:uppercase;transition:background 0.15s,color 0.15s,transform 0.12s,box-shadow 0.18s;margin-top:8px}
+.addr-locate svg{flex-shrink:0;color:var(--rust)}
+.addr-locate:hover{background:var(--ink);color:var(--paper);transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--rust)}
+.addr-locate:hover svg{color:var(--gold)}
+.addr-locate:disabled{opacity:0.5;cursor:wait;transform:none;box-shadow:none}
+.addr-locate.busy svg{animation:spin 0.9s linear infinite}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.ac-list{border:1.5px solid var(--ink);border-top:0;background:var(--paper-card);max-height:240px;overflow-y:auto;display:none}
+.ac-list.show{display:block}
+.ac-item{padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--rule);font-family:'Archivo',sans-serif;font-size:14px;color:var(--ink-soft)}
+.ac-item:hover{background:var(--paper-warm);color:var(--ink)}
+.ac-item:last-child{border-bottom:0}
+.ac-confirm{margin-top:8px;padding:10px 12px;background:var(--paper-warm);border:1px solid var(--rule);font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:0.06em;color:var(--ink-soft);font-weight:600}
+.ac-confirm strong{color:var(--ink)}
+.ac-hint{margin-top:6px;font-family:'Archivo',sans-serif;font-style:italic;font-size:13px;line-height:1.4;color:var(--ink-mid)}
+.ac-hint.error{color:var(--rust);font-style:normal;font-weight:600}
+
+/* progress dots */
+.progress{display:flex;gap:5px;margin-bottom:18px;flex-wrap:wrap}
+.progress .dot{width:24px;height:3px;background:var(--paper-deep)}
+.progress .dot.done{background:var(--moss)}
+.progress .dot.active{background:var(--ink)}
+
+/* POSITION SCREEN */
+.pos-stage{padding:18px 16px 32px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;max-width:600px;margin:0 auto;width:100%}
+.pos-lbl{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.20em;text-transform:uppercase;color:var(--ink-mid);font-weight:700}
+.pos-num{font-family:'Archivo',sans-serif;font-weight:900;font-size:clamp(78px,16vw,150px);letter-spacing:-0.06em;color:var(--ink);font-variant-numeric:tabular-nums;line-height:0.92;transition:transform 0.4s ease;margin-top:0}
+.pos-behind{font-family:'Archivo',sans-serif;font-weight:500;font-size:16px;line-height:1.5;color:var(--ink-soft)}
+.pos-behind strong{font-weight:800;color:var(--ink)}
+.pos-bump-toast{position:fixed;top:88px;left:50%;transform:translateX(-50%) translateY(-12px);padding:9px 16px;background:var(--moss);color:#fff;font-family:'Archivo',sans-serif;font-weight:800;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;z-index:300;opacity:0;transition:all 0.45s ease;pointer-events:none}
+.pos-bump-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Area Leaderboard — Sofia neighbourhoods ranked by signup count.
+   Sits between the position number and the "Move up in the queue"
+   climb section, gives every visitor an at-a-glance answer to "where
+   am I in the race?" — the literal mechanic of "neighbourhood with
+   most signups gets delivery first". No bars (cosmetic, no extra
+   info); just rank · name · count. The descriptive line lives at
+   the bottom (less prominent than the rankings themselves). */
+.lb{width:100%;max-width:540px;margin:18px auto 0;padding:14px 16px 12px;background:var(--paper-warm);border:1.5px solid var(--ink);text-align:left}
+.lb-title{font-family:'Archivo',sans-serif;font-weight:900;font-size:14px;letter-spacing:0.02em;text-transform:uppercase;color:var(--ink);margin:0 0 10px;line-height:1}
+.lb-list{list-style:none;padding:0;margin:0}
+.lb-list li{display:grid;grid-template-columns:24px 1fr auto;gap:10px;align-items:center;padding:7px 0;border-top:1px solid var(--rule);min-height:30px}
+.lb-list li:first-child{border-top:0}
+.lb-rank{font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:700;color:var(--ink-mid);text-align:center}
+.lb-list li.lead .lb-rank{color:var(--rust)}
+.lb-nb{font-family:'Archivo',sans-serif;font-weight:700;font-size:14px;color:var(--ink);letter-spacing:-0.005em;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-list li.you .lb-nb{color:var(--moss)}
+.lb-list li.you .lb-cnt{color:var(--moss)}
+.lb-you-tag{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:10.5px;letter-spacing:0.04em;color:var(--moss);text-transform:lowercase;margin-left:4px}
+.lb-cnt{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;text-align:right}
+.lb-foot{font-family:'Archivo',sans-serif;font-weight:500;font-size:11.5px;color:var(--ink-mid);font-style:italic;margin:10px 0 0;text-align:left;line-height:1.4}
+.lb-empty{font-family:'Archivo',sans-serif;font-weight:500;font-size:13px;color:var(--ink-mid);font-style:italic;text-align:center;padding:8px 0}
+.lb-list li.lb-more{cursor:pointer;border-top:1px solid var(--rule)}
+.lb-list li.lb-more:hover{background:var(--paper-deep)}
+.lb-more-label{grid-column:1 / 4;font-family:'Archivo',sans-serif;font-weight:800;font-size:13px;letter-spacing:0.02em;text-transform:uppercase;color:var(--ink);text-align:center;padding:2px 0}
+.lb-more-arrow{display:inline-block;margin-left:4px;font-family:'JetBrains Mono',monospace;font-weight:700}
+
+/* Area Leaderboard "See all" modal — same skeleton as the welcome modal. */
+.lb-modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(14,26,20,0.55);backdrop-filter:blur(4px)}
+.lb-modal[aria-hidden="false"]{display:flex}
+.lb-modal-card{background:var(--paper);border:1.5px solid var(--ink);box-shadow:8px 8px 0 var(--rust);width:100%;max-width:480px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden}
+.lb-modal-head{display:flex;justify-content:space-between;align-items:center;padding:16px 18px 12px;border-bottom:1.5px solid var(--ink)}
+.lb-modal-title{font-family:'Archivo',sans-serif;font-weight:900;font-size:16px;letter-spacing:0.02em;text-transform:uppercase;color:var(--ink);margin:0;line-height:1}
+.lb-modal-close{background:none;border:0;color:var(--ink);cursor:pointer;padding:6px;line-height:1;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;transition:background 0.12s}
+.lb-modal-close:hover{background:var(--paper-deep)}
+.lb-modal-close svg{display:block;width:18px;height:18px}
+.lb-modal-body{padding:8px 18px 16px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.lb-modal-body .lb-list li{padding:9px 0}
+.lb-modal-foot{padding:10px 18px 14px;border-top:1px solid var(--rule);font-family:'Archivo',sans-serif;font-weight:500;font-size:11.5px;color:var(--ink-mid);font-style:italic;text-align:left;line-height:1.4}
+
+/* Soft lead-in above the climb cards (not the welcome modal). Earlier
+   versions styled this as an uppercase H2 banner; that read like a
+   tappable button. Now it's a low-key italic aside — clearly text,
+   not a control. */
+.climb-heading{font-family:'Archivo',sans-serif;font-weight:500;font-style:italic;font-size:14px;line-height:1.45;letter-spacing:0;text-transform:none;color:var(--ink-mid);text-align:left;margin:28px auto 12px;max-width:540px;width:100%;pointer-events:none;user-select:none}
+
+/* Generic climb-action card. The +25 / +15 / +5 badges always anchor
+   to the top-right via .climb-card-bump so the badge position is
+   consistent across the three cards. */
+.climb-card{position:relative;width:100%;max-width:540px;margin:0 auto 10px;padding:18px 16px 16px;background:var(--paper);border:1.5px solid var(--ink);text-align:left;cursor:pointer;font-family:inherit;color:inherit;transition:all 0.15s;display:block}
+.climb-card:hover{background:var(--ink);color:#fff}
+.climb-card:hover .climb-card-bump{color:var(--gold)}
+.climb-card-bump{position:absolute;top:14px;right:18px;font-family:'JetBrains Mono',monospace;font-weight:800;font-size:14px;color:var(--rust);letter-spacing:0;line-height:1}
+.climb-card .climb-card-title{font-family:'Archivo',sans-serif;font-weight:800;font-size:16px;line-height:1.3;letter-spacing:-0.005em;color:inherit;padding-right:48px}
+.climb-card.done{background:var(--paper-deep);border-color:var(--ink-mid);cursor:default;opacity:0.72}
+.climb-card.done:hover{background:var(--paper-deep);color:var(--ink)}
+.climb-card.done .climb-card-title::before{content:'\2713\00a0';color:var(--moss);font-weight:900}
+
+/* The invite card is the one inverted (dark) card — same skeleton as
+   the other climb cards (so .climb-card-bump still anchors top-right)
+   but with the share link, share buttons, and the three Monzo-style
+   dotted slots inside. */
+.climb-card.invite{background:var(--ink);color:#fff;box-shadow:6px 6px 0 var(--rust);cursor:default;padding:20px 16px 18px}
+.climb-card.invite:hover{background:var(--ink);color:#fff}
+.climb-card.invite .climb-card-bump{color:var(--gold)}
+.climb-card.invite .climb-card-title{font-size:22px;font-weight:900;letter-spacing:-0.02em;text-transform:uppercase;color:#fff;margin-bottom:6px;padding-right:56px}
+.share-sub{font-family:'Archivo',sans-serif;font-weight:500;font-size:13.5px;color:rgba(255,255,255,0.74);margin:0 0 14px;line-height:1.45}
+.invite-slots{display:flex;justify-content:center;gap:14px;margin:6px 0 16px}
+.invite-slot{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Archivo',sans-serif;font-weight:900;font-size:26px;line-height:1;letter-spacing:-0.02em;background:transparent;flex-shrink:0;transition:all 0.3s}
+.invite-slot.empty{border:2px dashed rgba(255,255,255,0.40);color:rgba(255,255,255,0.42)}
+.invite-slot.empty svg{width:32px;height:32px;display:block}
+.invite-slot.filled{border:2px solid var(--gold);background:var(--gold);color:var(--ink)}
+.invite-extra{display:inline-flex;align-items:center;justify-content:center;height:24px;padding:0 10px;border-radius:12px;background:rgba(255,255,255,0.14);color:#fff;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.04em;margin:0 0 14px}
+.share-link{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;background:#fff;border:1.5px solid var(--gold);cursor:pointer;margin-bottom:10px}
+.share-link-url{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.share-link-copy{font-family:'Archivo',sans-serif;font-weight:800;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--rust);flex-shrink:0}
+.share-link-copy.copied{color:var(--moss)}
+/* Single Share & invite button — fills the dark card edge to edge.
+   (Was a 3-column grid for old WhatsApp/Viber/native split; only the
+   native sheet survives, so the row is a one-column block now.) */
+.share-row{display:block}
+.share-btn{display:block;width:100%;padding:15px 14px;background:#fff;color:var(--ink);border:1.5px solid #fff;cursor:pointer;font-family:'Archivo',sans-serif;font-weight:800;font-size:14px;letter-spacing:0.10em;text-transform:uppercase;transition:background 0.15s,border-color 0.15s,transform 0.12s}
+.share-btn:hover{background:var(--gold);border-color:var(--gold)}
+.share-btn:active{transform:scale(0.99)}
+
+.bottom-photo{display:block;margin:42px auto 18px;width:min(540px,82vw);height:auto}
+
+/* CHAT-OPTIONS SCREEN */
+.chat-stage{padding:90px 24px 40px;display:flex;flex-direction:column;align-items:center;gap:18px;max-width:520px;margin:0 auto;width:100%}
+.chat-buttons{display:flex;flex-direction:column;gap:12px;width:100%;margin-top:10px}
+.chat-btn{display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:14px;padding:18px 22px;border:2px solid var(--ink);background:var(--paper);cursor:pointer;font-family:'Archivo',sans-serif;font-weight:800;font-size:16px;letter-spacing:0.02em;color:var(--ink);transition:all 0.18s;text-align:left;width:100%}
+.chat-btn:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--rust);background:var(--paper-warm)}
+.chat-btn .icon{flex-shrink:0;width:38px;height:38px;display:flex;align-items:center;justify-content:center}
+.chat-btn .icon svg{width:38px;height:38px;display:block}
+.chat-btn.whatsapp .icon{color:#25d366}
+.chat-btn.viber .icon{color:#7360f2}
+.chat-btn .lbl{flex:1;line-height:1.2}
+
+/* Loading + error */
+.spinner{width:32px;height:32px;border:3px solid var(--paper-deep);border-top-color:var(--rust);border-radius:50%;animation:spin 0.7s linear infinite;margin:24px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.err{padding:10px 14px;background:#ffe5dc;border:1px solid var(--rust);color:var(--rust-deep);font-family:'Archivo',sans-serif;font-weight:600;font-size:13px}
+
+/* Desktop: bump padding back up. The 16px on .screen / .climb-card is
+   tuned for ~360-420px phones; on tablets and wider we want the
+   classic 24px breathing room. */
+@media(min-width:561px){
+  .screen{padding:0 24px calc(env(safe-area-inset-bottom, 0px) + 24px)}
+  .pos-stage{padding:18px 24px 32px}
+  .climb-card{padding:20px 22px 18px}
+  .climb-card.invite{padding:22px 22px 20px}
+}
+@media(max-width:560px){
+  .nav-right{gap:8px}
+  .pos-num{font-size:72px}
+  .stage{padding:78px 0 32px}
+}
+
+/* WELCOME MODAL — two-touch expectations pattern.
+   Auto-shown the first time someone lands on the position screen
+   (gated by localStorage.vitrina_welcome_shown). Also reachable
+   forever via the persistent ⓘ button beside .pos-lbl. */
+.wl-overlay{position:fixed;inset:0;background:rgba(14,26,20,0.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:200;padding:24px;animation:wlFade 0.22s ease both}
+@keyframes wlFade{from{opacity:0}to{opacity:1}}
+.wl-card{background:var(--paper);border:1.5px solid var(--ink);box-shadow:8px 8px 0 var(--rust);max-width:460px;width:100%;padding:28px 22px 22px;position:relative}
+.wl-close{position:absolute;top:10px;right:10px;width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:var(--ink);border:1.5px solid var(--ink);cursor:pointer;padding:0;transition:background 0.15s,color 0.15s}
+.wl-close:hover{background:var(--ink);color:var(--paper)}
+.wl-close svg{width:16px;height:16px;display:block}
+.welcome-h1{font-family:'Archivo',sans-serif;font-weight:900;font-size:clamp(28px,7vw,32px);letter-spacing:-0.03em;line-height:1.04;color:var(--ink);margin:0 36px 16px 0}
+html[lang="bg"] .welcome-h1{-webkit-text-stroke:0.7px currentColor}
+.wl-body{display:flex;flex-direction:column;gap:14px;max-width:460px}
+.wl-body p{font-family:'Archivo',sans-serif;font-weight:500;font-size:15px;line-height:1.5;color:var(--ink-soft);margin:0}
+.wl-body p.wl-foot{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--rust);font-weight:700;margin-top:4px}
+html[lang="bg"] .wl-body p.wl-foot{-webkit-text-stroke:0.45px currentColor}
+.wl-cta-row{margin-top:20px}
+
+/* Persistent ⓘ help button — sits inline next to .pos-lbl */
+.pos-lbl-row{display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.pos-help-btn{width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:transparent;color:var(--ink);border:1.5px solid var(--ink);cursor:pointer;padding:0;font-family:'Archivo',sans-serif;font-weight:900;font-size:13px;line-height:1;transition:background 0.15s,color 0.15s;flex-shrink:0}
+.pos-help-btn:hover,.pos-help-btn:active{background:var(--ink);color:var(--paper)}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="logo">vitrina<span class="dot">.</span></a>
+  <div class="nav-right">
+    <div class="lang-toggle" id="lang-toggle" role="group" aria-label="Language">
+      <button type="button" data-lang="bg" class="lang-pill">БГ</button>
+      <button type="button" data-lang="en" class="lang-pill">EN</button>
+    </div>
+  </div>
+</nav>
+
+<div class="pos-bump-toast" id="bump-toast">+0</div>
+
+<main class="stage" id="stage">
+
+  <!-- PHONE LOOKUP -->
+  <section class="screen active" data-screen="phone">
+    <div class="eyebrow" data-i18n="home.hero.eyebrow">Sofia · personalised grocery</div>
+    <h1 class="q-title" data-i18n="wl.phone.title">What's your phone number?</h1>
+    <p class="q-sub" data-i18n="wl.phone.sub">Phone first — we use it to find you if you're already on the list, and to text you when your wave opens.</p>
+    <div class="field">
+      <label class="label" data-i18n="wl.phone.label">Phone</label>
+      <div class="row-phone">
+        <button type="button" class="select dial-trigger" id="dial-btn" aria-haspopup="dialog" aria-label="Select country code">
+          <span class="dial-flag" id="dial-flag">🇧🇬</span>
+          <span class="dial-code" id="dial-code">+359</span>
+          <span class="dial-caret" aria-hidden="true">▾</span>
+        </button>
+        <input class="input" id="phone" type="tel" inputmode="numeric" placeholder="888 123 456" autocomplete="tel" />
+      </div>
+    </div>
+    <div id="lookup-err"></div>
+    <div class="actions" style="justify-content:flex-end">
+      <button class="btn" id="phone-next" disabled data-i18n="common.cta.next">Next →</button>
+    </div>
+  </section>
+
+  <!-- NAME -->
+  <section class="screen" data-screen="name">
+    <div class="eyebrow"><span data-i18n="wl.step">Step</span> 2 / 8</div>
+    <h1 class="q-title" data-i18n="wl.name.title">What should we call you?</h1>
+    <input class="input" id="firstName" placeholder="First name" data-i18n-attr="placeholder:wl.name.placeholder" autocomplete="given-name" />
+    <div class="actions">
+      <button class="back-link" data-back data-i18n="common.cta.back">← Back</button>
+      <button class="btn" id="name-next" disabled data-i18n="common.cta.next">Next →</button>
+    </div>
+  </section>
+
+  <!-- EMAIL -->
+  <section class="screen" data-screen="email">
+    <div class="eyebrow"><span data-i18n="wl.step">Step</span> 3 / 8</div>
+    <h1 class="q-title" data-i18n="wl.email.title">Where can we email you?</h1>
+    <input class="input" id="email" type="email" inputmode="email" placeholder="you@email.com" data-i18n-attr="placeholder:wl.email.placeholder" autocomplete="email" />
+    <div class="actions">
+      <button class="back-link" data-back data-i18n="common.cta.back">← Back</button>
+      <button class="btn" id="email-next" disabled data-i18n="common.cta.next">Next →</button>
+    </div>
+  </section>
+
+  <!-- HOME -->
+  <section class="screen" data-screen="home">
+    <div class="eyebrow"><span data-i18n="wl.step">Step</span> 4 / 8</div>
+    <h1 class="q-title" data-i18n="wl.home.title">Where do you live?</h1>
+    <p class="q-sub" data-i18n="wl.home.sub">We open neighbourhood by neighbourhood. Your address tells us when we're getting to you.</p>
+    <div class="addr-wrap">
+      <input class="input addr-input" id="home-addr" placeholder="Street and number, Sofia" data-i18n-attr="placeholder:wl.home.placeholder" autocomplete="off" />
+    </div>
+    <div class="ac-list" id="home-ac"></div>
+    <div class="ac-confirm" id="home-confirm" style="display:none"></div>
+    <button class="addr-locate" id="home-locate" type="button">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+      <span data-i18n="wl.home.locate">Use my current location</span>
+    </button>
+    <div class="ac-hint" id="home-hint" data-i18n="wl.home.hint">Pick a suggestion from the list, or tap the button below to detect your location.</div>
+    <div class="actions">
+      <button class="back-link" data-back data-i18n="common.cta.back">← Back</button>
+      <button class="btn" id="home-next" disabled data-i18n="common.cta.next">Next →</button>
+    </div>
+  </section>
+
+  <!-- WORK ASK -->
+  <section class="screen" data-screen="work-ask">
+    <div class="eyebrow"><span data-i18n="wl.step">Step</span> 5 / 8</div>
+    <h1 class="q-title" data-i18n="wl.work.ask">Want a pickup near work, too?</h1>
+    <p class="q-sub" data-i18n="wl.work.sub">Optional. Sometimes the corner shop near work is more convenient than home.</p>
+    <div class="actions">
+      <button class="back-link" data-back data-i18n="common.cta.back">← Back</button>
+      <div style="display:flex;gap:10px">
+        <button class="btn ghost" id="work-skip-submit" data-i18n="wl.work.no">Skip</button>
+        <button class="btn" data-go="work-name" data-i18n="wl.work.yes">Yes, add work →</button>
+      </div>
+    </div>
+    <p class="consent-line" data-i18n="wl.consent">By submitting you agree to our <a href="#" onclick="event.preventDefault();VitrinaLegal.open('privacy')">Privacy Notice</a> and <a href="#" onclick="event.preventDefault();VitrinaLegal.open('terms')">Terms</a>. We'll only contact you on the channels you picked.</p>
+  </section>
+
+  <!-- WORK NAME -->
+  <section class="screen" data-screen="work-name">
+    <div class="eyebrow"><span data-i18n="wl.step">Step</span> 5 / 8</div>
+    <h1 class="q-title" data-i18n="wl.work.company">Where do you work? (company name)</h1>
+    <input class="input" id="work-co" placeholder="Company" autocomplete="organization" />
+    <div class="actions">
+      <button class="back-link" data-back data-i18n="common.cta.back">← Back</button>
+      <button class="btn" data-go="work-addr" data-i18n="common.cta.next">Next →</button>
+    </div>
+  </section>
+
+  <!-- WORK ADDR -->
+  <section class="screen" data-screen="work-addr">
+    <div class="eyebrow"><span data-i18n="wl.step">Step</span> 5 / 8</div>
+    <h1 class="q-title" data-i18n="wl.work.address">Work address</h1>
+    <div class="addr-wrap">
+      <input class="input addr-input" id="work-addr" placeholder="Street and number, Sofia" autocomplete="off" />
+    </div>
+    <div class="ac-list" id="work-ac"></div>
+    <div class="ac-confirm" id="work-confirm" style="display:none"></div>
+    <button class="addr-locate" id="work-locate" type="button">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+      <span data-i18n="wl.home.locate">Use my current location</span>
+    </button>
+    <div class="actions">
+      <button class="back-link" data-back data-i18n="common.cta.back">← Back</button>
+      <button class="btn" id="work-next-submit" data-i18n="common.cta.submit">Submit →</button>
+    </div>
+    <p class="consent-line" data-i18n="wl.consent">By submitting you agree to our <a href="#" onclick="event.preventDefault();VitrinaLegal.open('privacy')">Privacy Notice</a> and <a href="#" onclick="event.preventDefault();VitrinaLegal.open('terms')">Terms</a>. We'll only contact you on the channels you picked.</p>
+  </section>
+
+  <!-- Q1 — buying habit -->
+  <section class="screen" data-screen="q1">
+    <div class="eyebrow"><span data-i18n="wl.quiz.label">Quick survey</span> · 1 / 5</div>
+    <h1 class="q-title" data-i18n="wl.q1.label">Where do you buy most of your groceries?</h1>
+    <p class="q-sub" data-i18n="wl.q.multi">Pick all that apply.</p>
+    <div class="chips" data-q="buy" data-multi="1" id="q1-chips"></div>
+    <div class="actions">
+      <button class="back-link" data-back data-i18n="common.cta.back">← Back</button>
+      <button class="btn" id="q1-next" data-go="q2" data-i18n="common.cta.next" disabled>Next →</button>
+    </div>
+  </section>
+
+  <!-- Q2 — ripped off -->
+  <section class="screen" data-screen="q2">
+    <div class="eyebrow"><span data-i18n="wl.quiz.label">Quick survey</span> · 2 / 5</div>
+    <h1 class="q-title" data-i18n="wl.q2.label">Have you ever felt ripped off shopping for food in Sofia?</h1>
+    <p class="q-sub" data-i18n="wl.q.multiadd">Pick all that apply, or add your own.</p>
+    <div class="chips" data-q="ripped" data-multi="1" id="q2-chips"></div>
+    <div class="actions">
+      <button class="back-link" data-back data-i18n="common.cta.back">← Back</button>
+      <button class="btn" id="q2-next" data-go="q3" data-i18n="common.cta.next" disabled>Next →</button>
+    </div>
+  </section>
+
+  <!-- Q3 — wish was better -->
+  <section class="screen" data-screen="q3">
+    <div class="eyebrow"><span data-i18n="wl.quiz.label">Quick survey</span> · 3 / 5</div>
+    <h1 class="q-title" data-i18n="wl.q3.label">What do you wish was better near you?</h1>
+    <p class="q-sub" data-i18n="wl.q.multiadd">Pick all that apply, or add your own.</p>
+    <div class="chips" data-q="wish" data-multi="1" id="q3-chips"></div>
+    <div class="actions">
+      <button class="back-link" data-back data-i18n="common.cta.back">← Back</button>
+      <button class="btn" id="q3-next" data-go="q4" data-i18n="common.cta.next" disabled>Next →</button>
+    </div>
+  </section>
+
+  <!-- Q4 — when cook -->
+  <section class="screen" data-screen="q4">
+    <div class="eyebrow"><span data-i18n="wl.quiz.label">Quick survey</span> · 4 / 5</div>
+    <h1 class="q-title" data-i18n="wl.q4.label">When do you cook the most?</h1>
+    <div class="chips" data-q="cook" id="q4-chips"></div>
+    <div class="actions">
+      <button class="back-link" data-back data-i18n="common.cta.back">← Back</button>
+      <button class="btn" id="q4-next" data-go="q5" data-i18n="common.cta.next" disabled>Next →</button>
+    </div>
+  </section>
+
+  <!-- Q5 — how often shop -->
+  <section class="screen" data-screen="q5">
+    <div class="eyebrow"><span data-i18n="wl.quiz.label">Quick survey</span> · 5 / 5</div>
+    <h1 class="q-title" data-i18n="wl.q5.label">How often do you shop for groceries?</h1>
+    <div class="chips" data-q="freq" id="q5-chips"></div>
+    <div class="actions">
+      <button class="back-link" data-back data-i18n="common.cta.back">← Back</button>
+      <button class="btn" id="submit-btn" data-i18n="common.cta.submit" disabled>Submit →</button>
+    </div>
+  </section>
+
+  <!-- SUBMITTING -->
+  <section class="screen" data-screen="submitting">
+    <div class="spinner"></div>
+    <p class="q-sub" style="text-align:center" data-i18n="wl.submitting">Saving your spot…</p>
+  </section>
+
+  <!-- POSITION (hosts the position-card UI) -->
+  <section class="screen" data-screen="position">
+    <div class="pos-stage" id="pos-stage"></div>
+  </section>
+
+  <!-- CHAT-OPTIONS -->
+  <section class="screen" data-screen="chat">
+    <div class="chat-stage">
+      <div class="eyebrow" data-i18n="home.hero.eyebrow">Sofia · personalised grocery</div>
+      <h1 class="q-title" data-i18n="chat.title">Chat with us</h1>
+      <p class="q-sub" data-i18n="chat.sub">Pick the channel that's easiest for you. We'll reply within a few hours.</p>
+      <div class="chat-buttons">
+        <button class="chat-btn whatsapp" id="chat-wa" type="button">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="currentColor"><path d="M16 2C8.3 2 2 8.3 2 16c0 2.6.7 5.1 2 7.3L2 30l6.9-1.8c2.1 1.2 4.6 1.8 7.1 1.8 7.7 0 14-6.3 14-14S23.7 2 16 2z"/><path d="M22.4 19.7c-.3-.2-2-1-2.3-1.1-.3-.1-.5-.2-.7.2-.2.3-.9 1.1-1.1 1.4-.2.2-.4.3-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-2-1.8-2.3-.2-.3 0-.5.1-.7l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.3 0-.5-.1-.2-.7-1.8-1-2.5-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1.1 1.1-1.1 2.6s1.1 3 1.3 3.2c.2.3 2.2 3.4 5.4 4.7 3.2 1.4 3.2.9 3.8.9.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.1-.3-.2-.6-.4z" fill="#fff"/></svg>
+          </span>
+          <span class="lbl" data-i18n="chat.whatsapp">Chat with us on WhatsApp</span>
+        </button>
+        <button class="chat-btn viber" id="chat-viber" type="button">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="currentColor"><path d="M19.6 1.1c-.7-.1-3.5-.4-7.3-.2-3 .2-7.2 1-9.7 4-2.5 3-2.6 6.7-2.7 11.3 0 4.6.7 8 4.7 10.2v3.7c0 .8.6 1.4 1.4 1.4.4 0 .8-.2 1.1-.4l3.7-3.4c1.5.1 5.3.2 7.5-.4 1.6-.5 7.6-1.2 9-9 1.5-7.9-.5-12.9-4.7-15-1.2-.6-1.9-1.2-3-1.2z"/><path d="M20.5 18.7c-.4.5-1 .6-1.7.5-.6-.2-1.2-.5-1.7-.8-2.9-1.7-5.2-4.1-6.8-7.1-.2-.4-.4-.8-.5-1.2-.2-.4-.2-.8 0-1.2.1-.3.4-.6.7-.9.3-.2.6-.2.9-.1.6.5 1.1 1.1 1.6 1.7.4.4.5.7 0 1.2l-.5.6c-.1.2-.1.3-.1.5.5 1.2 1.3 2.2 2.5 2.7.2.1.4 0 .5-.1.2-.2.4-.4.7-.6.4-.5.9-.6 1.3-.1.5.4 1 .7 1.5 1.1.4.3.4.6 0 1.1-.1.2-.3.4-.4.7zm-1.7-9.5c-.2-.4-.6-.6-1-.6h-.1c-.2 0-.4.1-.4.3-.1.2.1.4.3.5.4.2.7.6.7 1 0 .2.2.4.4.4h.1c.2 0 .4-.2.3-.5 0-.4-.1-.8-.3-1.1zm.9-2c-.6-.7-1.4-1-2.3-1-.2 0-.4.2-.4.4 0 .2.2.4.4.4.7 0 1.3.2 1.7.7.5.5.7 1.1.7 1.8 0 .2.2.4.4.4s.4-.2.4-.4c0-.9-.3-1.7-.9-2.3zm1.4-1.1c-.9-1-2.1-1.5-3.5-1.5-.2 0-.4.2-.4.4 0 .2.2.4.4.4 1.1 0 2.1.4 2.9 1.2.8.8 1.2 1.8 1.2 2.9 0 .2.2.4.4.4s.4-.2.4-.4c0-1.4-.5-2.6-1.4-3.4z" fill="#fff"/></svg>
+          </span>
+          <span class="lbl" data-i18n="chat.viber">Chat with us on Viber</span>
+        </button>
+      </div>
+      <button class="back-link" id="chat-back" style="margin-top:18px" data-i18n="common.cta.back">← Back</button>
+    </div>
+  </section>
+
+</main>
+
+<!-- Custom chip modal (Q1–Q3 — easier than inline text on mobile) -->
+<div id="chip-add-overlay" class="chip-add-overlay" aria-hidden="true">
+  <div class="chip-add-modal" role="dialog" aria-modal="true" aria-labelledby="chip-add-title">
+    <h2 id="chip-add-title" class="chip-add-modal-title"></h2>
+    <p id="chip-add-hint" class="chip-add-modal-hint"></p>
+    <input type="text" id="chip-add-field" class="input chip-add-field" maxlength="80" autocomplete="off" />
+    <div class="chip-add-actions">
+      <button type="button" class="back-link" id="chip-add-cancel"></button>
+      <button type="button" class="btn" id="chip-add-confirm"></button>
+    </div>
+  </div>
+</div>
+
+<footer class="legal-footer" role="contentinfo">
+  <span class="lf-tagline" data-i18n="wl.footer.tagline">Vitrina · operated by Leo Casa Ltd · Sofia closed beta</span>
+  <span style="display:flex;gap:14px">
+    <a href="#" onclick="event.preventDefault();VitrinaLegal.open('privacy')" data-i18n="wl.footer.privacy">Privacy</a>
+    <a href="#" onclick="event.preventDefault();VitrinaLegal.open('terms')" data-i18n="wl.footer.terms">Terms</a>
+  </span>
+</footer>
+
+<script src="/legal/legal-modal.js" defer></script>
+<script src="/i18n/i18n.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
+<script>
+// ============================================================
+// Referral capture
+//
+// The single source of truth for "who referred this user" is
+// localStorage.vitrina_ref. We set it the first time the visitor lands
+// on ANY page with a valid `?r=CODE` query string and never overwrite
+// it with an empty value, so:
+//   - Direct ref click → ref stored.
+//   - Get-access redirect strips the query → still in storage.
+//   - User reloads /waitlist → still in storage.
+//   - User opens /waitlist directly later (no ref) → storage holds.
+// We DO overwrite if a NEW non-empty ?r= arrives — explicit click on a
+// new friend's link wins over an older stored one.
+//
+// Format whitelist (`[A-Za-z0-9_-]{1,64}`) blocks junk and crafted
+// payloads from being passed to the backend.
+// ============================================================
+function captureRefFromUrl() {
+  try {
+    const u = new URL(window.location.href);
+    const r = (u.searchParams.get('r') || '').trim();
+    if (r && /^[A-Za-z0-9_-]{1,64}$/.test(r)) {
+      localStorage.setItem('atelier_vitrina_ref', r);
+      localStorage.setItem('atelier_vitrina_ref_at', String(Date.now()));
+      return r;
+    }
+  } catch (e) {}
+  return '';
+}
+function getStoredRef() {
+  try {
+    const u = new URL(window.location.href);
+    const r = (u.searchParams.get('r') || '').trim();
+    if (r && /^[A-Za-z0-9_-]{1,64}$/.test(r)) return r;
+    const stored = (localStorage.getItem('atelier_vitrina_ref') || '').trim();
+    if (stored && /^[A-Za-z0-9_-]{1,64}$/.test(stored)) return stored;
+  } catch (e) {}
+  return '';
+}
+captureRefFromUrl();
+
+// ============================================================
+// State
+// ============================================================
+const state = {
+  phone: '',
+  dial: '+359',
+  firstName: '',
+  email: '',
+  home: { address: '', neighbourhood: '', lat: null, lng: null },
+  work: { company: '', address: '', neighbourhood: '', lat: null, lng: null },
+  quiz: { buy: [], ripped: [], wish: [], cook: '', freq: '' },
+  token: null,
+  position: 0,
+  total: 0,
+  invitedCount: 0,
+  invitedNames: [],
+  did_call: false,
+  did_quiz: false,
+  did_follow_ig: false,
+  referralCode: '',
+  history: ['phone'],
+};
+
+// Restore token from URL or storage so reload lands on /position
+
+(function bootstrap(){
+  try{
+    const url = new URL(location.href);
+    const t = url.searchParams.get('t') || localStorage.getItem('atelier_vitrina_token');
+    const stepHint = url.searchParams.get('step');
+    if (t) {
+      state.token = t;
+      try { localStorage.setItem('atelier_vitrina_token', t); } catch(e){}
+      // Allowlist of steps the transactional emails deep-link into.
+      // ``position`` always renders after fetch so the page header /
+      // bump animation is fresh; ``chat`` and ``q1`` open the matching
+      // climb-action screen exactly the way the equivalent button on
+      // the position page would.
+      const ALLOWED_STEP_HINTS = new Set(['position', 'chat', 'q1']);
+      const target = ALLOWED_STEP_HINTS.has(stepHint) ? stepHint : 'position';
+      fetchPosition().then(() => goto(target, false));
+    }
+  }catch(e){}
+})();
+
+// ============================================================
+// Multi-step navigation — backed by real browser history so the back
+// button on phones returns to the previous step instead of nuking the
+// flow. Each forward goto() pushes a history entry; popstate pulls the
+// step out of history.state and renders it without pushing again.
+// ============================================================
+function renderScreen(name) {
+  document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+  const target = document.querySelector(`.screen[data-screen="${name}"]`);
+  if (!target) return false;
+  target.classList.add('active');
+  if (name === 'position') renderPosition();
+  if (name === 'chat') wireChat();
+  // Guard against the deep-link race: if the email lands the user on
+  // q1/q2/q3/q4/q5 before window.load has fired renderChipGroups, the
+  // chip wells are empty and the screen looks broken. Calling it here
+  // is idempotent — re-running just rewrites the same innerHTML.
+  if (/^q\d$/.test(name)) renderChipGroups();
+  window.scrollTo({ top: 0, behavior: 'instant' });
+  return true;
+}
+function goto(name, push = true) {
+  if (!renderScreen(name)) return;
+  try {
+    const url = new URL(window.location.href);
+    url.searchParams.set('step', name);
+    const stateObj = { step: name };
+    if (push) { state.history.push(name); history.pushState(stateObj, '', url.toString()); }
+    else { history.replaceState(stateObj, '', url.toString()); }
+  } catch (e) {}
+  // Funnel tracking — fire on every forward navigation so the founder
+  // dashboard can see exactly where people drop off in the flow.
+  window.vph?.capture('wl.step_reached', { step: name });
+  // First-time welcome modal on the position screen. Fresh post-signup
+  // path schedules its own delayed open inside submitSignup() (after the
+  // bump animation lands), so we only auto-trigger here for the
+  // returning-user / deep-link path. The localStorage gate inside
+  // maybeAutoShowWelcome makes the second call a no-op anyway.
+  if (name === 'position' && !window.__vitrinaWelcomeFromSignup) {
+    maybeAutoShowWelcome(600);
+  }
+  window.__vitrinaWelcomeFromSignup = false;
+}
+window.addEventListener('popstate', (e) => {
+  const step = (e.state && e.state.step) || (() => {
+    try { return new URL(window.location.href).searchParams.get('step'); } catch (err) { return null; }
+  })() || (state.token ? 'position' : 'phone');
+  if (state.history.length > 1) state.history.pop();
+  renderScreen(step);
+});
+document.querySelectorAll('[data-back]').forEach(el => {
+  el.addEventListener('click', () => {
+    // Walk the actual browser back stack so URL + screen stay aligned.
+    history.back();
+  });
+});
+document.querySelectorAll('[data-go]').forEach(el => {
+  el.addEventListener('click', () => goto(el.getAttribute('data-go')));
+});
+
+// ============================================================
+// Phone screen
+// ============================================================
+const phoneEl = document.getElementById('phone');
+const dialBtn = document.getElementById('dial-btn');
+const dialFlagEl = document.getElementById('dial-flag');
+const dialCodeEl = document.getElementById('dial-code');
+const phoneNext = document.getElementById('phone-next');
+function refreshPhone(){
+  state.phone = (phoneEl.value || '').replace(/\D/g, '');
+  phoneNext.disabled = state.phone.length < 6;
+}
+phoneEl.addEventListener('input', refreshPhone);
+
+// ============================================================
+// Country-dial picker — modal listing every country with a
+// search box. Replaces the old 5-option <select>. Search matches
+// country name (diacritic-insensitive), ISO-2 code, or dial code.
+// ============================================================
+// One row per country. iso is the 2-letter code used to render the
+// flag emoji via regional-indicator codepoints — no image assets.
+const COUNTRIES = [
+  ['AF','Afghanistan','+93'],['AL','Albania','+355'],['DZ','Algeria','+213'],
+  ['AS','American Samoa','+1684'],['AD','Andorra','+376'],['AO','Angola','+244'],
+  ['AI','Anguilla','+1264'],['AG','Antigua and Barbuda','+1268'],
+  ['AR','Argentina','+54'],['AM','Armenia','+374'],['AW','Aruba','+297'],
+  ['AU','Australia','+61'],['AT','Austria','+43'],['AZ','Azerbaijan','+994'],
+  ['BS','Bahamas','+1242'],['BH','Bahrain','+973'],['BD','Bangladesh','+880'],
+  ['BB','Barbados','+1246'],['BY','Belarus','+375'],['BE','Belgium','+32'],
+  ['BZ','Belize','+501'],['BJ','Benin','+229'],['BM','Bermuda','+1441'],
+  ['BT','Bhutan','+975'],['BO','Bolivia','+591'],['BA','Bosnia and Herzegovina','+387'],
+  ['BW','Botswana','+267'],['BR','Brazil','+55'],['IO','British Indian Ocean Territory','+246'],
+  ['VG','British Virgin Islands','+1284'],['BN','Brunei','+673'],
+  ['BG','Bulgaria','+359'],['BF','Burkina Faso','+226'],['BI','Burundi','+257'],
+  ['KH','Cambodia','+855'],['CM','Cameroon','+237'],['CA','Canada','+1'],
+  ['CV','Cape Verde','+238'],['KY','Cayman Islands','+1345'],
+  ['CF','Central African Republic','+236'],['TD','Chad','+235'],['CL','Chile','+56'],
+  ['CN','China','+86'],['CX','Christmas Island','+61'],['CC','Cocos Islands','+61'],
+  ['CO','Colombia','+57'],['KM','Comoros','+269'],['CK','Cook Islands','+682'],
+  ['CR','Costa Rica','+506'],['HR','Croatia','+385'],['CU','Cuba','+53'],
+  ['CW','Curacao','+599'],['CY','Cyprus','+357'],['CZ','Czech Republic','+420'],
+  ['CD','DR Congo','+243'],['DK','Denmark','+45'],['DJ','Djibouti','+253'],
+  ['DM','Dominica','+1767'],['DO','Dominican Republic','+1809'],
+  ['EC','Ecuador','+593'],['EG','Egypt','+20'],['SV','El Salvador','+503'],
+  ['GQ','Equatorial Guinea','+240'],['ER','Eritrea','+291'],['EE','Estonia','+372'],
+  ['SZ','Eswatini','+268'],['ET','Ethiopia','+251'],['FK','Falkland Islands','+500'],
+  ['FO','Faroe Islands','+298'],['FJ','Fiji','+679'],['FI','Finland','+358'],
+  ['FR','France','+33'],['GF','French Guiana','+594'],['PF','French Polynesia','+689'],
+  ['GA','Gabon','+241'],['GM','Gambia','+220'],['GE','Georgia','+995'],
+  ['DE','Germany','+49'],['GH','Ghana','+233'],['GI','Gibraltar','+350'],
+  ['GR','Greece','+30'],['GL','Greenland','+299'],['GD','Grenada','+1473'],
+  ['GP','Guadeloupe','+590'],['GU','Guam','+1671'],['GT','Guatemala','+502'],
+  ['GG','Guernsey','+44'],['GN','Guinea','+224'],['GW','Guinea-Bissau','+245'],
+  ['GY','Guyana','+592'],['HT','Haiti','+509'],['HN','Honduras','+504'],
+  ['HK','Hong Kong','+852'],['HU','Hungary','+36'],['IS','Iceland','+354'],
+  ['IN','India','+91'],['ID','Indonesia','+62'],['IR','Iran','+98'],
+  ['IQ','Iraq','+964'],['IE','Ireland','+353'],['IM','Isle of Man','+44'],
+  ['IL','Israel','+972'],['IT','Italy','+39'],['CI','Ivory Coast','+225'],
+  ['JM','Jamaica','+1876'],['JP','Japan','+81'],['JE','Jersey','+44'],
+  ['JO','Jordan','+962'],['KZ','Kazakhstan','+7'],['KE','Kenya','+254'],
+  ['KI','Kiribati','+686'],['XK','Kosovo','+383'],['KW','Kuwait','+965'],
+  ['KG','Kyrgyzstan','+996'],['LA','Laos','+856'],['LV','Latvia','+371'],
+  ['LB','Lebanon','+961'],['LS','Lesotho','+266'],['LR','Liberia','+231'],
+  ['LY','Libya','+218'],['LI','Liechtenstein','+423'],['LT','Lithuania','+370'],
+  ['LU','Luxembourg','+352'],['MO','Macau','+853'],['MG','Madagascar','+261'],
+  ['MW','Malawi','+265'],['MY','Malaysia','+60'],['MV','Maldives','+960'],
+  ['ML','Mali','+223'],['MT','Malta','+356'],['MH','Marshall Islands','+692'],
+  ['MQ','Martinique','+596'],['MR','Mauritania','+222'],['MU','Mauritius','+230'],
+  ['YT','Mayotte','+262'],['MX','Mexico','+52'],['FM','Micronesia','+691'],
+  ['MD','Moldova','+373'],['MC','Monaco','+377'],['MN','Mongolia','+976'],
+  ['ME','Montenegro','+382'],['MS','Montserrat','+1664'],['MA','Morocco','+212'],
+  ['MZ','Mozambique','+258'],['MM','Myanmar','+95'],['NA','Namibia','+264'],
+  ['NR','Nauru','+674'],['NP','Nepal','+977'],['NL','Netherlands','+31'],
+  ['NC','New Caledonia','+687'],['NZ','New Zealand','+64'],['NI','Nicaragua','+505'],
+  ['NE','Niger','+227'],['NG','Nigeria','+234'],['NU','Niue','+683'],
+  ['KP','North Korea','+850'],['MK','North Macedonia','+389'],
+  ['MP','Northern Mariana Islands','+1670'],['NO','Norway','+47'],
+  ['OM','Oman','+968'],['PK','Pakistan','+92'],['PW','Palau','+680'],
+  ['PS','Palestine','+970'],['PA','Panama','+507'],['PG','Papua New Guinea','+675'],
+  ['PY','Paraguay','+595'],['PE','Peru','+51'],['PH','Philippines','+63'],
+  ['PL','Poland','+48'],['PT','Portugal','+351'],['PR','Puerto Rico','+1787'],
+  ['QA','Qatar','+974'],['CG','Republic of the Congo','+242'],
+  ['RE','Reunion','+262'],['RO','Romania','+40'],['RU','Russia','+7'],
+  ['RW','Rwanda','+250'],['BL','Saint Barthelemy','+590'],['SH','Saint Helena','+290'],
+  ['KN','Saint Kitts and Nevis','+1869'],['LC','Saint Lucia','+1758'],
+  ['MF','Saint Martin','+590'],['PM','Saint Pierre and Miquelon','+508'],
+  ['VC','Saint Vincent and the Grenadines','+1784'],['WS','Samoa','+685'],
+  ['SM','San Marino','+378'],['ST','Sao Tome and Principe','+239'],
+  ['SA','Saudi Arabia','+966'],['SN','Senegal','+221'],['RS','Serbia','+381'],
+  ['SC','Seychelles','+248'],['SL','Sierra Leone','+232'],['SG','Singapore','+65'],
+  ['SX','Sint Maarten','+1721'],['SK','Slovakia','+421'],['SI','Slovenia','+386'],
+  ['SB','Solomon Islands','+677'],['SO','Somalia','+252'],['ZA','South Africa','+27'],
+  ['KR','South Korea','+82'],['SS','South Sudan','+211'],['ES','Spain','+34'],
+  ['LK','Sri Lanka','+94'],['SD','Sudan','+249'],['SR','Suriname','+597'],
+  ['SE','Sweden','+46'],['CH','Switzerland','+41'],['SY','Syria','+963'],
+  ['TW','Taiwan','+886'],['TJ','Tajikistan','+992'],['TZ','Tanzania','+255'],
+  ['TH','Thailand','+66'],['TL','Timor-Leste','+670'],['TG','Togo','+228'],
+  ['TK','Tokelau','+690'],['TO','Tonga','+676'],['TT','Trinidad and Tobago','+1868'],
+  ['TN','Tunisia','+216'],['TR','Turkey','+90'],['TM','Turkmenistan','+993'],
+  ['TC','Turks and Caicos Islands','+1649'],['TV','Tuvalu','+688'],
+  ['UG','Uganda','+256'],['UA','Ukraine','+380'],['AE','United Arab Emirates','+971'],
+  ['GB','United Kingdom','+44'],['US','United States','+1'],['UY','Uruguay','+598'],
+  ['VI','US Virgin Islands','+1340'],['UZ','Uzbekistan','+998'],['VU','Vanuatu','+678'],
+  ['VA','Vatican City','+39'],['VE','Venezuela','+58'],['VN','Vietnam','+84'],
+  ['WF','Wallis and Futuna','+681'],['EH','Western Sahara','+212'],
+  ['YE','Yemen','+967'],['ZM','Zambia','+260'],['ZW','Zimbabwe','+263'],
+].map(([iso,name,dial]) => ({iso, name, dial}));
+
+function _flagEmoji(iso){
+  // Regional Indicator Symbol Letter A is U+1F1E6. Each letter offset
+  // by (charCode - 65). Two letters together render as the flag on
+  // every modern OS that has the segment ("Flags" Unicode block).
+  return String.fromCodePoint(...iso.toUpperCase().split('').map(c => 0x1F1E6 + c.charCodeAt(0) - 65));
+}
+function _normalize(s){
+  // Strip diacritics + lowercase so "españa" matches "espana", etc.
+  return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+function _setDial(iso, dial){
+  state.dial = dial;
+  state.dialIso = iso;
+  dialFlagEl.textContent = _flagEmoji(iso);
+  dialCodeEl.textContent = dial;
+  try { localStorage.setItem('atelier_vitrina_dial', JSON.stringify({iso, dial})); } catch(e){}
+}
+// Default = Bulgaria. Restore last-used choice if any.
+(function initDial(){
+  try {
+    const saved = JSON.parse(localStorage.getItem('atelier_vitrina_dial') || 'null');
+    if (saved && saved.iso && saved.dial) { _setDial(saved.iso, saved.dial); return; }
+  } catch(e){}
+  _setDial('BG','+359');
+})();
+
+let _dialEscHandler = null;
+function closeDialModal(){
+  const ex = document.getElementById('dial-modal-overlay');
+  if (ex) ex.remove();
+  if (_dialEscHandler) { document.removeEventListener('keydown', _dialEscHandler); _dialEscHandler = null; }
+}
+function openDialModal(){
+  const t = window.__vitrinaT || ((k, fb) => fb);
+  const overlay = document.createElement('div');
+  overlay.id = 'dial-modal-overlay';
+  overlay.className = 'lb-modal';
+  overlay.setAttribute('aria-hidden','false');
+  overlay.innerHTML = `
+    <div class="lb-modal-card" role="dialog" aria-modal="true" aria-labelledby="dial-modal-title">
+      <div class="lb-modal-head">
+        <h3 class="lb-modal-title" id="dial-modal-title">${t('wl.dial.title','Country code')}</h3>
+        <button type="button" class="lb-modal-close" id="dial-modal-close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 5 L19 19 M19 5 L5 19"/></svg></button>
+      </div>
+      <div class="dial-search-row">
+        <input type="text" class="dial-search" id="dial-search" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="${t('wl.dial.search','Search country or code')}" />
+      </div>
+      <div class="lb-modal-body" style="padding:0"><ul class="dial-list" id="dial-list"></ul></div>
+    </div>`;
+  document.body.appendChild(overlay);
+  const listEl = overlay.querySelector('#dial-list');
+  const searchEl = overlay.querySelector('#dial-search');
+  function render(q){
+    const nq = _normalize(q);
+    const digits = q.replace(/\D/g,'');
+    let rows;
+    if (!nq) {
+      rows = COUNTRIES;
+    } else {
+      // Score: name-startswith > name-includes > iso-match > dial-includes.
+      // Plain enough to be predictable, fuzzy enough that "esp" finds Spain
+      // and "1" finds every NANP country.
+      const scored = [];
+      for (const c of COUNTRIES) {
+        const n = _normalize(c.name);
+        let s = -1;
+        if (n.startsWith(nq)) s = 0;
+        else if (n.includes(' ' + nq)) s = 1;
+        else if (n.includes(nq)) s = 2;
+        else if (c.iso.toLowerCase() === nq) s = 0;
+        else if (c.iso.toLowerCase().startsWith(nq)) s = 1;
+        else if (digits && c.dial.slice(1).startsWith(digits)) s = 3;
+        else if (digits && c.dial.includes(digits)) s = 4;
+        if (s >= 0) scored.push([s, c]);
+      }
+      scored.sort((a,b) => a[0]-b[0] || a[1].name.localeCompare(b[1].name));
+      rows = scored.map(x => x[1]);
+    }
+    if (!rows.length) {
+      listEl.innerHTML = `<li class="dial-empty">${t('wl.dial.empty','No matches')}</li>`;
+      return;
+    }
+    listEl.innerHTML = rows.map(c => (
+      `<li class="dial-item" data-iso="${c.iso}" data-dial="${c.dial}" role="button" tabindex="0">`+
+        `<span class="di-flag">${_flagEmoji(c.iso)}</span>`+
+        `<span class="di-name">${c.name}</span>`+
+        `<span class="di-code">${c.dial}</span>`+
+      `</li>`
+    )).join('');
+  }
+  render('');
+  searchEl.addEventListener('input', () => render(searchEl.value));
+  listEl.addEventListener('click', (e) => {
+    const li = e.target.closest('.dial-item');
+    if (!li) return;
+    _setDial(li.dataset.iso, li.dataset.dial);
+    closeDialModal();
+    refreshPhone();
+    phoneEl.focus();
+  });
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeDialModal(); });
+  overlay.querySelector('#dial-modal-close').addEventListener('click', closeDialModal);
+  _dialEscHandler = (e) => {
+    if (e.key === 'Escape') closeDialModal();
+    else if (e.key === 'Enter') {
+      const first = listEl.querySelector('.dial-item');
+      if (first) first.click();
+    }
+  };
+  document.addEventListener('keydown', _dialEscHandler);
+  setTimeout(() => searchEl.focus(), 30);
+  window.vph?.capture('wl.dial_open', {});
+}
+dialBtn.addEventListener('click', openDialModal);
+phoneNext.addEventListener('click', async () => {
+  phoneNext.disabled = true;
+  phoneNext.textContent = '…';
+  const full = state.dial + state.phone;
+  try {
+    const r = await fetch('/api/waitlist/lookup', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ phone: full }),
+    });
+    const j = r.ok ? await r.json() : {};
+    if (j.exists && j.token) {
+      state.token = j.token;
+      try { localStorage.setItem('atelier_vitrina_token', j.token); } catch(e){}
+      await fetchPosition();
+      goto('position');
+    } else {
+      goto('name');
+    }
+  } catch (e) {
+    // backend may not be live yet — let people through
+    goto('name');
+  }
+  phoneNext.textContent = 'Next →';
+  refreshPhone();
+});
+
+// ============================================================
+// Name + email validation
+// ============================================================
+const fnEl = document.getElementById('firstName');
+const fnNext = document.getElementById('name-next');
+fnEl.addEventListener('input', () => {
+  state.firstName = fnEl.value.trim();
+  fnNext.disabled = state.firstName.length < 2;
+});
+fnNext.addEventListener('click', () => goto('email'));
+
+const emEl = document.getElementById('email');
+const emNext = document.getElementById('email-next');
+emEl.addEventListener('input', () => {
+  state.email = emEl.value.trim();
+  emNext.disabled = !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(state.email);
+});
+emNext.addEventListener('click', () => goto('home'));
+
+// ============================================================
+// Address autocomplete (Mapbox via /api/geocode/* proxy)
+// ============================================================
+// Mapbox handles Cyrillic and Latin queries natively (it indexes both
+// scripts), so the old transliteration table is gone. The browser
+// never sees the Mapbox token — every request goes through our
+// Hetzner backend at /api/geocode/{forward,reverse}, which:
+//   1. holds MAPBOX_TOKEN server-side,
+//   2. atomically counts requests in Postgres against a monthly cap
+//      (default 80,000 — 20% margin under the 100k free tier),
+//   3. fails closed (503 capped) if the cap is exhausted.
+//
+// When the API returns 503 (cap reached) or 502 (Mapbox upstream
+// down), we degrade gracefully: the user can submit the address as
+// free text. No lat/lng saved, but the row still lands and we can
+// reach them. The waitlist must never break because of a quota.
+// See apps/vitrina/product/backend/api/routes/geocode.py for details.
+
+async function geocodeForward(q, lang) {
+  try {
+    const r = await fetch('/api/geocode/forward', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ q, lang: lang === 'bg' ? 'bg' : 'en' }),
+    });
+    if (r.status === 503) return { capped: true, suggestions: [] };
+    if (!r.ok) return { error: true, suggestions: [] };
+    const d = await r.json();
+    return { suggestions: d.suggestions || [] };
+  } catch (e) {
+    return { error: true, suggestions: [] };
+  }
+}
+
+async function geocodeReverse(lng, lat, lang) {
+  try {
+    const r = await fetch('/api/geocode/reverse', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lng, lat, lang: lang === 'bg' ? 'bg' : 'en' }),
+    });
+    if (r.status === 503) return { capped: true };
+    if (!r.ok) return { error: true };
+    return await r.json();
+  } catch (e) {
+    return { error: true };
+  }
+}
+
+function attachAutocomplete(inputId, listId, confirmId, kind /* 'home'|'work' */) {
+  const input = document.getElementById(inputId);
+  const list = document.getElementById(listId);
+  const confirm = document.getElementById(confirmId);
+  const hint = document.getElementById(kind + '-hint');
+  const locateBtn = document.getElementById(kind + '-locate');
+  const nextBtn = kind === 'home' ? document.getElementById('home-next') : null;
+  let timer = null;
+  // Free-text mode flag: flips on when Mapbox can't help (cap reached
+  // or upstream error). We then accept whatever the user typed (≥6
+  // chars) so signup never blocks on a geocoder problem.
+  let freeText = false;
+
+  function clearSelection() {
+    confirm.style.display = 'none';
+    state[kind].address = '';
+    state[kind].neighbourhood = '';
+    state[kind].lat = null;
+    state[kind].lng = null;
+    if (nextBtn) nextBtn.disabled = true;
+  }
+
+  function applyPick(s) {
+    // s is a Suggestion from the proxy (already flattened from Mapbox).
+    const cleanAddr = s.address || s.text || (s.place_name || '').split(',')[0].trim();
+    const nb = s.neighbourhood || s.place || '';
+    state[kind].address = cleanAddr;
+    state[kind].neighbourhood = nb;
+    state[kind].lat = s.lat;
+    state[kind].lng = s.lng;
+    input.value = cleanAddr;
+    list.classList.remove('show');
+    list.innerHTML = '';
+    confirm.style.display = 'block';
+    confirm.innerHTML = `<strong>${nb || 'Sofia'}</strong> · ${cleanAddr}`;
+    if (hint) hint.classList.remove('error');
+    if (nextBtn) nextBtn.disabled = false;
+  }
+
+  function applyFreeText(text) {
+    // No lat/lng, no neighbourhood — just record what they typed.
+    state[kind].address = text;
+    state[kind].neighbourhood = '';
+    state[kind].lat = null;
+    state[kind].lng = null;
+    if (nextBtn) nextBtn.disabled = text.trim().length < 6;
+  }
+
+  input.addEventListener('input', () => {
+    const q = input.value.trim();
+    clearSelection();
+    if (freeText) { applyFreeText(q); return; }
+    if (q.length < 3) { list.classList.remove('show'); list.innerHTML=''; return; }
+    clearTimeout(timer);
+    timer = setTimeout(async () => {
+      const t = window.__vitrinaT || ((k, fb) => fb);
+      const noMatch = t('wl.home.nomatch', "No matches. Try a different spelling, or tap 'Use my current location' below.");
+      const lang = (document.documentElement.lang || 'bg').slice(0, 2);
+      const res = await geocodeForward(q, lang);
+      if (res.capped || res.error) {
+        // Quota exhausted or Mapbox unreachable — degrade to free
+        // text so the user can still finish the form.
+        freeText = true;
+        list.classList.remove('show');
+        list.innerHTML = '';
+        if (hint) {
+          hint.textContent = t('wl.home.freetext', 'Address lookup is temporarily unavailable. Type your full address and tap Next — we will sort it out manually.');
+          hint.classList.remove('error');
+        }
+        applyFreeText(q);
+        return;
+      }
+      const items = res.suggestions || [];
+      window.__acItems = window.__acItems || {};
+      window.__acItems[kind] = items;
+      if (items.length === 0) {
+        list.innerHTML = `<div class="ac-item" style="cursor:default;color:var(--ink-mid)">${noMatch}</div>`;
+        if (hint) { hint.textContent = noMatch; hint.classList.add('error'); }
+      } else {
+        list.innerHTML = items.map((it, i) => {
+          const parts = (it.place_name || it.text || '').split(',').slice(0, 4).join(',').trim();
+          return `<div class="ac-item" data-i="${i}">${parts}</div>`;
+        }).join('');
+        if (hint) hint.classList.remove('error');
+      }
+      list.classList.add('show');
+      list.querySelectorAll('.ac-item[data-i]').forEach(el => {
+        el.addEventListener('click', () => {
+          const i = parseInt(el.getAttribute('data-i'), 10);
+          const it = (window.__acItems[kind] || [])[i];
+          if (it) applyPick(it);
+        });
+      });
+    }, 280);
+  });
+
+  // "Use my current location" button: ask the browser for coords,
+  // reverse-geocode via the proxy, then drop the user into the same
+  // picked-address state as if they tapped a suggestion.
+  if (locateBtn) {
+    locateBtn.addEventListener('click', async () => {
+      const t = window.__vitrinaT || ((k, fb) => fb);
+      if (!navigator.geolocation) {
+        if (hint) { hint.textContent = t('wl.home.geo.unsupported', 'Your browser cannot detect location. Type your address instead.'); hint.classList.add('error'); }
+        return;
+      }
+      locateBtn.classList.add('busy');
+      locateBtn.disabled = true;
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        try {
+          const { latitude, longitude } = pos.coords;
+          const lang = (document.documentElement.lang || 'bg').slice(0, 2);
+          const r = await geocodeReverse(longitude, latitude, lang);
+          if (r && !r.error && !r.capped && r.label) {
+            applyPick({
+              address: r.label,
+              text: r.label,
+              place_name: r.label,
+              neighbourhood: r.neighbourhood || r.place || '',
+              place: r.place || '',
+              lat: latitude,
+              lng: longitude,
+            });
+            if (hint) { hint.textContent = t('wl.home.geo.ok', 'Location picked. You can edit and re-select if it is off.'); hint.classList.remove('error'); }
+          } else if (r && r.capped) {
+            // Capped on reverse — still store the coords with a generic
+            // label so we know roughly where they are.
+            freeText = true;
+            applyPick({
+              address: t('wl.home.geo.coords', 'Pinned location'),
+              text: t('wl.home.geo.coords', 'Pinned location'),
+              place_name: '',
+              neighbourhood: '',
+              place: '',
+              lat: latitude,
+              lng: longitude,
+            });
+            if (hint) { hint.textContent = t('wl.home.geo.ok', 'Location picked. You can edit and re-select if it is off.'); hint.classList.remove('error'); }
+          } else {
+            if (hint) { hint.textContent = t('wl.home.geo.fail', 'Could not look up your location. Type your address instead.'); hint.classList.add('error'); }
+          }
+        } finally {
+          locateBtn.classList.remove('busy');
+          locateBtn.disabled = false;
+        }
+      }, (err) => {
+        locateBtn.classList.remove('busy');
+        locateBtn.disabled = false;
+        if (hint) { hint.textContent = t('wl.home.geo.denied', 'Location permission denied. Type your address instead.'); hint.classList.add('error'); }
+      }, { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 });
+    });
+  }
+}
+attachAutocomplete('home-addr', 'home-ac', 'home-confirm', 'home');
+attachAutocomplete('work-addr', 'work-ac', 'work-confirm', 'work');
+
+document.getElementById('home-next').addEventListener('click', () => {
+  // Pin coords are preferred but not required — when the geocoder is
+  // unreachable or capped we still take what the user typed (state.lat
+  // may be null in that case). The 6-char minimum is enforced in the
+  // input handler via applyFreeText().
+  if (state.home.address && state.home.address.trim().length >= 6) goto('work-ask');
+});
+document.getElementById('work-co').addEventListener('input', e => {
+  state.work.company = e.target.value.trim();
+});
+
+// Skip-work and Submit-work both go straight to /signup — quiz is a separate climb flow.
+document.getElementById('work-skip-submit').addEventListener('click', () => submitSignup());
+document.getElementById('work-next-submit').addEventListener('click', () => submitSignup());
+
+// ============================================================
+// Quiz chip groups (Q1, Q3, Q4, Q5) — built from i18n bundle
+// ============================================================
+// For Q1–Q3 we show a *single* capped row: a few anchor presets + top curated
+// answers from everyone else (same styling — no second-tier “other colour”).
+// Anchor order = scan order: put clean negatives / simple stances first on Q2 so
+// "No, never" is never buried under long "Yes — …" complaint presets.
+const QUIZ_MULTI_ANCHORS = {
+  q1: ['wl.q1.opt.super', 'wl.q1.opt.corner', 'wl.q1.opt.market', 'wl.q1.opt.direct'],
+  q2: ['wl.q2.opt.never', 'wl.q2.opt.sometimes', 'wl.q2.opt.overpriced'],
+  q3: ['wl.q3.opt.cheese', 'wl.q3.opt.meat', 'wl.q3.opt.tomato', 'wl.q3.opt.bread'],
+};
+const MULTI_CHIP_CAP = 12;
+
+const QUIZ_OPTIONS = {
+  q1: [
+    'wl.q1.opt.super',
+    'wl.q1.opt.corner',
+    'wl.q1.opt.market',
+    'wl.q1.opt.bio',
+    'wl.q1.opt.ebag',
+    'wl.q1.opt.glovo',
+    'wl.q1.opt.wolt',
+    'wl.q1.opt.takeaway',
+    'wl.q1.opt.shopee',
+    'wl.q1.opt.zoya',
+    'wl.q1.opt.balev',
+    'wl.q1.opt.direct',
+  ],
+  q2: [
+    'wl.q2.opt.overpriced',
+    'wl.q2.opt.bad_quality',
+    'wl.q2.opt.cheaper_elsewhere',
+    'wl.q2.opt.fees_at_checkout',
+    'wl.q2.opt.delivery_markup',
+    'wl.q2.opt.tourist_pricing',
+    'wl.q2.opt.sometimes',
+    'wl.q2.opt.never',
+  ],
+  q3: ['wl.q3.opt.cheese', 'wl.q3.opt.meat', 'wl.q3.opt.tomato', 'wl.q3.opt.bread', 'wl.q3.opt.honey', 'wl.q3.opt.eggs', 'wl.q3.opt.lyutenitsa'],
+  q4: ['wl.q4.opt.weekends', 'wl.q4.opt.weeknights', 'wl.q4.opt.most', 'wl.q4.opt.rare'],
+  q5: ['wl.q5.opt.daily', 'wl.q5.opt.2-3', 'wl.q5.opt.weekly', 'wl.q5.opt.rare'],
+};
+
+function escapeInlineChipText(value) {
+  return String(value).replace(/[&<>"']/g, ch => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  }[ch]));
+}
+
+// Each forward button on the quiz stays disabled until that question has
+// a real answer. Multi-select needs at least one chip on; q2 needs a few
+// trimmed characters of text; q4/q5 need exactly one selection. Called
+// from every chip click, every textarea keystroke, and on language change
+// (so re-rendering chips doesn't accidentally enable a button).
+function refreshQuizGates() {
+  const v = state.quiz;
+  const set = (id, ok) => { const el = document.getElementById(id); if (el) el.disabled = !ok; };
+  set('q1-next', Array.isArray(v.buy) && v.buy.length > 0);
+  set('q2-next', Array.isArray(v.ripped) && v.ripped.length > 0);
+  set('q3-next', Array.isArray(v.wish) && v.wish.length > 0);
+  set('q4-next', typeof v.cook === 'string' && v.cook.length > 0);
+  set('submit-btn', typeof v.freq === 'string' && v.freq.length > 0);
+}
+
+// Cache of community answers, keyed by `${qkey}|${lang}` so a language
+// flip refetches under the new locale (the backend curator returns a
+// different localised array per lang). Populated lazily on first quiz
+// render. Each entry is the array of {label, count, merged_from?}
+// returned by /api/waitlist/community_answers.
+//
+// The backend curator (Sonnet 4.6 via Anthropic API direct, see
+// apps/vitrina/product/backend/api/community_curation.py) already merges
+// near-duplicates and translates labels into the requested lang, so we
+// no longer need cross-language preset dedup. A simple same-language
+// preset filter stays as a belt-and-braces guard against stale curated
+// rows.
+const _communityAnswers = {};
+async function _fetchCommunityAnswers(qkey, presetLabelsLower) {
+  const lang = (window.__vitrinaLang || (document.documentElement.lang || 'bg')).slice(0, 2);
+  const cacheKey = `${qkey}|${lang}`;
+  if (_communityAnswers[cacheKey] !== undefined) return _communityAnswers[cacheKey];
+  _communityAnswers[cacheKey] = { items: [], source: 'pending' };
+  try {
+    const r = await fetch(`/api/waitlist/community_answers?qid=${encodeURIComponent(qkey)}&limit=10&lang=${encodeURIComponent(lang)}`, { cache: 'no-store' });
+    if (!r.ok) {
+      _communityAnswers[cacheKey] = { items: [], source: 'raw' };
+      return _communityAnswers[cacheKey];
+    }
+    const j = await r.json();
+    const items = (j && j.items) || [];
+    const source = (j && j.source) || 'raw';
+    const filtered = items.filter(it => {
+      const lbl = String(it.label || '').trim();
+      if (!lbl) return false;
+      return !presetLabelsLower.includes(lbl.toLowerCase());
+    });
+    _communityAnswers[cacheKey] = { items: filtered, source };
+    return _communityAnswers[cacheKey];
+  } catch (_) {
+    _communityAnswers[cacheKey] = { items: [], source: 'raw' };
+    return _communityAnswers[cacheKey];
+  }
+}
+
+/** One unified chip list for buy / ripped / wish: anchors + learned + optional preset fill. */
+function buildUnifiedMultiChips(qid, t, tAll, meta, keys, optionLabelsLower) {
+  const anchorKeys = QUIZ_MULTI_ANCHORS[qid] || [];
+  const anchorLabels = anchorKeys.map(k => t(k));
+  const anchorLower = new Set(anchorKeys.flatMap(k => {
+    const all = tAll(k);
+    return all.length ? all.map(x => String(x).toLowerCase()) : [String(t(k)).toLowerCase()];
+  }));
+  const rows = [];
+  const seen = new Set();
+  function push(label) {
+    const low = String(label).trim().toLowerCase();
+    if (!low || seen.has(low)) return;
+    seen.add(low);
+    rows.push(String(label).trim());
+  }
+  const src = meta ? meta.source : 'pending';
+  const curated = (meta && Array.isArray(meta.items)) ? meta.items : [];
+
+  for (const lbl of anchorLabels) {
+    if (rows.length >= MULTI_CHIP_CAP) break;
+    push(lbl);
+  }
+  if (src !== 'pending') {
+    for (const it of curated) {
+      if (rows.length >= MULTI_CHIP_CAP) break;
+      const lbl = String(it.label || '').trim();
+      if (!lbl) continue;
+      if (anchorLower.has(lbl.toLowerCase())) continue;
+      if (optionLabelsLower.includes(lbl.toLowerCase())) continue;
+      push(lbl);
+    }
+  }
+  // Thin screen while curated loads: anchors only. After load, if still sparse,
+  // back-fill from remaining presets (never duplicate anchors).
+  if (src !== 'pending' && rows.length < 6) {
+    for (const k of keys) {
+      if (rows.length >= MULTI_CHIP_CAP) break;
+      if (anchorKeys.includes(k)) continue;
+      push(t(k));
+    }
+  }
+  return { labels: rows, seenLower: seen };
+}
+function _communityCacheKey(qkey) {
+  const lang = (window.__vitrinaLang || (document.documentElement.lang || 'bg')).slice(0, 2);
+  return `${qkey}|${lang}`;
+}
+
+let _chipAddQkey = null;
+
+function openChipAddModal(qkey) {
+  const t = window.__vitrinaT || (k => k);
+  _chipAddQkey = qkey;
+  const ov = document.getElementById('chip-add-overlay');
+  if (!ov) return;
+  document.getElementById('chip-add-title').textContent = t('wl.chip_add.title');
+  document.getElementById('chip-add-hint').textContent = t('wl.chip_add.hint');
+  document.getElementById('chip-add-cancel').textContent = t('wl.chip_add.cancel');
+  document.getElementById('chip-add-confirm').textContent = t('wl.chip_add.submit');
+  const field = document.getElementById('chip-add-field');
+  field.value = '';
+  field.setAttribute('aria-label', t('wl.q1.add.prompt', 'Add another option:'));
+  field.placeholder = t('wl.q1.add.prompt', 'Add another option:');
+  ov.style.display = 'flex';
+  ov.setAttribute('aria-hidden', 'false');
+  field.focus();
+}
+
+function closeChipAddModal() {
+  _chipAddQkey = null;
+  const ov = document.getElementById('chip-add-overlay');
+  if (ov) {
+    ov.style.display = 'none';
+    ov.setAttribute('aria-hidden', 'true');
+  }
+}
+
+function initChipAddModal() {
+  const ov = document.getElementById('chip-add-overlay');
+  const field = document.getElementById('chip-add-field');
+  const cancel = document.getElementById('chip-add-cancel');
+  const ok = document.getElementById('chip-add-confirm');
+  if (!ov || !field || !cancel || !ok) return;
+  const commit = () => {
+    const qkey = _chipAddQkey;
+    if (!qkey) return;
+    const v = field.value.trim();
+    if (!v) {
+      closeChipAddModal();
+      return;
+    }
+    const arr = state.quiz[qkey];
+    if (!arr.includes(v)) arr.push(v);
+    closeChipAddModal();
+    renderChipGroups();
+  };
+  cancel.addEventListener('click', closeChipAddModal);
+  ok.addEventListener('click', commit);
+  ov.addEventListener('click', (e) => {
+    if (e.target === ov) closeChipAddModal();
+  });
+  field.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      commit();
+    }
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeChipAddModal();
+    }
+  });
+}
+
+function renderChipGroups() {
+  const t = window.__vitrinaT || (k => k);
+  Object.entries(QUIZ_OPTIONS).forEach(([qid, keys]) => {
+    const wrap = document.getElementById(qid + '-chips');
+    if (!wrap) return;
+    const multi = wrap.getAttribute('data-multi') === '1';
+    const qkey = wrap.getAttribute('data-q');
+    const optionLabels = keys.map(k => t(k));
+    const tAll = window.__vitrinaTAll || (() => []);
+    const optionLabelsLower = [...new Set(keys.flatMap(k => {
+      const all = tAll(k);
+      return all.length ? all : [t(k).toLowerCase()];
+    }))];
+    const cacheKey = _communityCacheKey(qkey);
+
+    if (multi && (qid === 'q1' || qid === 'q2' || qid === 'q3')) {
+      const meta = _communityAnswers[cacheKey];
+      const built = buildUnifiedMultiChips(qid, t, tAll, meta, keys, optionLabelsLower);
+      const labels = built.labels.slice();
+      const seenLower = built.seenLower;
+      for (const v of state.quiz[qkey] || []) {
+        if (labels.length >= MULTI_CHIP_CAP) break;
+        const low = String(v).trim().toLowerCase();
+        if (!low || seenLower.has(low)) continue;
+        seenLower.add(low);
+        labels.push(String(v).trim());
+      }
+      wrap.innerHTML = labels.map(lbl =>
+        `<button type="button" class="chip">${escapeInlineChipText(lbl)}</button>`
+      ).join('') +
+        `<button type="button" class="chip-add-open" data-open-chip-add="1" data-qkey="${qkey}">+ ${escapeInlineChipText(t('wl.q1.add'))}</button>`;
+      if (_communityAnswers[cacheKey] === undefined) {
+        _fetchCommunityAnswers(qkey, optionLabelsLower).then(() => renderChipGroups());
+      }
+    } else {
+      wrap.innerHTML = keys.map(k => `<button type="button" class="chip" data-key="${k}">${t(k)}</button>`).join('');
+    }
+
+    if (multi) {
+      const sel = state.quiz[qkey] || [];
+      wrap.querySelectorAll('.chip').forEach(c => {
+        if (sel.includes(c.textContent.trim())) c.classList.add('on');
+      });
+    } else {
+      wrap.querySelectorAll('.chip').forEach(c => {
+        if (state.quiz[qkey] === c.textContent.trim()) c.classList.add('on');
+      });
+    }
+    wrap.querySelectorAll('.chip').forEach(c => {
+      c.addEventListener('click', () => {
+        const v = c.textContent.trim();
+        if (multi) {
+          const arr = state.quiz[qkey];
+          const i = arr.indexOf(v);
+          if (i >= 0) { arr.splice(i, 1); c.classList.remove('on'); }
+          else { arr.push(v); c.classList.add('on'); }
+        } else {
+          wrap.querySelectorAll('.chip').forEach(x => x.classList.remove('on'));
+          c.classList.add('on');
+          state.quiz[qkey] = v;
+        }
+        refreshQuizGates();
+      });
+    });
+    wrap.querySelectorAll('[data-open-chip-add]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openChipAddModal(btn.getAttribute('data-qkey'));
+      });
+    });
+  });
+  refreshQuizGates();
+}
+window.addEventListener('load', () => {
+  initChipAddModal();
+  renderChipGroups();
+});
+window.addEventListener('vitrina:langchange', renderChipGroups);
+
+// Re-render any dynamically built screen (position, chat) when the user
+// flips EN/BG mid-flow. Static markup is handled by i18n.js applyAll(),
+// but innerHTML built from t(...) inside renderPosition() needs an explicit
+// rebuild or the orange share card / climb rows freeze in the old language.
+window.addEventListener('vitrina:langchange', () => {
+  closeChipAddModal();
+  const active = document.querySelector('.screen.active');
+  if (active) {
+    const which = active.getAttribute('data-screen');
+    if (which === 'position') renderPosition();
+  }
+  // Modal is built dynamically — tear down + rebuild if it's open so
+  // the body copy follows the EN/BG flip.
+  if (document.getElementById('wl-welcome-overlay')) {
+    // Re-open without flipping the auto-show flag (it's already set if
+    // this was the auto-shown instance; it doesn't matter for the help
+    // path either way).
+    openWelcomeModal('langchange');
+  }
+});
+
+// Q2 is now a chip group (handled by renderChipGroups). Earlier
+// versions used a free-text textarea; that handler is gone. Keep
+// state.quiz.ripped as an array — historical string values from
+// pre-conversion signups stay as-is in quiz_answers.ripped (the
+// founder dashboard renders both shapes).
+
+// ============================================================
+// Sign-up submit (no quiz — quiz is a separate climb-action flow)
+// ============================================================
+async function submitSignup() {
+  goto('submitting');
+  const payload = {
+    phone: state.dial + state.phone,
+    email: state.email,
+    first_name: state.firstName,
+    home_address: state.home.address,
+    home_neighbourhood: state.home.neighbourhood,
+    home_lat: state.home.lat,
+    home_lng: state.home.lng,
+    work_company: state.work.company || null,
+    work_address: state.work.address || null,
+    work_neighbourhood: state.work.neighbourhood || null,
+    work_lat: state.work.lat,
+    work_lng: state.work.lng,
+    quiz_answers: {},
+    // Pull from URL first, fall back to localStorage. Backend also
+    // self-defends against malformed / self-referral codes, but we
+    // sanitise here so we never bother sending obvious junk.
+    referred_by: getStoredRef() || null,
+    lang: window.__vitrinaLang || 'bg',
+  };
+  let ok = false;
+  try {
+    const r = await fetch('/api/waitlist/signup', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (r.ok) {
+      const j = await r.json();
+      state.token = j.token;
+      state.position = j.position;
+      state.total = j.total || j.position + 154;
+      state.referralCode = j.referral_code || '';
+      state.did_quiz = !!j.did_quiz;
+      try { localStorage.setItem('atelier_vitrina_token', j.token); } catch(e){}
+      // Tie this PostHog anonymous session to the waitlist row so the
+      // founder can click a replay and see exactly who it was.
+      window.vph?.identify(j.token);
+      window.vph?.capture('wl.signup_complete', {
+        position: j.position,
+        referral_code: j.referral_code || '',
+        lang: window.__vitrinaLang || 'bg',
+      });
+      ok = true;
+    } else {
+      console.warn('signup failed', r.status, await r.text().catch(()=>'')); 
+    }
+  } catch (e) { console.warn('signup err', e); }
+  if (!ok) {
+    state.position = 347 + Math.floor(Math.random() * 30);
+    state.total = state.position + 154;
+    state.referralCode = (state.firstName || 'friend').toLowerCase().replace(/[^a-z0-9]/g,'');
+  }
+  // Tell goto() to skip its own auto-show; we handle the post-signup path
+  // here so the modal lands on the dopamine peak (after confetti + bump).
+  window.__vitrinaWelcomeFromSignup = true;
+  goto('position');
+  startBumpAnimation();
+  maybeAutoShowWelcome(1400);
+}
+
+// ============================================================
+// Quiz submit (separate climb-action flow — only reachable from
+// the position-page "60-second taste quiz" climb-row)
+// ============================================================
+async function submitQuiz() {
+  if (!state.token) { goto('position'); return; }
+  const btn = document.getElementById('submit-btn');
+  if (btn) { btn.disabled = true; btn.textContent = '…'; }
+  try {
+    await fetch('/api/waitlist/answer', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ token: state.token, quiz_answers: state.quiz }),
+    });
+  } catch (e) {}
+  state.did_quiz = true;
+  window.vph?.capture('wl.quiz_complete');
+  await fetchPosition();
+  goto('position');
+}
+document.getElementById('submit-btn').addEventListener('click', submitQuiz);
+
+// ============================================================
+// Position + share + climb
+// ============================================================
+async function fetchPosition() {
+  if (!state.token) return;
+  try {
+    const r = await fetch(`/api/waitlist/position/${encodeURIComponent(state.token)}`);
+    if (!r.ok) return;
+    const j = await r.json();
+    state.position = j.position;
+    state.total = j.total || j.position + 154;
+    state.invitedCount = j.invited_count || 0;
+    state.invitedNames = Array.isArray(j.invited_names) ? j.invited_names : [];
+    state.did_call = !!j.did_call;
+    state.did_quiz = !!j.did_quiz;
+    state.did_follow_ig = !!j.did_follow_ig;
+    state.referralCode = j.referral_code || state.referralCode;
+    state.firstName = j.first_name || state.firstName;
+  } catch (e) {}
+}
+
+// Build the three Monzo-style invite slots. Empty slots are dotted
+// circles with a person glyph; once a friend signs up via this user's
+// referral_code, their initial fills the next slot. After 3, we cap
+// the visual at three circles and render a "+N more" pill so the row
+// doesn't blow out wider than the card.
+function renderInviteSlots(names) {
+  const safe = (Array.isArray(names) ? names : []).filter(n => typeof n === 'string' && n.trim().length > 0);
+  const PERSON_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 12.6c2.4 0 4.4-2 4.4-4.4S14.4 3.8 12 3.8 7.6 5.8 7.6 8.2 9.6 12.6 12 12.6Zm0 2.2c-3 0-9 1.5-9 4.4v1.4h18v-1.4c0-2.9-6-4.4-9-4.4Z"/></svg>';
+  const slots = [0, 1, 2].map(i => {
+    const name = safe[i];
+    if (name) {
+      const initial = (name.trim()[0] || '?').toUpperCase();
+      return `<div class="invite-slot filled" title="${name.replace(/"/g, '&quot;')}">${initial}</div>`;
+    }
+    return `<div class="invite-slot empty">${PERSON_SVG}</div>`;
+  }).join('');
+  const extra = safe.length > 3
+    ? `<div class="invite-extra">+${safe.length - 3}</div>`
+    : '';
+  return `<div class="invite-slots">${slots}</div>${extra}`;
+}
+
+function renderPosition() {
+  const stage = document.getElementById('pos-stage');
+  const t = window.__vitrinaT || (k => k);
+  const behind = Math.max(0, state.total - state.position);
+  const inviteDone = (state.invitedNames || []).length >= 3;
+  stage.innerHTML = `
+    <div class="pos-lbl-row">
+      <div class="pos-lbl" data-i18n="wl.position.spot">${t('wl.position.spot','Your spot on the Sofia waitlist')}</div>
+      <button type="button" id="pos-help-btn" class="pos-help-btn" aria-label="${t('wl.welcome.help','What does this mean?').replace(/"/g,'&quot;')}">?</button>
+    </div>
+    <div class="pos-num" id="pos-num">#${state.position}</div>
+    <div class="pos-behind"><strong>${behind.toLocaleString()}</strong> ${t('wl.position.behind','people are behind you in the queue.')}</div>
+
+    <section class="lb" id="lb-board" hidden>
+      <h3 class="lb-title">${t('wl.lb.title','Area Leaderboard')}</h3>
+      <ol class="lb-list" id="lb-list"></ol>
+      <p class="lb-foot" id="lb-foot">${t('wl.lb.foot','The neighbourhood with the most signups gets delivery first.')}</p>
+    </section>
+
+    <h2 class="climb-heading">${t('wl.climb.heading','A few ways to move up:')}</h2>
+
+    <div class="climb-card invite ${inviteDone ? 'done' : ''}">
+      <span class="climb-card-bump">+25</span>
+      <div class="climb-card-title">${t('wl.invite.title','Invite 3 friends')}</div>
+      <p class="share-sub">${t('wl.invite.sub','When 3 friends sign up with your link, you jump up 25 spots.')}</p>
+      ${renderInviteSlots(state.invitedNames)}
+      <div class="share-row">
+        <button class="share-btn share-btn-full" data-share="native">${t('wl.invite.cta','Invite friends')}</button>
+      </div>
+    </div>
+
+    <button class="climb-card ${state.did_call ? 'done' : ''}" id="climb-call">
+      <span class="climb-card-bump">+15</span>
+      <span class="climb-card-title">${t('wl.climb.call','Chat with Peter about your grocery habits')}</span>
+    </button>
+
+    <button class="climb-card ${state.did_quiz ? 'done' : ''}" id="climb-quiz">
+      <span class="climb-card-bump">+5</span>
+      <span class="climb-card-title">${t('wl.climb.quiz','60-second taste quiz')}</span>
+    </button>
+
+    <button class="climb-card ${state.did_follow_ig ? 'done' : ''}" id="climb-follow-ig" type="button">
+      <span class="climb-card-bump">+2</span>
+      <span class="climb-card-title">${t('wl.climb.followIg','Follow us on Instagram @vitrinalocalshop')}</span>
+    </button>
+  `;
+  document.querySelectorAll('[data-share]').forEach(el => {
+    el.addEventListener('click', () => doShare(el.getAttribute('data-share')));
+  });
+  document.getElementById('climb-call').addEventListener('click', () => goto('chat'));
+  document.getElementById('climb-quiz').addEventListener('click', () => {
+    if (state.did_quiz) return;
+    goto('q1');
+  });
+  document.getElementById('climb-follow-ig').addEventListener('click', handleFollowIg);
+  const helpBtn = document.getElementById('pos-help-btn');
+  if (helpBtn) helpBtn.addEventListener('click', () => openWelcomeModal('help_btn'));
+  loadLeaderboard();
+}
+
+// Area Leaderboard — fetched once per /position render. Backend hits
+// vitrina_waitlist, drops the generic 'София' bucket, returns top
+// neighbourhoods + the requesting user's bucket so the UI can mark
+// "you" with the moss highlight. The board only shows top 3 inline;
+// the 4th row is a "See all" button that opens a modal with every
+// other neighbourhood. Fails silently — the climb cards are the
+// primary CTA, the board is a density teaser.
+function _lbEscape(s) {
+  return String(s || '').replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function _lbRowHtml(it, idx, youLabel) {
+  const cls = [idx === 0 ? 'lead' : '', it.is_you ? 'you' : ''].filter(Boolean).join(' ');
+  const youTag = it.is_you ? ` <span class="lb-you-tag">${youLabel}</span>` : '';
+  return `<li class="${cls}"><span class="lb-rank">${idx + 1}</span><span class="lb-nb">${_lbEscape(it.neighbourhood)}${youTag}</span><span class="lb-cnt">${it.count}</span></li>`;
+}
+let _lbCache = null; // { items, user_neighbourhood } — populated by loadLeaderboard, read by openLeaderboardModal
+async function loadLeaderboard() {
+  const board = document.getElementById('lb-board');
+  const list = document.getElementById('lb-list');
+  if (!board || !list || !state.token) return;
+  const t = window.__vitrinaT || (k => k);
+  try {
+    const r = await fetch(`/api/waitlist/leaderboard?token=${encodeURIComponent(state.token)}&limit=25`);
+    if (!r.ok) return;
+    const j = await r.json();
+    const items = (j && j.items) || [];
+    _lbCache = j;
+
+    // Personalise the leaderboard foot: when we know which bucket the
+    // user lives in, replace the generic "neighbourhood with the most
+    // signups gets delivery first" line with a direct CTA naming their
+    // own neighbourhood. Falls back to the generic line otherwise.
+    const foot = document.getElementById('lb-foot');
+    if (foot && j && j.user_neighbourhood) {
+      const tpl = t('wl.lb.foot.you', 'Your neighbourhood is <strong>{nb}</strong>. Invite more friends to move it up the leaderboard.');
+      foot.innerHTML = tpl.replace('{nb}', _lbEscape(j.user_neighbourhood));
+    }
+
+    if (items.length === 0) {
+      board.hidden = false;
+      list.innerHTML = `<li class="lb-empty">${t('wl.lb.empty','Be the first in your neighbourhood.')}</li>`;
+      return;
+    }
+    const youLabel = t('wl.lb.you','(you)');
+    const TOP = 3;
+    const top = items.slice(0, TOP);
+    const rest = items.slice(TOP);
+    let html = top.map((it, i) => _lbRowHtml(it, i, youLabel)).join('');
+    if (rest.length > 0) {
+      html += `<li class="lb-more" id="lb-see-all" role="button" tabindex="0"><span class="lb-more-label">${t('wl.lb.seeAll','See all')}<span class="lb-more-arrow">→</span></span></li>`;
+    }
+    list.innerHTML = html;
+    board.hidden = false;
+    const more = document.getElementById('lb-see-all');
+    if (more) {
+      more.addEventListener('click', openLeaderboardModal);
+      more.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLeaderboardModal(); } });
+    }
+  } catch (_) { /* silent */ }
+}
+
+function _closeLeaderboardModal() {
+  const ex = document.getElementById('lb-modal-overlay');
+  if (ex) ex.remove();
+  document.removeEventListener('keydown', _lbEscHandler);
+}
+function _lbEscHandler(e) { if (e.key === 'Escape') _closeLeaderboardModal(); }
+function openLeaderboardModal() {
+  if (!_lbCache) return;
+  const t = window.__vitrinaT || (k => k);
+  const items = (_lbCache.items || []);
+  const userInTop = items.some(it => it.is_you);
+  const youLabel = t('wl.lb.you','(you)');
+  let body = items.map((it, i) => _lbRowHtml(it, i, youLabel)).join('');
+  if (!userInTop && _lbCache.user_neighbourhood) {
+    body += `<li class="you"><span class="lb-rank">·</span><span class="lb-nb">${_lbEscape(_lbCache.user_neighbourhood)} <span class="lb-you-tag">${youLabel}</span></span><span class="lb-cnt">1</span></li>`;
+  }
+  const overlay = document.createElement('div');
+  overlay.id = 'lb-modal-overlay';
+  overlay.className = 'lb-modal';
+  overlay.setAttribute('aria-hidden', 'false');
+  overlay.innerHTML = `
+    <div class="lb-modal-card" role="dialog" aria-modal="true" aria-labelledby="lb-modal-title">
+      <div class="lb-modal-head">
+        <h3 class="lb-modal-title" id="lb-modal-title">${t('wl.lb.title','Area Leaderboard')}</h3>
+        <button type="button" class="lb-modal-close" id="lb-modal-close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 5 L19 19 M19 5 L5 19"/></svg></button>
+      </div>
+      <div class="lb-modal-body"><ol class="lb-list">${body}</ol></div>
+      <div class="lb-modal-foot">${t('wl.lb.foot','The neighbourhood with the most signups gets delivery first.')}</div>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) _closeLeaderboardModal(); });
+  document.getElementById('lb-modal-close').addEventListener('click', _closeLeaderboardModal);
+  document.addEventListener('keydown', _lbEscHandler);
+  window.vph?.capture('wl.lb_see_all', { entries: items.length });
+}
+
+// ============================================================
+// Welcome modal — two-touch expectations pattern.
+//   Touch 1: auto-shown the first time someone lands on /position
+//            (gated by localStorage.vitrina_welcome_shown).
+//   Touch 2: persistent ⓘ next to .pos-lbl reopens it forever after.
+// The localStorage flag is set on auto-show open, NOT on close — once
+// we've put it in front of the user, the auto-show is done.
+// ============================================================
+function buildWelcomeModal() {
+  const t = window.__vitrinaT || ((k, fb) => fb);
+  const overlay = document.createElement('div');
+  overlay.className = 'wl-overlay';
+  overlay.id = 'wl-welcome-overlay';
+  overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+  overlay.setAttribute('aria-labelledby', 'wl-welcome-title');
+  overlay.innerHTML = `
+    <div class="wl-card">
+      <button type="button" class="wl-close" id="wl-welcome-close" aria-label="${t('wl.welcome.close','Close').replace(/"/g,'&quot;')}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5l-5 14"/></svg>
+      </button>
+      <h2 class="welcome-h1" id="wl-welcome-title">${t('wl.welcome.title',"You're in.")}</h2>
+      <div class="wl-body">
+        <p>${t('wl.welcome.body1','We open neighbourhood by neighbourhood, starting with the ones where the most people have signed up. The best way to bring us to yours sooner is to invite friends and neighbours who live nearby — every new signup pulls your area closer to launch.')}</p>
+        <p>${t('wl.welcome.body2','We will get in touch when your area is up — through whichever channel suits you. The first customers in each neighbourhood get our full attention, so the first drop is genuinely good when it lands.')}</p>
+        <p class="wl-foot">${t('wl.welcome.footer','Density wins. The more of your block joins, the sooner we are at your door.')}</p>
+      </div>
+      <div class="wl-cta-row">
+        <button type="button" class="btn full" id="wl-welcome-ok">${t('wl.welcome.cta','Got it')}</button>
+      </div>
+    </div>
+  `;
+  return overlay;
+}
+function closeWelcomeModal() {
+  const ex = document.getElementById('wl-welcome-overlay');
+  if (ex) ex.remove();
+  document.removeEventListener('keydown', _wlEscHandler);
+  window.vph?.capture('wl.welcome_dismissed');
+}
+function _wlEscHandler(e) { if (e.key === 'Escape') closeWelcomeModal(); }
+function openWelcomeModal(trigger) {
+  // Tear down any existing instance (lang-flip rebuild path).
+  const ex = document.getElementById('wl-welcome-overlay');
+  if (ex) ex.remove();
+  const overlay = buildWelcomeModal();
+  document.body.appendChild(overlay);
+  // Backdrop click closes (only when the overlay itself is clicked, not children).
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeWelcomeModal(); });
+  document.getElementById('wl-welcome-close').addEventListener('click', closeWelcomeModal);
+  document.getElementById('wl-welcome-ok').addEventListener('click', closeWelcomeModal);
+  document.addEventListener('keydown', _wlEscHandler);
+  // Set the auto-show flag on OPEN (not close) — once we've put it in
+  // front of them, we're done with the auto-show. Backgrounded tabs still
+  // count as "saw it".
+  if (trigger === 'auto') {
+    try { localStorage.setItem('atelier_vitrina_welcome_shown', '1'); } catch (e) {}
+  }
+  window.vph?.capture('wl.welcome_shown', { trigger: trigger || 'auto' });
+}
+function maybeAutoShowWelcome(delayMs) {
+  try {
+    if (localStorage.getItem('atelier_vitrina_welcome_shown')) return;
+  } catch (e) {}
+  setTimeout(() => {
+    // Re-check: only auto-show if we're still on the position screen and
+    // nothing else opened the modal in the meantime.
+    if (document.getElementById('wl-welcome-overlay')) return;
+    const active = document.querySelector('.screen.active');
+    if (!active || active.getAttribute('data-screen') !== 'position') return;
+    openWelcomeModal('auto');
+  }, delayMs);
+}
+
+// ============================================================
+// Instagram-follow climb-action.
+// Tap = open @vitrinalocalshop in a new tab AND fire-and-forget the
+// +2 bump endpoint. The card flips to the "done" state immediately so
+// the user sees the reward even before the position re-fetch lands;
+// re-taps after that are no-ops (the endpoint is idempotent).
+// ============================================================
+const INSTAGRAM_HANDLE_URL = 'https://instagram.com/vitrinalocalshop';
+function handleFollowIg() {
+  const lang = window.__vitrinaLang || 'bg';
+  window.vph?.capture('wl.follow_ig_click', { lang });
+  // Optimistic local flip — the climb-card paints "done" immediately so
+  // the user sees their +2 reward without waiting for the round-trip.
+  const wasDone = state.did_follow_ig;
+  state.did_follow_ig = true;
+  // Open Instagram first (synchronous user gesture so popup blockers
+  // don't eat it). Tracking + re-render run in the background.
+  try { window.open(INSTAGRAM_HANDLE_URL, '_blank', 'noopener,noreferrer'); } catch (e) {}
+  if (state.token && !wasDone) {
+    fetch('/api/waitlist/track-follow-ig', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ token: state.token }),
+    })
+      .then(() => fetchPosition())
+      .then(() => renderPosition())
+      .catch(() => {});
+  } else {
+    renderPosition();
+  }
+}
+
+function copyShareLink() {
+  const url = `https://vitrina.bg/?r=${state.referralCode || ''}`;
+  const lbl = document.getElementById('share-copy');
+  navigator.clipboard.writeText(url).then(() => {
+    if (lbl) {
+      lbl.textContent = (window.__vitrinaT && window.__vitrinaT('wl.copied')) || 'Copied ✓';
+      lbl.classList.add('copied');
+      setTimeout(() => { lbl.textContent = (window.__vitrinaT && window.__vitrinaT('wl.copy')) || 'Copy'; lbl.classList.remove('copied'); }, 2000);
+    }
+  }).catch(() => prompt('Copy this link:', url));
+}
+
+function buildInviteShareText(t, url) {
+  const hero = t(
+    'wl.share.hero_boilerplate',
+    'Sofia · personalised grocery\n\nGrocery from small farms, personalised to your taste, delivered to your local shop.\n\nHigh-quality food. Without the boutique markup.'
+  );
+  const pitch = t(
+    'wl.share.launch_pitch',
+    "We're launching neighbourhood by neighbourhood — starting with the areas where the waitlist has the most sign-ups. Join free if you want to try it when we open near you."
+  );
+  const linkLbl = t('wl.share.personal_link', 'My invite link:');
+  return `${hero.trim()}\n\n${pitch.trim()}\n\n${linkLbl} ${url}`;
+}
+
+function doShare(channel) {
+  const url = `https://vitrina.bg/?r=${state.referralCode || ''}`;
+  const t = window.__vitrinaT || (k => k);
+  const text = buildInviteShareText(t, url);
+  if (channel === 'whatsapp') window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+  else if (channel === 'viber') window.open(`viber://forward?text=${encodeURIComponent(text)}`, '_blank');
+  else if (channel === 'native') {
+    // Prefer the OS share sheet (every chat app, every contact in one tap).
+    // Fallback chain on older browsers: WhatsApp deep link → clipboard.
+    if (navigator.share) {
+      navigator.share({
+        title: t('home.meta.title', 'Vitrina'),
+        text,
+        url,
+      }).catch(() => {});
+    } else if (/iPhone|iPad|Android/i.test(navigator.userAgent)) {
+      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+    } else {
+      copyShareLink();
+    }
+  }
+}
+
+function startBumpAnimation() {
+  const numEl = document.getElementById('pos-num');
+  if (!numEl) return;
+  const target = state.position;
+  const start = target + 6;
+  let cur = start;
+  numEl.textContent = '#' + cur;
+  if (window.confetti) {
+    window.confetti({ particleCount: 90, spread: 70, origin: { y: 0.6 }, colors: ['#ee6c2c','#f3b94d','#1a4d2e','#ffffff'] });
+  }
+  const iv = setInterval(() => {
+    cur -= 1;
+    numEl.textContent = '#' + cur;
+    showBumpToast('+1');
+    if (cur <= target) {
+      clearInterval(iv);
+    }
+  }, 240);
+}
+
+function showBumpToast(text) {
+  const t = document.getElementById('bump-toast');
+  if (!t) return;
+  t.textContent = text;
+  t.classList.add('show');
+  clearTimeout(t._h);
+  t._h = setTimeout(() => t.classList.remove('show'), 1100);
+}
+
+// ============================================================
+// Chat-options screen
+// ============================================================
+let chatWired = false;
+function wireChat() {
+  if (chatWired) return;
+  chatWired = true;
+  document.getElementById('chat-back').addEventListener('click', () => {
+    // If chat was reached by pushing (climb-call from position), step out of
+    // our own history stack via history.back(). If we landed here as a deep
+    // link (?step=chat), there's no waitlist entry behind us, so render the
+    // position screen in-place instead.
+    if (state.history.includes('chat')) history.back();
+    else if (state.token) goto('position');
+    else goto('phone');
+  });
+  document.getElementById('chat-wa').addEventListener('click', () => fireCallIntent('whatsapp'));
+  document.getElementById('chat-viber').addEventListener('click', () => fireCallIntent('viber'));
+}
+async function fireCallIntent(channel) {
+  const lang = window.__vitrinaLang || 'bg';
+  window.vph?.capture('wl.chat_intent', { channel, lang });
+  // fire-and-forget — don't block the deep-link
+  if (state.token) {
+    fetch('/api/waitlist/track-call-intent', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ token: state.token, channel, lang }),
+    }).catch(()=>{});
+  }
+  if (channel === 'whatsapp') {
+    const body = (window.__vitrinaT && window.__vitrinaT('chat.whatsapp.body')) || "Hi Peter, I'm on the Vitrina waitlist.";
+    window.open(`https://wa.me/?text=${encodeURIComponent(body)}`, '_blank');
+  } else if (channel === 'viber') {
+    window.open('', '_blank');
+  }
+}
+
+// ============================================================
+// Keyboard-aware action bar
+// ------------------------------------------------------------
+// Android Chrome leaves the layout viewport unchanged when the soft
+// keyboard opens — so an in-flow Next button sits BEHIND the keyboard
+// instead of above it. iOS Safari resizes the layout viewport, but the
+// behaviour is inconsistent across versions. Portable fix: while any
+// input is focused, pin .actions to `bottom: <keyboard-height>` using
+// the VisualViewport API, and pad the active .screen so content doesn't
+// slide under it.
+// ============================================================
+(function setupKeyboardAwareActions(){
+  const vv = window.visualViewport;
+  if (!vv) return;
+  const root = document.documentElement;
+
+  // Drive kb-open off the actual visual-viewport delta, not focus
+  // state. On mobile the keyboard can hide without focusout firing
+  // (Done button, swipe-down dismissal) so a focus-based toggle gets
+  // stuck on. The visual-viewport resize is the source of truth.
+  // Threshold of 80px filters out small chrome shifts (toolbar
+  // collapse, URL bar) that aren't really the keyboard.
+  const KB_THRESHOLD = 80;
+
+  function applyKbState(){
+    const offset = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+    root.style.setProperty('--kb-offset', offset + 'px');
+    const open = offset > KB_THRESHOLD;
+    document.body.classList.toggle('kb-open', open);
+    document.querySelectorAll('.screen').forEach(s => {
+      s.classList.toggle('kb-open', open && s.classList.contains('active'));
+    });
+  }
+  vv.addEventListener('resize', applyKbState);
+  vv.addEventListener('scroll', applyKbState);
+  applyKbState();
+
+  // On focus: pull the focused field to the top of the viewport (just
+  // below the fixed nav) so the suggestion list + "Use my current
+  // location" button below it have room above the keyboard. Compute
+  // the scroll target explicitly — scrollIntoView() fights with the
+  // browser's own auto-scroll on Android Chrome and lands inconsistently.
+  // Nav is hidden while the keyboard is up (see body.kb-open .nav rule),
+  // so we only reserve a tiny 4px breathing strip at the top.
+  const NAV_HEIGHT = 4;
+  function isField(el){ return el && el.matches && el.matches('input, textarea'); }
+  function scrollFieldToTop(el, smooth){
+    const rect = el.getBoundingClientRect();
+    const target = Math.max(0, rect.top + window.scrollY - NAV_HEIGHT);
+    window.scrollTo({ top: target, behavior: smooth ? 'smooth' : 'auto' });
+  }
+
+  // Re-scroll the focused field once the visual viewport finishes
+  // resizing (i.e. the keyboard animation lands). The .screen.kb-open
+  // padding-bottom:50vh guarantees the document is taller than the
+  // layout viewport, so scrollTo() actually has room to move the
+  // input up. Without that padding, scroll-max is 0 and nothing
+  // happens — that was the bug Peter caught on Nido.
+  let pendingScroll = null;
+  function scrollIfFocusedField(){
+    const el = document.activeElement;
+    if (isField(el)) scrollFieldToTop(el, true);
+  }
+  vv.addEventListener('resize', () => {
+    clearTimeout(pendingScroll);
+    pendingScroll = setTimeout(scrollIfFocusedField, 60);
+  });
+
+  document.addEventListener('focusin', (e) => {
+    if (!isField(e.target)) return;
+    // Three scrolls: immediate (before keyboard animates), short
+    // delay (mid-animation), and the resize listener above catches
+    // the post-animation settle. Belt + braces; different mobile
+    // browsers fire visualViewport.resize at different points.
+    scrollFieldToTop(e.target, false);
+    setTimeout(() => scrollFieldToTop(e.target, true), 100);
+    setTimeout(() => scrollFieldToTop(e.target, true), 400);
+  });
+})();
+</script>
+</body>
+</html>

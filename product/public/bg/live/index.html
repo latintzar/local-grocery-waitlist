@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<base href="/live/" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title data-i18n-title="home.meta.title">Vitrina · Grocery from small farms, delivered to your local shop.</title>
+<meta name="description" content="Grocery from small farms, personalised to your taste, delivered to your local shop. Without the boutique markup. Sofia waitlist open." />
+<meta property="og:title" content="Vitrina · Grocery from small farms, delivered to your local shop." />
+<meta property="og:description" content="Personalised to your taste. Without the boutique markup. Sofia waitlist open." />
+<meta property="og:image" content="https://vitrina.bg/live/drop-01-assets/og-cover.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://vitrina.bg/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Vitrina" />
+<meta property="og:locale" content="bg_BG" />
+<meta property="og:locale:alternate" content="en_GB" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Vitrina · Grocery from small farms, delivered to your local shop." />
+<meta name="twitter:description" content="Personalised to your taste. Without the boutique markup. Sofia waitlist open." />
+<meta name="twitter:image" content="https://vitrina.bg/live/drop-01-assets/og-cover.png" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<!-- Vitrina analytics — PostHog EU cloud -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#ffffff;--paper-warm:#f5f7f2;--paper-card:#ffffff;--paper-deep:#dfe3da;
+  --ink:#0e1a14;--ink-soft:#1f2a23;--ink-mid:rgba(14,26,20,0.62);--ink-faint:rgba(14,26,20,0.34);
+  --rule:rgba(28,28,26,0.16);--rule-strong:rgba(28,28,26,0.4);
+  --moss:#1a4d2e;--moss-soft:#2d6f43;--rust:#ee6c2c;--rust-deep:#c95216;
+  --gold:#f3b94d;--gold-deep:#cc9224;--sky:#5a8aa8;--forest:#143521;--forest-line:#2d4f37;--forest-soft:rgba(20,53,33,0.06);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--paper);color:var(--ink);overflow-x:hidden}
+body{font-family:'Archivo',sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;position:relative}
+body::before{content:none}
+::selection{background:var(--gold);color:var(--ink)}
+
+/* Bulgarian Cyrillic in Archivo renders visually thinner than Latin at the same
+   weight. Faux-bold the headings via a thin text-stroke and ease the negative
+   letter-spacing so the glyphs don't crush together. */
+/* Headings & display copy — heavier stroke, slightly tighter tracking. */
+html[lang="bg"] h1,
+html[lang="bg"] h2,
+html[lang="bg"] h3,
+html[lang="bg"] h4,
+html[lang="bg"] .hero-title,
+html[lang="bg"] .section-title,
+html[lang="bg"] .walk-card h3,
+html[lang="bg"] .pc-title,
+html[lang="bg"] .founder-eyebrow,
+html[lang="bg"] .modal-title,
+html[lang="bg"] .q-title{
+  letter-spacing:-0.02em;
+  -webkit-text-stroke:0.7px currentColor;
+}
+html[lang="bg"] .hero-title{letter-spacing:-0.025em;-webkit-text-stroke:0.85px currentColor}
+/* Inline emphasis inside paragraphs — `<strong>`, the orange `<em>`, and the
+   slot-card title. Lighter stroke so body copy doesn't smear. */
+html[lang="bg"] strong,
+html[lang="bg"] b,
+html[lang="bg"] em,
+html[lang="bg"] .slot-title,
+html[lang="bg"] .pb-val,
+html[lang="bg"] .spc-num,
+html[lang="bg"] .t-num{-webkit-text-stroke:0.45px currentColor}
+/* Buttons — text on dark inverse needs less stroke to avoid clogging. */
+html[lang="bg"] .nav-cta,
+html[lang="bg"] .btn-primary,
+html[lang="bg"] .big-cta,
+html[lang="bg"] .btn{-webkit-text-stroke:0.45px currentColor}
+.serif{font-family:'Archivo',sans-serif;font-weight:600}
+.mono{font-family:'JetBrains Mono',monospace}
+
+/* TICKER */
+.ticker{position:fixed;top:0;left:0;right:0;background:var(--ink);color:var(--paper);padding:9px 20px;z-index:150;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid var(--gold);min-height:34px;box-sizing:border-box}
+.ticker .left{color:var(--paper)}
+.ticker .right{color:var(--gold);font-weight:700}
+.ticker .live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gold);margin-right:8px;animation:pulse 1.6s infinite;vertical-align:middle}
+@media(max-width:600px){.ticker{font-size:9.5px;padding:8px 12px;letter-spacing:0.12em}.ticker .right .hide-sm{display:none}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* NAV */
+.nav{position:fixed;top:34px;left:0;right:0;z-index:140;padding:12px 22px;display:flex;justify-content:space-between;align-items:center;background:#f1ece0;border-bottom:1px solid var(--rule);transform:translateZ(0);-webkit-transform:translateZ(0);will-change:transform}
+.logo{font-family:'Archivo',sans-serif;font-weight:900;font-size:26px;letter-spacing:-0.04em;color:var(--ink);text-transform:lowercase;text-decoration:none}
+.logo .dot{color:var(--rust)}
+.nav-cta{display:inline-flex;align-items:center;gap:9px;padding:10px 18px;background:var(--ink);color:var(--paper);border:1.5px solid var(--ink);cursor:pointer;font-family:'Archivo',sans-serif;font-weight:800;font-size:11.5px;letter-spacing:0.1em;text-transform:uppercase;transition:all 0.18s ease}
+.nav-cta:hover{background:var(--rust);border-color:var(--rust)}
+.nav-right{display:flex;align-items:center;gap:14px}
+.lang-toggle{display:inline-flex;border:1.5px solid var(--ink);background:var(--paper);padding:0;overflow:hidden}
+.lang-pill{font-family:'Archivo',sans-serif;font-weight:800;font-size:11px;letter-spacing:0.1em;color:var(--ink);background:transparent;border:0;padding:7px 11px;cursor:pointer;text-transform:uppercase}
+.lang-pill[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.lang-pill:not([aria-pressed="true"]):hover{background:var(--paper-deep)}
+@media(max-width:560px){.lang-pill{font-size:10px;padding:6px 8px}.nav-right{gap:8px}}
+
+
+/* HERO */
+.hero{min-height:auto;padding:108px 28px 28px;max-width:1280px;margin:0 auto;display:flex;flex-direction:column;justify-content:flex-start;position:relative}
+.hero-eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--rust);font-weight:700;margin-bottom:12px}
+.hero-title{font-family:'Archivo',sans-serif;font-weight:900;font-size:clamp(46px,8.6vw,118px);line-height:1.00;letter-spacing:-0.04em;text-transform:uppercase;color:var(--ink);max-width:1120px}
+/* Single global rule for orange highlight text inside any heading.
+   Inherits size, weight, case and tracking from the parent so it never looks
+   smaller, lighter, or italic than the surrounding text. */
+h1 em, h2 em, h3 em, .hero-title em, .section-title em, .walk-card h3 em,
+.modal-title em, .invite-hero-title em, .q-title em{
+  font-family:inherit;font-size:inherit;font-weight:inherit;font-style:normal;
+  letter-spacing:inherit;text-transform:inherit;color:var(--rust);
+  background:rgba(238,108,44,0.16);padding:0 0.06em
+}
+/* The hero title gets a slightly stronger highlight tint for readability against the warm paper. */
+.hero-title em{background:rgba(238,108,44,0.22)}
+.hero-sub{font-family:'Archivo',sans-serif;font-weight:500;font-size:clamp(18px,2.1vw,26px);line-height:1.42;color:var(--ink-soft);max-width:760px;margin-top:26px}
+.hero-sub strong{font-family:'Archivo',sans-serif;font-style:normal;font-weight:700;color:var(--ink)}
+.hero-cta-wrap{margin-top:44px;display:flex;flex-direction:column;align-items:flex-start;gap:14px}
+.cta-context{font-family:'Archivo',sans-serif;font-weight:500;font-size:14px;line-height:1.45;color:var(--ink-mid);max-width:520px;margin:0;padding:0}
+.cta-context strong{font-weight:700;color:var(--ink)}
+.waitlist .cta-context{color:rgba(255,255,255,0.84);max-width:520px;margin:0 0 16px;text-align:left}
+.waitlist .cta-context strong{color:var(--gold)}
+.btn-primary{display:inline-flex;align-items:center;gap:14px;padding:24px 36px;background:var(--ink);color:var(--paper);border:2px solid var(--ink);cursor:pointer;font-family:'Archivo',sans-serif;font-weight:800;font-size:15px;letter-spacing:0.13em;text-transform:uppercase;transition:all 0.18s ease;box-shadow:7px 7px 0 var(--rust)}
+.btn-primary:hover{transform:translate(-2px,-2px);box-shadow:10px 10px 0 var(--rust)}
+.btn-primary .arrow{font-size:20px;line-height:1}
+.hero-fineprint{font-family:'Archivo',sans-serif;font-weight:500;font-size:14.5px;color:var(--ink-mid);max-width:560px;line-height:1.5}
+.hero-fineprint strong{font-family:'Archivo',sans-serif;font-style:normal;font-weight:700;color:var(--ink)}
+
+/* SCROLL HINT */
+.scroll-hint{position:absolute;bottom:30px;left:28px;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-mid);font-weight:600}
+.scroll-hint::after{content:' ↓'}
+
+/* SECTION SHELL */
+.section{padding:90px 28px 70px;max-width:1280px;margin:0 auto}
+.section-eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--rust);font-weight:700;margin-bottom:14px}
+.section-title{font-family:'Archivo',sans-serif;font-weight:900;font-size:clamp(34px,5vw,60px);letter-spacing:-0.04em;line-height:0.94;text-transform:uppercase;color:var(--ink);margin-bottom:14px;max-width:920px}
+.section-title em{font-family:'Archivo',sans-serif;color:var(--rust);font-weight:900;letter-spacing:-0.04em;text-transform:uppercase;font-style:normal}
+.section-sub{font-family:'Archivo',sans-serif;font-weight:500;font-size:18px;line-height:1.5;color:var(--ink-soft);max-width:720px;margin-bottom:42px}
+
+/* FRESHNESS / NO WAREHOUSE — boxless two-up that stacks on mobile */
+.fresh-points{display:grid;grid-template-columns:repeat(2,1fr);gap:48px 56px;align-items:start;max-width:1080px;margin-top:18px}
+.fresh-point .fresh-h{font-family:'Archivo',sans-serif;font-weight:900;font-size:clamp(22px,3.2vw,34px);line-height:1.05;letter-spacing:-0.02em;text-transform:uppercase;color:var(--ink);margin-bottom:14px}
+.fresh-point .fresh-p{font-family:'Archivo',sans-serif;font-weight:500;font-size:17px;line-height:1.55;color:var(--ink-soft);max-width:48ch}
+.fresh-point .fresh-p strong{font-family:'Archivo',sans-serif;font-weight:700;color:var(--ink)}
+@media(max-width:760px){.fresh-points{grid-template-columns:1fr;gap:32px}.fresh-point .fresh-p{font-size:16px}}
+
+/* WALKTHROUGH (A / B / C / D) */
+.walk{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:stretch}
+.walk.walk-4{grid-template-columns:repeat(4,1fr);gap:18px}
+.walk-card{background:var(--paper-card);border:2px solid var(--ink);padding:22px 20px;display:flex;flex-direction:column;gap:13px;position:relative}
+.walk-card .step{font-family:'Archivo',sans-serif;font-weight:900;font-size:14px;letter-spacing:0.18em;color:var(--rust);line-height:1;text-transform:uppercase}
+.walk-card h3{font-family:'Archivo',sans-serif;font-weight:900;font-size:20px;line-height:1.12;letter-spacing:-0.02em;text-transform:uppercase}
+.walk-card .lede{font-family:'Archivo',sans-serif;font-weight:500;font-size:14.5px;line-height:1.5;color:var(--ink-soft)}
+.walk-card .lede strong{font-family:'Archivo',sans-serif;font-style:normal;font-weight:700;color:var(--ink)}
+@media(max-width:1180px){.walk.walk-4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:980px){.walk{grid-template-columns:1fr;gap:18px}.walk.walk-4{grid-template-columns:1fr}}
+
+/* CHIP CONFIG MOCK (step A) */
+/* Each Step A category is its own outlined card (Minced meat, Tomatoes, White cheese expanded). */
+/* No margin-top:auto — the inner card sits directly beneath the .lede text
+   instead of being pushed to the bottom of the equal-height walk-card. */
+.cfg-stack{display:flex;flex-direction:column;gap:10px}
+.cfg-card{background:var(--paper);border:2px solid var(--ink);font-family:'Archivo',sans-serif}
+.cfg-card-collapsed{display:flex;align-items:center;gap:14px;padding:12px 14px}
+.cfg-card-expanded{padding:14px 14px 16px}
+.cfg-thumb{width:38px;height:38px;flex:0 0 auto;object-fit:contain;display:block;background:var(--paper);image-rendering:pixelated;-ms-interpolation-mode:nearest-neighbor}
+.cfg-card-body{flex:1;display:flex;align-items:center}
+.cfg-card-label{font-weight:800;font-size:13px;letter-spacing:0.04em;text-transform:uppercase;color:var(--ink)}
+.cfg-card-arrow{font-weight:900;font-size:16px;color:var(--rust)}
+.cfg-card-head{display:flex;align-items:center;gap:14px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--paper-deep)}
+.cfg-card-head .cfg-card-label{flex:1}
+.cfg-card-chev{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--rust);font-weight:700}
+/* Configurator rows + chip buttons inside the expanded Step A card. */
+.cfg-card-expanded .cfg-row{display:flex;flex-direction:column;gap:7px;margin-bottom:13px}
+.cfg-card-expanded .cfg-row:last-of-type{margin-bottom:0}
+.cfg-card-expanded .cfg-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-mid);font-weight:700}
+.cfg-card-expanded .cfg-chips{display:flex;flex-wrap:wrap;gap:6px}
+.cfg-card-expanded .chip{display:inline-block;padding:7px 12px;border:1.5px solid var(--ink);background:var(--paper);font-family:'Archivo',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.02em;color:var(--ink);cursor:default;line-height:1;transition:all 0.15s}
+.cfg-card-expanded .chip.on{background:var(--ink);color:var(--paper)}
+.cfg-card-expanded .chip.rust.on{background:var(--rust);border-color:var(--rust);color:var(--paper)}
+
+/* QUEUE CASCADE MOCK (step B) */
+.queue-mock{background:var(--paper);border:2px solid var(--ink);padding:18px 16px 16px;display:flex;flex-direction:column;gap:10px}
+.queue-row{display:flex;flex-direction:column;gap:6px;padding:8px 0;border-bottom:1px dashed var(--rule);position:relative}
+.queue-row:last-child{border-bottom:0}
+.queue-row.you{padding-left:8px;border-left:3px solid var(--rust);background:var(--paper-card);margin:0 -16px;padding:8px 16px 8px 13px}
+.queue-row .qhead{display:flex;justify-content:space-between;align-items:baseline;font-family:'Archivo',sans-serif;font-weight:700;font-size:12px;color:var(--ink);letter-spacing:0.02em}
+.queue-row .qhead .lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.1em;color:var(--ink-mid);font-weight:600;text-transform:uppercase}
+.queue-row .qhead .lbl.full{color:var(--moss);font-weight:700}
+.queue-row .qhead .lbl.you{color:var(--rust);font-weight:700}
+.queue-bar{height:9px;background:var(--paper-deep);border:1px solid var(--ink);position:relative;margin:6px 0 4px}
+.queue-bar .fill{height:100%;background:var(--moss-soft);transition:width 0.4s ease}
+.queue-bar .fill.you{background:var(--rust)}
+.queue-bar .fill.empty{background:var(--paper-deep)}
+.queue-bar .thresh-mark{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink);z-index:2}
+.queue-bar .thresh-mark.you{background:var(--rust-deep)}
+.queue-bar .thresh-mark::before{content:'';position:absolute;top:-3px;left:-3px;width:8px;height:3px;background:var(--ink)}
+.queue-bar .thresh-mark.you::before{background:var(--rust-deep)}
+.queue-foot{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.1em;color:var(--ink-mid);text-transform:uppercase;line-height:1.5;font-weight:600;margin-top:4px;font-style:normal}
+
+
+/* SLOT CARD (step B v13.7) — designed like a real product / order card.
+   Title + selection summary on the left, countdown timer top-right, then a
+   real two-price block (retail strike on the LEFT, what-you-pay big rust on
+   the RIGHT, with the per-kg as a quiet caption underneath the order price),
+   and finally the goal progress with the headline number called out in copy
+   and the bar + 'X / Y' counter sitting underneath. */
+.slot-card{cursor:default;background:#ffffff;border:1.5px solid var(--ink);padding:18px;display:flex;flex-direction:column;gap:16px;box-shadow:none}
+
+/* Head row: title block | timer */
+.slot-head-row{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding-bottom:13px;border-bottom:1px solid var(--paper-deep)}
+/* Quantity stepper in top-right of the slot card. Looks like a tiny segmented
+   button group [ − ][ 1 ][ + ] so the demo card reads as an order-able item.
+   Buttons are visual-only here (the section is a static illustration). */
+.qty-stepper{flex-shrink:0;display:inline-flex;align-items:stretch;border:1.5px solid var(--ink);background:var(--paper-card);font-family:'Archivo',sans-serif;font-weight:800;color:var(--ink);user-select:none}
+.qty-stepper .qb{width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;background:var(--paper);border:0;font-family:'Archivo',sans-serif;font-size:18px;font-weight:800;color:var(--ink);cursor:pointer;line-height:1;padding:0}
+.qty-stepper .qb:hover{background:var(--ink);color:var(--paper)}
+.qty-stepper .qn{min-width:34px;height:32px;display:inline-flex;align-items:center;justify-content:center;font-family:'Archivo',sans-serif;font-weight:900;font-size:15px;color:var(--ink);background:var(--paper-card);border-left:1.5px solid var(--ink);border-right:1.5px solid var(--ink);font-variant-numeric:tabular-nums}
+.slot-head-l{display:flex;flex-direction:column;gap:6px;min-width:0}
+.slot-title{font-family:'Archivo',sans-serif;font-weight:900;font-size:22px;letter-spacing:-0.02em;text-transform:uppercase;color:var(--ink);line-height:1}
+.slot-config{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.10em;text-transform:uppercase;font-weight:700;color:var(--rust);line-height:1.4}
+.slot-timer{display:flex;flex-direction:column;align-items:flex-end;text-align:right;flex-shrink:0;background:var(--paper-warm);border:1px solid var(--paper-deep);padding:6px 10px}
+.slot-timer .t-num{font-family:'Archivo',sans-serif;font-weight:900;font-size:15px;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:0.01em;line-height:1}
+.slot-timer .t-lbl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-mid);font-weight:700;margin-top:3px}
+
+/* Prices — symmetrical two-column layout per Peter's spec (v13.18):
+     LEFT  block: "boutique" label   →  €3.00 (strike)  →  €12 / kg
+     RIGHT block: "you pay" label    →  €2.00 (rust)    →  €8 / kg
+   Labels above price, per-kg below price, both sides. The right block
+   stays the visually-loud one (big rust number) so "what you pay" wins
+   the eye even though the layouts mirror each other. */
+.slot-prices{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:flex-start;padding:6px 0 14px;border-bottom:1px solid var(--paper-deep)}
+/* Two columns share identical row heights so the boutique row and the you-pay
+   row line up on the baseline: label row, then value row (same font-size on
+   both sides), then per-kg row (same font-size on both sides). Each block is
+   its own 3-row grid so the rows snap regardless of content length. */
+.price-block{display:grid;grid-template-rows:auto auto auto;gap:4px;align-items:end;justify-items:start;text-align:left}
+.price-block.now{justify-items:end;text-align:right}
+.price-block .pb-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;font-weight:700;color:var(--ink-mid);line-height:1;margin:0 0 2px}
+.price-block.now .pb-lbl{color:var(--ink)}
+.price-block .pb-val{font-family:'Archivo',sans-serif;font-variant-numeric:tabular-nums;letter-spacing:-0.025em;line-height:1;font-size:40px}
+.price-block.strike .pb-val{font-weight:700;color:var(--ink-faint);text-decoration:line-through;text-decoration-thickness:1.5px}
+.price-block.now .pb-val{font-weight:900;color:var(--rust)}
+.price-block .pb-perkg{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.10em;text-transform:uppercase;font-weight:700;color:var(--ink-mid);line-height:1;margin-top:4px}
+.price-block.now .pb-perkg{color:var(--ink-mid)}
+
+/* Goal progress — timer on the LEFT of the bar, ratio on the RIGHT, then the
+   bar full-width below, then a single descriptive sub-line that explains what
+   the ratio means. Ordering: glance the time pressure (left) and the social
+   proof number (right) → see the bar fill → read the unlock condition. */
+.slot-progress{display:grid;grid-template-columns:auto auto;grid-template-rows:auto auto auto;column-gap:12px;row-gap:8px;align-items:end}
+/* Timer is stacked: tiny caption ("TIME LEFT" / "ОСТАВАТ") on top, bigger
+   rust-coloured number below. Same vertical rhythm as the orders counter
+   on the right so both columns visually balance. Left-aligned. */
+.slot-progress-time{grid-column:1;grid-row:1;display:flex;flex-direction:column;align-items:flex-start;gap:3px;line-height:1;font-variant-numeric:tabular-nums}
+.slot-progress-time .t-lbl{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;font-weight:700;color:var(--ink-mid)}
+.slot-progress-time .t-num{font-family:'Archivo',sans-serif;font-weight:900;font-size:18px;color:var(--rust);letter-spacing:-0.01em}
+.slot-progress-count{grid-column:2;grid-row:1;justify-self:end;display:flex;flex-direction:column;align-items:flex-end;gap:3px;line-height:1;font-variant-numeric:tabular-nums;text-align:right}
+.slot-progress-count .spc-lbl{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;font-weight:700;color:var(--ink-mid)}
+.slot-progress-count .spc-num{font-family:'Archivo',sans-serif;font-weight:900;font-size:18px;color:var(--rust);letter-spacing:-0.01em}
+.slot-bar{grid-column:1 / -1;grid-row:2;height:12px;background:#f1f3ee;border:1px solid var(--paper-deep);position:relative;overflow:hidden}
+.slot-bar-fill{height:100%;background:var(--moss);transition:width 0.5s ease}
+.slot-progress-msg{grid-column:1 / -1;grid-row:3;justify-self:end;font-family:'Archivo',sans-serif;font-weight:500;font-size:13px;line-height:1.4;color:var(--ink-soft);text-align:right}
+/* PICKUP MOCK (step C) */
+.pickup-mock{background:var(--paper);border:2px solid var(--ink);padding:18px 16px;display:flex;flex-direction:column;gap:10px}
+.pickup-row{display:flex;align-items:center;gap:10px;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;color:var(--ink);line-height:1.3}
+.pickup-row .icon{flex-shrink:0;width:32px;height:32px;border:1.5px solid var(--ink);background:var(--paper-card);display:flex;align-items:center;justify-content:center;font-family:'Archivo',sans-serif;font-style:italic;font-size:16px;color:var(--rust)}
+.pickup-row .text strong{font-weight:800}
+.pickup-row .text .sub{display:block;font-family:'Archivo',sans-serif;font-style:italic;font-size:13px;color:var(--ink-mid);font-weight:400;margin-top:2px}
+
+/* FEEDBACK SECTION */
+.feedback{background:var(--paper-warm);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);padding:90px 28px}
+.feedback-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr;gap:60px;align-items:center}
+.feedback-quiz{background:var(--paper-card);border:2px solid var(--ink);padding:28px 26px;box-shadow:8px 8px 0 var(--rust)}
+.feedback-quiz .head{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-mid);font-weight:700;margin-bottom:8px}
+.feedback-quiz h4{font-family:'Archivo',sans-serif;font-weight:900;font-size:24px;letter-spacing:-0.02em;line-height:1.15;margin-bottom:18px;text-transform:uppercase}
+.feedback-quiz h4 em{font-family:'Archivo',sans-serif;color:var(--rust);font-weight:400;font-style:italic;text-transform:lowercase;letter-spacing:-0.01em}
+.feedback-quiz .qrow{margin-bottom:14px}
+.feedback-quiz .qrow:last-of-type{margin-bottom:18px}
+.feedback-quiz .qlabel{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-mid);font-weight:600;margin-bottom:7px}
+.feedback-quiz .qchips{display:flex;flex-wrap:wrap;gap:6px}
+.feedback-quiz .qchip{padding:7px 12px;border:1.5px solid var(--ink);background:var(--paper);font-family:'Archivo',sans-serif;font-weight:600;font-size:12px;color:var(--ink);cursor:pointer;transition:all 0.18s;letter-spacing:0.01em}
+.feedback-quiz .qchip:hover{background:var(--paper-deep)}
+.feedback-quiz .qchip.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.feedback-quiz .qchip.rust.on{background:var(--rust);color:var(--paper);border-color:var(--rust)}
+.feedback-quiz .qchip.moss.on{background:var(--moss);color:var(--paper);border-color:var(--moss)}
+.feedback-quiz .submit{display:inline-flex;align-items:center;gap:9px;padding:11px 18px;background:transparent;color:var(--ink);border:1.5px solid var(--ink);cursor:pointer;font-family:'Archivo',sans-serif;font-weight:700;font-size:11.5px;letter-spacing:0.1em;text-transform:uppercase}
+/* inline (D) variant — sits inside a walk card, no shadow, tighter */
+.feedback-quiz.feedback-quiz--inline{box-shadow:none;padding:14px 14px 12px;background:var(--paper)}
+.feedback-quiz.feedback-quiz--inline h4{font-size:18px;margin-bottom:12px}
+.feedback-quiz.feedback-quiz--inline .qrow{margin-bottom:10px}
+.feedback-quiz.feedback-quiz--inline .qchip{padding:5px 9px;font-size:11px;border-width:1.5px}
+.feedback-quiz.feedback-quiz--inline .qlabel{font-size:9px;letter-spacing:0.13em;margin-bottom:5px}
+.feedback-side h2{margin-bottom:22px}
+.feedback-side p{font-family:'Archivo',sans-serif;font-style:italic;font-size:18px;line-height:1.55;color:var(--ink-soft);margin-bottom:14px}
+.feedback-side p strong{font-family:'Archivo',sans-serif;font-style:normal;font-weight:700;color:var(--ink)}
+@media(max-width:980px){.feedback-inner{grid-template-columns:1fr;gap:30px}.feedback-quiz{order:2}}
+
+/* PRODUCT ROW (compact horizontal cards) */
+.staples-head{margin-bottom:36px}
+.product-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.product-card{background:var(--paper-card);border:2px solid var(--ink);display:grid;grid-template-columns:88px 1fr;align-items:stretch;overflow:hidden;transition:all 0.15s}
+.product-card:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--ink)}
+.pc-image{width:88px;height:88px;background:var(--paper-deep);background-size:cover;background-position:center;border-right:2px solid var(--ink)}
+.pc-body{padding:11px 14px 11px;display:flex;flex-direction:column;justify-content:center;gap:3px;min-width:0}
+.pc-cat{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-mid);font-weight:600}
+.pc-title{font-family:'Archivo',sans-serif;font-weight:800;font-size:15.5px;letter-spacing:-0.01em;line-height:1.15;color:var(--ink)}
+.pc-desc{font-family:'Archivo',sans-serif;font-style:italic;font-size:13px;line-height:1.35;color:var(--ink-mid);margin-top:1px}
+@media(max-width:980px){.product-grid{grid-template-columns:repeat(2,1fr);gap:12px}}
+@media(max-width:560px){.product-grid{grid-template-columns:1fr}}
+
+
+/* CATEGORY COLOUR RAILS (V9 — food-forward direction) */
+.product-card{position:relative}
+.product-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;z-index:2}
+.product-card.pc-dairy::before{background:#9cb8c6}
+.product-card.pc-meat::before{background:#8b2e2a}
+.product-card.pc-honey::before{background:#d49b2a}
+.product-card.pc-eggs::before{background:#8aa672}
+.product-card.pc-veg::before{background:#c46c3f}
+.product-card.pc-pantry::before{background:#c46c3f}
+
+/* THREE-COLUMN VALUE FOR EVERYONE */
+.tri{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:18px}
+.tri-card{border-top:3px solid var(--ink);padding-top:22px}
+.tri-card .who{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--rust);font-weight:700;margin-bottom:10px}
+.tri-card h4{font-family:'Archivo',sans-serif;font-weight:800;font-size:21px;line-height:1.18;text-transform:uppercase;letter-spacing:-0.015em;margin-bottom:10px}
+.tri-card p{font-family:'Archivo',sans-serif;font-style:italic;font-size:16.5px;line-height:1.5;color:var(--ink-soft)}
+.tri-card p strong{font-family:'Archivo',sans-serif;font-style:normal;font-weight:700;color:var(--ink)}
+@media(max-width:880px){.tri{grid-template-columns:1fr;gap:24px}}
+
+/* WAITLIST CTA SECTION */
+/* All inner elements share one max-width (640px) and `text-align:center`
+   so the title, lede, button and beta-note read as one centered column.
+   Previous bug (v13.x): each element had a different max-width
+   (760/620/560) plus text-align:left, which produced a stair-step
+   indentation where the lede and the beta-note appeared shifted right
+   relative to the headline. Peter spotted it on desktop. */
+.waitlist{background:var(--forest);color:var(--paper);padding:96px 28px;border-top:1px solid var(--forest-line);text-align:left;max-width:none}
+.waitlist-inner{max-width:640px;margin:0 auto;display:flex;flex-direction:column;align-items:flex-start}
+.waitlist .eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#f3b94d;font-weight:700;margin-bottom:18px;text-align:left;display:block}
+.waitlist h2{font-family:'Archivo',sans-serif;font-weight:900;font-size:clamp(34px,5vw,58px);line-height:0.95;letter-spacing:-0.04em;text-transform:uppercase;color:#ffffff;margin:0 0 18px;text-align:left}
+.waitlist .lede{font-family:'Archivo',sans-serif;font-weight:500;font-size:18px;line-height:1.5;color:rgba(255,255,255,0.84);margin:0 0 32px;text-align:left}
+.big-cta{display:inline-flex;align-items:center;justify-content:center;gap:14px;padding:24px 36px;background:var(--rust);color:#ffffff;border:2px solid var(--rust);cursor:pointer;font-family:'Archivo',sans-serif;font-weight:900;font-size:15px;letter-spacing:0.13em;text-transform:uppercase;transition:all 0.18s ease;box-shadow:7px 7px 0 rgba(0,0,0,0.25)}
+.big-cta:hover{background:var(--paper);border-color:var(--paper)}
+.big-cta .arrow{display:inline-flex;align-items:center;justify-content:center;font-size:22px;line-height:1}
+.beta-note{margin:24px 0 0;font-family:'Archivo',sans-serif;font-style:italic;font-size:14.5px;color:rgba(241,236,224,0.65);line-height:1.55;text-align:left}
+
+
+/* FOUNDER BLOCK (v13) */
+.founder-block{background:var(--paper-warm);border-top:1px solid var(--rule);padding:80px 28px}
+.founder-inner{max-width:880px;margin:0 auto;display:grid;grid-template-columns:160px 1fr;gap:36px;align-items:start}
+.founder-photo img{width:160px;height:160px;object-fit:cover;border:1.5px solid var(--ink);display:block;border-radius:0;background:var(--paper-deep)}
+.founder-eyebrow{font-family:'Archivo',sans-serif;font-weight:900;font-size:24px;line-height:1.1;letter-spacing:-0.02em;text-transform:uppercase;color:var(--ink);margin-bottom:14px}
+.founder-name{font-family:'Archivo',sans-serif;font-weight:900;font-size:28px;line-height:1.05;letter-spacing:-0.025em;text-transform:uppercase;margin-bottom:12px;color:var(--ink)}
+.founder-bio{font-family:'Archivo',sans-serif;font-weight:500;font-size:15.5px;line-height:1.55;color:var(--ink-soft);margin-bottom:14px}
+.founder-prev{font-family:'Archivo',sans-serif;font-weight:500;font-size:15.5px;line-height:1.55;color:var(--ink-soft);margin:0 0 18px}
+.founder-prev strong{font-weight:700;color:var(--ink)}
+.founder-contacts{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;color:var(--ink-mid)}
+.founder-contacts a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule);padding-bottom:1px}
+.founder-contacts a:hover{color:var(--rust);border-color:var(--rust)}
+.founder-contacts .sep{margin:0 8px;color:var(--ink-faint)}
+@media(max-width:680px){
+  .founder-inner{grid-template-columns:1fr;gap:20px}
+  .founder-photo img{width:120px;height:120px}
+  .founder-name{font-size:22px}
+}
+
+/* FOOTER */
+.footer{padding:54px 28px 130px;background:var(--paper-warm);color:var(--ink-soft);text-align:center;border-top:1px solid var(--rule)}
+.footer-logo{font-size:30px;margin-bottom:10px;color:var(--ink)}
+.footer-text{font-family:'Archivo',sans-serif;font-style:italic;font-size:15px;color:var(--ink-mid);max-width:540px;margin:0 auto 16px;line-height:1.5}
+.footer-mini{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase}
+
+/* STICKY BAR */
+.sticky-bar{position:fixed;bottom:0;left:0;right:0;z-index:130;background:var(--ink);color:var(--paper);padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:18px;border-top:2px solid var(--gold);transform:translateY(100%);transition:transform 0.3s ease}
+.sticky-bar.visible{transform:translateY(0)}
+.sticky-bar-left{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;line-height:1.3}
+.sticky-bar-left strong{color:var(--gold);font-weight:700}
+.sticky-bar-cta{background:var(--gold);color:var(--ink);border:2px solid var(--gold);padding:13px 22px;cursor:pointer;font-family:'Archivo',sans-serif;font-weight:800;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;transition:all 0.18s;white-space:nowrap}
+.sticky-bar-cta:hover{background:var(--paper)}
+@media(max-width:600px){.sticky-bar-left{font-size:10.5px}.sticky-bar-cta{padding:10px 14px;font-size:11px}}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:var(--paper);z-index:1000;display:none;align-items:flex-start;justify-content:center;padding:0;overflow:auto}
+.modal-overlay.visible{display:flex}
+.modal{background:var(--paper);border:0;box-shadow:none;width:100%;max-width:none;min-height:100vh;overflow:visible;position:relative;display:flex;align-items:center;justify-content:center}
+.modal-close{position:fixed;top:18px;right:18px;background:var(--paper);border:1.5px solid var(--ink);cursor:pointer;font-family:'Archivo',sans-serif;font-weight:800;font-size:18px;color:var(--ink);width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:0;transition:all 0.15s;z-index:1100}
+.modal-close:hover{color:var(--ink);background:var(--paper-deep)}
+.modal-body{padding:48px 28px 36px;width:100%;max-width:560px}
+.modal-eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--rust);font-weight:700;margin-bottom:14px}
+.modal-title{font-family:'Archivo',sans-serif;font-weight:900;font-size:32px;line-height:0.96;letter-spacing:-0.035em;text-transform:uppercase;color:var(--ink);margin-bottom:14px}
+.modal-title em{font-family:'Archivo',sans-serif;color:var(--rust);font-weight:400;text-transform:lowercase;font-style:italic}
+.modal-sub{font-family:'Archivo',sans-serif;font-style:italic;font-size:16.5px;line-height:1.45;color:var(--ink-soft);margin-bottom:22px}
+.modal-input,.modal-select{width:100%;padding:14px 16px;background:var(--paper-card);border:2px solid var(--ink);font-family:'Archivo',sans-serif;font-size:15px;color:var(--ink);outline:none;transition:all 0.15s;margin-bottom:12px;font-weight:500}
+.modal-input:focus,.modal-select:focus{background:var(--paper);box-shadow:3px 3px 0 var(--rust)}
+.modal-input::placeholder{color:var(--ink-faint);font-weight:400}
+.modal-label{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-mid);font-weight:600;margin-bottom:6px;display:block}
+.modal-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:8px}
+.modal-back{background:transparent;border:0;cursor:pointer;font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;letter-spacing:0.06em;color:var(--ink-mid);padding:10px}
+.modal-back:hover{color:var(--ink)}
+.modal-next{display:inline-flex;align-items:center;gap:10px;padding:16px 26px;background:var(--ink);color:var(--paper);border:2px solid var(--ink);cursor:pointer;font-family:'Archivo',sans-serif;font-weight:800;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;transition:all 0.18s}
+.modal-next:hover{background:var(--rust);border-color:var(--rust)}
+.modal-next:disabled{opacity:0.4;cursor:not-allowed;background:var(--ink);border-color:var(--ink)}
+
+/* position card (full-screen v11) — single dominant number, sentence below */
+.pos-card{background:transparent;border:0;padding:0;margin:0 0 18px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
+.pos-card .lbl{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.20em;text-transform:uppercase;color:var(--ink-mid);font-weight:700}
+.pos-card .num{font-family:'Archivo',sans-serif;font-weight:900;font-size:clamp(96px,16vw,168px);letter-spacing:-0.06em;color:var(--ink);font-variant-numeric:tabular-nums;line-height:0.86}
+.pos-card .pos-behind{font-family:'Archivo',sans-serif;font-weight:500;font-size:15px;line-height:1.5;color:var(--ink-soft);margin-top:4px}
+.pos-card .pos-behind strong{font-weight:800;color:var(--ink)}
+.pos-card .pos-climbed{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;background:rgba(26,77,46,0.10);border:1px solid rgba(26,77,46,0.34);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--moss);font-weight:700;margin-top:4px}
+
+.climb-list{display:flex;flex-direction:column;gap:10px;margin-bottom:22px}
+.climb-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 16px;background:var(--paper);border:1.5px solid var(--ink);cursor:pointer;text-align:left;transition:all 0.15s;width:100%}
+.climb-row:hover{background:var(--ink);color:var(--paper)}
+.climb-row:hover .climb-bump{color:var(--gold)}
+.climb-row .climb-label{display:flex;flex-direction:column;gap:3px}
+.climb-row .climb-action{font-family:'Archivo',sans-serif;font-weight:800;font-size:14px;letter-spacing:0.02em}
+.climb-row .climb-desc{font-family:'Archivo',sans-serif;font-style:italic;font-size:13px;color:var(--ink-mid);line-height:1.35}
+.climb-row:hover .climb-desc{color:rgba(241,236,224,0.65)}
+.climb-row .climb-bump{font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:0.05em;color:var(--rust);font-weight:700;flex-shrink:0;white-space:nowrap}
+.climb-row.done{background:var(--paper-deep);border-color:var(--ink-mid);cursor:default}
+.climb-row.done:hover{background:var(--paper-deep);color:var(--ink)}
+.climb-row.done .climb-action::before{content:'✓ ';color:var(--moss);font-weight:900}
+.climb-row.done .climb-bump{color:var(--moss-soft)}
+
+/* small quiz inside climb option */
+.climb-quiz .q{margin-bottom:14px}
+.climb-quiz .qlabel{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.13em;text-transform:uppercase;color:var(--ink-mid);font-weight:600;margin-bottom:6px}
+.climb-quiz .qchips{display:flex;flex-wrap:wrap;gap:6px}
+.climb-quiz .qchip{padding:8px 12px;border:1.5px solid var(--ink);background:var(--paper);font-family:'Archivo',sans-serif;font-weight:600;font-size:12.5px;color:var(--ink);cursor:pointer;transition:all 0.15s}
+.climb-quiz .qchip.on{background:var(--ink);color:var(--paper)}
+
+/* Invite hero block (post-signup, primary action) */
+.invite-hero{background:var(--ink);color:#ffffff;border:1.5px solid var(--ink);padding:18px 18px 16px;box-shadow:5px 5px 0 var(--rust);position:relative}
+.invite-hero-eyebrow{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.20em;text-transform:uppercase;color:var(--rust);font-weight:700;margin-bottom:6px}
+.invite-hero-title{font-family:'Archivo',sans-serif;font-weight:900;font-size:21px;line-height:1.1;letter-spacing:-0.025em;text-transform:uppercase;color:#ffffff;margin-bottom:6px}
+.invite-hero-sub{font-family:'Archivo',sans-serif;font-weight:500;font-size:13.5px;line-height:1.45;color:rgba(255,255,255,0.74);margin-bottom:12px}
+.invite-link{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;background:var(--paper);border:1.5px solid var(--gold);cursor:pointer;transition:all 0.15s;margin-bottom:10px}
+.invite-link:hover{background:var(--paper-card)}
+.invite-link-url{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink);font-weight:600;letter-spacing:0.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.invite-link-copy{font-family:'Archivo',sans-serif;font-weight:800;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--rust);flex-shrink:0}
+.invite-link-copy.copied{color:var(--moss)}
+.invite-share-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.invite-share-btn{padding:11px 8px;background:var(--paper);color:var(--ink);border:1.5px solid var(--paper);cursor:pointer;font-family:'Archivo',sans-serif;font-weight:800;font-size:12px;letter-spacing:0.06em;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:all 0.15s}
+.invite-share-btn:hover{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+.invite-share-btn.whatsapp{color:#1c1c1a}
+.invite-tally{margin-top:12px;padding:10px 12px;background:rgba(199,154,59,0.18);border:1px solid var(--gold);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);font-weight:700;text-align:center}
+
+@media(max-width:520px){.modal-body{padding:30px 22px 26px}.modal-title{font-size:26px}.pos-card .num{font-size:54px}.invite-hero-title{font-size:20px}.invite-link-url{font-size:11.5px}}
+
+/* PIXEL MOTIF (v13) — top-corner cow, chicken behind CTA, real farmer photo */
+.hero{position:relative;overflow:hidden}
+.section{position:relative}
+.pix{display:block;image-rendering:pixelated;image-rendering:-moz-crisp-edges;-ms-interpolation-mode:nearest-neighbor;pointer-events:none;user-select:none;mix-blend-mode:multiply;filter:saturate(0.94) contrast(1.02)}
+/* cow: small, top-right corner of hero */
+.pix-bg-cow{position:absolute;top:96px;right:18px;width:140px;height:auto;z-index:0;opacity:0.85}
+.hero > *:not(.pix-bg-cow):not(.pix-farmer-real){position:relative;z-index:1}
+.hero-cta-wrap{position:relative}
+.hero-cta-row{display:inline-flex;align-items:center;position:relative;z-index:1}
+.section-tri{position:relative}
+.pix-chicken-tri{position:absolute;top:-72px;right:24px;width:140px;height:auto;z-index:0;pointer-events:none}
+@media(min-width:900px){.pix-chicken-tri{top:-92px;right:48px;width:180px}}
+@media(max-width:600px){.pix-chicken-tri{top:-46px;right:6px;width:96px}}
+html[lang="bg"] .hero{padding-top:172px}
+@media(max-width:600px){html[lang="bg"] .hero{padding-top:156px}}
+/* chicken: bigger, partially behind the CTA button (z-index 0 puts it under).
+   Anchored near the left edge of the cta-wrap so it sits behind the button
+   itself and never extends rightward into the .hero-sub paragraph above. */
+.pix-chicken-float{position:absolute;top:-78px;left:80px;width:150px;height:150px;z-index:0}
+/* farmer-cow: real photo, motion-blur — no pixelation, no blend mode */
+.pix-farmer-real{display:block;margin:32px auto 0;width:min(560px,82vw);height:auto;image-rendering:auto;mix-blend-mode:normal;filter:none}
+/* bottle now lives below step D — pulled tighter into next section */
+.pix-after-d{display:block;margin:18px auto -28px;width:min(160px,34vw);height:auto;position:relative;z-index:2}
+
+@media(min-width:880px){
+  .pix-bg-cow{top:88px;right:34px;width:170px}
+  .pix-chicken-float{top:-104px;left:60px;width:200px;height:200px}
+  .pix-farmer-real{margin-top:42px;width:min(640px,55vw)}
+  .pix-after-d{width:180px;margin-bottom:-36px}
+}
+@media(max-width:560px){
+  .pix-bg-cow{top:78px;right:8px;width:96px;opacity:0.78}
+  .pix-chicken-float{top:-30px;left:auto;right:-10px;width:118px;height:118px}
+  .pix-farmer-real{margin-top:28px;width:min(360px,90vw)}
+  .pix-after-d{width:130px;margin-bottom:-22px}
+}
+
+.cfg-cart{margin-top:14px;width:100%;padding:13px 16px;background:var(--ink);color:var(--paper);border:2px solid var(--ink);cursor:pointer;font-family:'Archivo',sans-serif;font-weight:800;font-size:12.5px;letter-spacing:0.14em;text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center;gap:10px;transition:all 0.15s}
+.cfg-cart:hover{background:var(--rust);border-color:var(--rust)}
+.cfg-cart-arrow{font-size:16px;line-height:1}
+
+
+.climb-section-head{font-family:'Archivo',sans-serif;font-weight:900;font-size:14px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink);margin:22px 0 12px}
+.climb-or{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-mid);font-weight:600;text-align:center;margin:14px 0 10px}
+.climb-hint{margin-top:14px;padding:10px 12px;background:var(--paper-warm);border:1px dashed var(--rule-strong);font-family:'Archivo',sans-serif;font-weight:500;font-size:12.5px;line-height:1.4;color:var(--ink-mid);text-align:center}
+
+.footer-legal{max-width:680px;margin:0 auto;padding-top:18px;border-top:1px solid var(--rule);font-family:'Archivo',sans-serif;font-weight:500;font-size:13px;line-height:1.55;color:var(--ink-mid)}
+.footer-legal p{margin:0 0 12px}
+.footer-legal strong{color:var(--ink);font-weight:700}
+.footer-links{display:flex;justify-content:center;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600}
+.footer-links a{color:var(--ink-mid);text-decoration:none;transition:color 0.15s}
+.footer-links a:hover{color:var(--rust)}
+.footer-links .sep{color:var(--ink-faint)}
+.legal-overlay{position:fixed;inset:0;background:rgba(14,26,20,0.72);z-index:1500;display:none;align-items:center;justify-content:center;padding:30px}
+.legal-overlay.visible{display:flex}
+.legal-sheet{background:var(--paper);border:1.5px solid var(--ink);padding:38px 30px 28px;width:100%;max-width:600px;max-height:88vh;overflow-y:auto;position:relative;font-family:'Archivo',sans-serif}
+.legal-sheet h2{font-weight:900;font-size:24px;letter-spacing:-0.02em;text-transform:uppercase;margin-bottom:14px;color:var(--ink)}
+.legal-sheet p{font-weight:500;font-size:13.5px;line-height:1.6;color:var(--ink-soft);margin-bottom:11px}
+.legal-sheet h3{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-mid);font-weight:700;margin:18px 0 6px}
+.legal-close{position:absolute;top:14px;right:14px;background:transparent;border:0;cursor:pointer;font-size:22px;color:var(--ink-mid);width:36px;height:36px;display:flex;align-items:center;justify-content:center}
+.legal-close:hover{color:var(--ink)}
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="left"><span class="live-dot"></span><span data-i18n="ticker.left">Sofia waitlist · open</span></div>
+  <div class="right"><span data-i18n="ticker.right.short">Sofia</span> <span class="hide-sm" data-i18n="ticker.right.long">· personalised · pre-ordered · pickup</span></div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="/" class="logo">vitrina<span class="dot">.</span></a>
+  <div class="nav-right">
+    <div class="lang-toggle" id="lang-toggle" role="group" aria-label="Language">
+      <button type="button" data-lang="bg" class="lang-pill">БГ</button>
+      <button type="button" data-lang="en" class="lang-pill">EN</button>
+    </div>
+    <button class="nav-cta" onclick="openSignup()"><span data-i18n="common.cta.access">Get access</span> <span class="arrow">→</span></button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <img class="pix pix-bg-cow" src="drop-01-assets/pix-cow.png" alt="" aria-hidden="true" />
+  <h1 class="hero-title" data-i18n="home.hero.title">
+    Grocery from <em>small producers</em>,<br/>
+    personalised to <em>your taste</em>,<br/>
+    picked up <em>around the corner.</em>
+  </h1>
+  <p class="hero-sub" data-i18n="home.hero.sub">
+    <strong>High-quality food</strong> at near-wholesale prices — without the high-street markup.
+  </p>
+  <div class="hero-cta-wrap">
+    <p class="cta-context" data-i18n="cta.context.launch">
+      We're launching in<br/><strong>the first Sofia neighbourhood to fill up.</strong>
+    </p>
+    <div class="hero-cta-row">
+      <button class="btn-primary" onclick="openSignup()">
+        <span data-i18n="home.hero.cta">Join the waitlist</span> <span class="arrow">→</span>
+      </button>
+    </div>
+    <p class="hero-fineprint" data-i18n="home.hero.fineprint">
+      Sofia waitlist is open. We're starting small — <strong>one neighbourhood at a time.</strong>
+      Sign up free, climb the queue, eat first.
+    </p>
+    <img class="pix-farmer-real" src="drop-01-assets/farmer-cow-real.png" alt="A small farmer leading a cow" />
+  </div>
+</section>
+
+<!-- HOW IT WORKS — A / B / C / D -->
+<section class="section" id="how">
+  <h2 class="section-title" data-i18n="home.how.title">How it works.</h2>
+  <p class="section-sub" data-i18n="home.how.sub">
+    Pick the shape of staple you like. Once enough neighbours pre-order, the drop ships at wholesale to a
+    corner shop near you. Then you tell us how it was — and next time, your match is sharper.
+  </p>
+
+  <div class="walk walk-4">
+
+    <!-- A. PICK -->
+    <div class="walk-card">
+      <div class="step">A.</div>
+      <h3 data-i18n="home.stepa.title">Browse by <em style="font-family:'Archivo',sans-serif;color:var(--rust);font-weight:900;font-style:normal;text-transform:uppercase;">product</em>, not brand.</h3>
+      <p class="lede" data-i18n="home.stepa.lede">
+        Pick what you want. Then tell us how you like it — with a few simple chips, not producer names.
+      </p>
+      <div class="cfg-stack" aria-hidden="true">
+        <div class="cfg-card cfg-card-collapsed">
+          <img class="cfg-thumb" src="drop-01-assets/pix-minced.png" alt="" />
+          <div class="cfg-card-body">
+            <span class="cfg-card-label" data-i18n="home.stepa.minced">Minced meat</span>
+          </div>
+          <span class="cfg-card-arrow">→</span>
+        </div>
+        <div class="cfg-card cfg-card-collapsed">
+          <img class="cfg-thumb" src="drop-01-assets/pix-tomatoes.png" alt="" />
+          <div class="cfg-card-body">
+            <span class="cfg-card-label" data-i18n="home.stepa.tomatoes">Tomatoes</span>
+          </div>
+          <span class="cfg-card-arrow">→</span>
+        </div>
+        <div class="cfg-card cfg-card-expanded" aria-label="White cheese configurator example">
+          <div class="cfg-card-head">
+            <img class="cfg-thumb" src="drop-01-assets/pix-whitecheese.png" alt="" />
+            <span class="cfg-card-label" data-i18n="home.stepa.whitecheese">White cheese</span>
+            <span class="cfg-card-chev">▼</span>
+          </div>
+        <div class="cfg-row">
+          <span class="cfg-label" data-i18n="home.stepa.cfg.milk">Milk</span>
+          <div class="cfg-chips">
+            <span class="chip on" data-i18n="home.stepa.cfg.cow">Cow</span>
+            <span class="chip" data-i18n="home.stepa.cfg.sheep">Sheep</span>
+            <span class="chip" data-i18n="home.stepa.cfg.goat">Goat</span>
+          </div>
+        </div>
+        <div class="cfg-row">
+          <span class="cfg-label" data-i18n="home.stepa.cfg.aging">Aging</span>
+          <div class="cfg-chips">
+            <span class="chip" data-i18n="home.stepa.cfg.young">Young &amp; mild</span>
+            <span class="chip on" data-i18n="home.stepa.cfg.aged">Aged</span>
+          </div>
+        </div>
+        <div class="cfg-row">
+          <span class="cfg-label" data-i18n="home.stepa.cfg.fat">Fat content</span>
+          <div class="cfg-chips">
+            <span class="chip" data-i18n="home.stepa.cfg.lean">Lean</span>
+            <span class="chip on" data-i18n="home.stepa.cfg.medium">Medium</span>
+            <span class="chip" data-i18n="home.stepa.cfg.rich">Rich</span>
+          </div>
+        </div>
+        <div class="cfg-row">
+          <span class="cfg-label" data-i18n="home.stepa.cfg.salt">Saltiness</span>
+          <div class="cfg-chips">
+            <span class="chip" data-i18n="home.stepa.cfg.mild">Mild</span>
+            <span class="chip on rust" data-i18n="home.stepa.cfg.classic">Classic</span>
+            <span class="chip" data-i18n="home.stepa.cfg.sharp">Sharp</span>
+          </div>
+        </div>
+        <div class="cfg-row">
+          <span class="cfg-label" data-i18n="home.stepa.qty">Quantity</span>
+          <div class="cfg-chips">
+            <span class="chip on" data-i18n="home.stepa.qty250">250 g</span>
+            <span class="chip" data-i18n="home.stepa.qty500">500 g</span>
+            <span class="chip" data-i18n="home.stepa.qty1kg">1 kg</span>
+          </div>
+        </div>
+        <button class="cfg-cart" type="button" onclick="openSignup()"><span data-i18n="home.stepa.addtocart">Add to cart</span> <span class="cfg-cart-arrow">→</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- B. GROUP BUY -->
+    <div class="walk-card">
+      <div class="step">B.</div>
+      <h3 data-i18n="home.stepb.title">Delivery happens <em style="font-family:'Archivo',sans-serif;color:var(--rust);font-weight:400;font-style:italic;text-transform:lowercase;">when enough people in the city order.</em></h3>
+      <p class="lede" data-i18n="home.stepb.lede">
+        Each small farm needs a minimum number of orders before their truck rolls. Yours counts toward the goal. Hit it in time and the truck leaves; miss it and the slot rolls to the next one. Your card isn't charged until the truck rolls.
+      </p>
+      <div class="slot-card" role="figure" aria-label="White cheese order illustration">
+        <div class="slot-head-row">
+          <div class="slot-head-l">
+            <div class="slot-title" data-i18n="home.stepb.cat">White cheese</div>
+            <div class="slot-config" data-i18n="home.stepb.config">Cow · Aged · Medium · Classic · 250 g</div>
+          </div>
+          <div class="qty-stepper" role="group" aria-label="Quantity">
+            <button type="button" class="qb" aria-label="Decrease quantity">−</button>
+            <span class="qn">1</span>
+            <button type="button" class="qb" aria-label="Increase quantity">+</button>
+          </div>
+        </div>
+
+        <div class="slot-prices">
+          <div class="price-block strike">
+            <span class="pb-lbl" data-i18n="home.stepb.boutique">boutique</span>
+            <span class="pb-val">€3.00</span>
+            <span class="pb-perkg">€12 / kg</span>
+          </div>
+          <div class="price-block now">
+            <span class="pb-lbl" data-i18n="home.stepb.youpay">you pay</span>
+            <span class="pb-val">€2.00</span>
+            <span class="pb-perkg">€8 / kg</span>
+          </div>
+        </div>
+
+        <div class="slot-progress">
+          <div class="slot-progress-time" data-deadline-offset-min="201">
+            <span class="t-lbl" data-i18n="home.stepb.timerlbl">Time left</span>
+            <span class="t-num">3h 19m</span>
+          </div>
+          <div class="slot-progress-count">
+            <span class="spc-lbl" data-i18n="home.stepb.countlbl">orders</span>
+            <span class="spc-num">132 / 200</span>
+          </div>
+          <div class="slot-bar"><div class="slot-bar-fill" style="width:66%"></div></div>
+          <div class="slot-progress-msg" data-i18n="home.stepb.goalmsg">
+            Hit the goal before midnight for delivery&nbsp;tomorrow.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C. PICKUP -->
+    <div class="walk-card">
+      <div class="step">C.</div>
+      <h3 data-i18n="home.stepc.title">Pick up at <em style="font-family:'Archivo',sans-serif;color:var(--rust);font-weight:400;font-style:italic;text-transform:lowercase;">your local shop.</em></h3>
+      <p class="lede" data-i18n="home.stepc.lede">
+        <strong>Walk in, say your name, walk out.</strong> We rent fridge space in a corner shop a few streets away.
+      </p>
+      <div class="pickup-mock">
+        <div class="pickup-row">
+          <div class="icon">i.</div>
+          <div class="text" data-i18n="home.stepc.row1"><strong>Packed by the producer.</strong><span class="sub">Labelled with your name.</span></div>
+        </div>
+        <div class="pickup-row">
+          <div class="icon">ii.</div>
+          <div class="text" data-i18n="home.stepc.row2"><strong>Sent to your corner shop.</strong><span class="sub">They get footfall, you get fewer steps.</span></div>
+        </div>
+        <div class="pickup-row">
+          <div class="icon">iii.</div>
+          <div class="text" data-i18n="home.stepc.row3"><strong>Pop in on the way home.</strong><span class="sub">Two windows per week.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D. FEEDBACK -->
+    <div class="walk-card">
+      <div class="step">D.</div>
+      <h3 data-i18n="home.stepd.title">Each pickup makes the next one <em style="font-family:'Archivo',sans-serif;color:var(--rust);font-weight:400;font-style:italic;text-transform:lowercase;">sharper.</em></h3>
+      <p class="lede" data-i18n="home.stepd.lede">
+        Ten seconds of feedback after pickup — <strong>mouthfeel, flavour, order again?</strong>
+        We learn your taste, then adjust what you get next time. The more you tell us, the closer the match.
+      </p>
+      <div class="feedback-quiz feedback-quiz--inline" aria-label="Feedback quiz mock">
+        <div class="head" data-i18n="home.stepd.head">After pickup · 10 seconds</div>
+        <h4 data-i18n="home.stepd.qhead">How was the <em>cheese?</em></h4>
+        <div class="qrow">
+          <div class="qlabel" data-i18n="home.stepd.q1">Mouthfeel</div>
+          <div class="qchips">
+            <button class="qchip" data-i18n="home.stepd.q1.a1">Creamy</button>
+            <button class="qchip on rust" data-i18n="home.stepd.q1.a2">Crumbly</button>
+            <button class="qchip" data-i18n="home.stepd.q1.a3">Pasty</button>
+          </div>
+        </div>
+        <div class="qrow">
+          <div class="qlabel" data-i18n="home.stepd.q2">Saltiness</div>
+          <div class="qchips">
+            <button class="qchip" data-i18n="home.stepd.q2.a1">Too mild</button>
+            <button class="qchip on rust" data-i18n="home.stepd.q2.a2">Spot on</button>
+            <button class="qchip" data-i18n="home.stepd.q2.a3">Too salty</button>
+          </div>
+        </div>
+        <div class="qrow">
+          <div class="qlabel" data-i18n="home.stepd.q3">Order again?</div>
+          <div class="qchips">
+            <button class="qchip on moss" data-i18n="home.stepd.q3.a1">Yes please</button>
+            <button class="qchip" data-i18n="home.stepd.q3.a2">Maybe</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <img class="pix pix-after-d" src="drop-01-assets/pix-bottle.png" alt="" aria-hidden="true" />
+</section>
+
+<!-- FRESHNESS / NO WAREHOUSE -->
+<section class="section" id="fresh" style="border-top:1px solid var(--rule);">
+  <h2 class="section-title" data-i18n="home.fresh.title">Why it tastes <em>different.</em></h2>
+  <div class="fresh-points">
+    <div class="fresh-point">
+      <h3 class="fresh-h" data-i18n="home.fresh.c1.title">We skip <em>the warehouse.</em></h3>
+      <p class="fresh-p" data-i18n="home.fresh.c1.body">
+        From the farm to your corner shop in <strong>days, not weeks.</strong> Most supermarket food sits in
+        fridges and trucks for a week or more before you see it — refrigerated, sure, but a tomato picked on
+        Monday is a different vegetable by Sunday.
+      </p>
+    </div>
+    <div class="fresh-point">
+      <h3 class="fresh-h" data-i18n="home.fresh.c2.title">Packed by <em>the people who grew it.</em></h3>
+      <p class="fresh-p" data-i18n="home.fresh.c2.body">
+        The farmer who grew the tomatoes is the one who <strong>puts them in your bag</strong> — and ten
+        seconds after pickup you tell them how it was. What you get is <strong>what they're proud to send.</strong>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- STAPLES PREVIEW -->
+<section class="section">
+  <div class="staples-head">
+    <div class="section-eyebrow" data-i18n="home.staples.eyebrow">What we stock</div>
+    <h2 class="section-title" data-i18n="home.staples.title">Staples, <em>cleanly sourced.</em></h2>
+    <p class="section-sub" data-i18n="home.staples.sub">
+      Things you actually buy every week, grouped by category. Each category has 2–3 small producers behind it; you
+      see the standard, not the supplier.
+    </p>
+  </div>
+  <div class="product-grid">
+    <div class="product-card pc-dairy"><div class="pc-image" style="background-image:url('drop-01-assets/cheese-press-1.png')"></div><div class="pc-body"><div class="pc-cat" data-i18n="home.staples.dairy.cat">Dairy</div><div class="pc-title" data-i18n="home.staples.dairy.title">Sirene, kashkaval, milk</div><div class="pc-desc" data-i18n="home.staples.dairy.desc">Cow, sheep or mixed. Aged or young.</div></div></div>
+    <div class="product-card pc-meat"><div class="pc-image" style="background-image:url('drop-01-assets/butcher-lukanka.png')"></div><div class="pc-body"><div class="pc-cat" data-i18n="home.staples.meat.cat">Cured meats</div><div class="pc-title" data-i18n="home.staples.meat.title">Lukanka, sudzhuk, fillet</div><div class="pc-desc" data-i18n="home.staples.meat.desc">Slow-air-dried, family recipes.</div></div></div>
+    <div class="product-card pc-honey"><div class="pc-image" style="background-image:url('drop-01-assets/honey-beekeeper.png')"></div><div class="pc-body"><div class="pc-cat" data-i18n="home.staples.honey.cat">Honey</div><div class="pc-title" data-i18n="home.staples.honey.title">Mountain &amp; acacia</div><div class="pc-desc" data-i18n="home.staples.honey.desc">Single-apiary, raw, by aroma.</div></div></div>
+    <div class="product-card pc-eggs"><div class="pc-image" style="background-image:url('drop-01-assets/eggs-walk.png')"></div><div class="pc-body"><div class="pc-cat" data-i18n="home.staples.eggs.cat">Eggs</div><div class="pc-title" data-i18n="home.staples.eggs.title">Free-range eggs</div><div class="pc-desc" data-i18n="home.staples.eggs.desc">Free-roaming, two yolk shades.</div></div></div>
+    <div class="product-card pc-veg"><div class="pc-image" style="background-image:url('drop-01-assets/veg-crate-walk.png')"></div><div class="pc-body"><div class="pc-cat" data-i18n="home.staples.veg.cat">Fruit &amp; veg</div><div class="pc-title" data-i18n="home.staples.veg.title">Seasonal, from the plain</div><div class="pc-desc" data-i18n="home.staples.veg.desc">Whatever's ripening that week.</div></div></div>
+    <div class="product-card pc-pantry"><div class="pc-image" style="background-image:url('drop-01-assets/turshia-maker.png')"></div><div class="pc-body"><div class="pc-cat" data-i18n="home.staples.pantry.cat">Pantry &amp; jars</div><div class="pc-title" data-i18n="home.staples.pantry.title">Lyutenitsa, turshia, ferments</div><div class="pc-desc" data-i18n="home.staples.pantry.desc">Roasted-pepper batches, naturally fermented.</div></div></div>
+  </div>
+</section>
+
+<!-- VALUE FOR EVERYONE -->
+<section class="section section-tri" style="border-top:1px solid var(--rule);">
+  <img class="pix pix-chicken-tri" src="drop-01-assets/pix-chicken.png" alt="" aria-hidden="true" />
+  <div class="section-eyebrow" data-i18n="home.tri.eyebrow">Why it works</div>
+  <h2 class="section-title" data-i18n="home.tri.title">A model that <em>everyone</em> wins from.</h2>
+  <div class="tri">
+    <div class="tri-card">
+      <div class="who" data-i18n="home.tri.you.who">For you</div>
+      <h4 data-i18n="home.tri.you.h">Better food, fairer price.</h4>
+      <p data-i18n="home.tri.you.p">
+        Quality you'd find at a boutique — at a price <strong>between supermarket and boutique.</strong>
+        Personalised every drop, never a tin you didn't ask for.
+      </p>
+    </div>
+    <div class="tri-card">
+      <div class="who" data-i18n="home.tri.prod.who">For small producers</div>
+      <h4 data-i18n="home.tri.prod.h">A direct route to consumers.</h4>
+      <p data-i18n="home.tri.prod.p">
+        No supermarket gauntlet, no boutique margin haircut. <strong>Sell what you make</strong> —
+        get back actual taste feedback to keep getting better.
+      </p>
+    </div>
+    <div class="tri-card">
+      <div class="who" data-i18n="home.tri.shop.who">For corner shops</div>
+      <h4 data-i18n="home.tri.shop.h">Footfall and data on what people want.</h4>
+      <p data-i18n="home.tri.shop.p">
+        We rent a fridge from your nearest indie shop — <strong>they earn rent, gain footfall,
+        and see weekly demand data</strong> on what their neighbourhood actually wants.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- WAITLIST CTA -->
+<section class="waitlist">
+  <div class="waitlist-inner">
+    <h2 data-i18n="home.wl.h">Be one of the first.</h2>
+    <p class="lede" data-i18n="home.wl.lede">
+      We're opening Sofia <strong>one neighbourhood at a time</strong>. Small first
+      cohort, so we can vet the producers and run the slot mechanics tight. The earlier
+      you're in line, the earlier you eat.
+    </p>
+    <p class="cta-context" data-i18n="cta.context.launch">
+      We're launching in<br/><strong>the first Sofia neighbourhood to fill up.</strong>
+    </p>
+    <button class="big-cta" onclick="openSignup()">
+      <span data-i18n="common.cta.access">Join the waitlist</span> <span class="arrow">→</span>
+    </button>
+    <p class="beta-note" data-i18n="home.wl.note">
+      Free · no card required. Joining puts you on the list for the first cohort.
+      Invite a friend and you both move up.
+    </p>
+  </div>
+</section>
+
+<!-- FOUNDER + FOOTER -->
+<section class="founder-block">
+  <div class="founder-inner">
+    <div class="founder-photo"><img src="drop-01-assets/peter.jpg" alt="Peter, founder of Vitrina" /></div>
+    <div class="founder-body">
+      <div class="founder-eyebrow" data-i18n="footer.founder.eyebrow">About the founder, Peter</div>
+      <p class="founder-bio" data-i18n="footer.founder.bio">
+        Bulgarian-Peruvian. Two cultures where food is everything — the flavour, the variety,
+        what it does for people sitting around a table. I've spent years working with producers
+        and small operators, and I'm a fanatic about cooking (lately, sandwich-engineering).
+        I'm building Vitrina because the produce I want at home isn't easy to find without
+        paying main-street markups — and the small farms making it deserve a real route to
+        people who care.
+      </p>
+      <p class="founder-prev" data-i18n="footer.founder.prev">
+        I keep ending up around food. My first job out of school had me at London's wholesale
+        night markets, sitting next to traders at <strong>Smithfield Market for meat, New Covent
+        Garden Market for produce and flowers, Billingsgate Market for fish</strong>, watching
+        how they worked and how a city actually feeds itself. Later I helped <strong>Gojek</strong>,
+        Southeast Asia's largest delivery business, think through some properly complicated food
+        problems, like getting restaurant orders out during monsoon season. Through
+        nutrition-related hackathons I've run with <strong>Imperial College London's nutrition
+        department</strong>, I've brought together a wide cast from across the food supply chain:
+        seed specialists like Syngenta, retailers I pulled in like Waitrose, frozen-food giant
+        Bird's Eye, staples producer Tate &amp; Lyle, healthy-condiment brand Dr Will's, and a
+        handful of indie packaged-food brands, all working out how to get things like a new
+        wrinkled pea (a variety that lowers the risk of cardiovascular disease) into the food
+        supply chain. And most recently, I put a sandwich on the menu at <strong>Gallo Nero</strong>,
+        a 60-year-old Italian deli in North London. Although I'm not a chef nor a farmer, food is
+        everything around me.
+      </p>
+      <div class="founder-contacts">
+        <a href="https://www.linkedin.com/in/peter-a-neyra/" target="_blank" rel="noopener" data-i18n="footer.founder.linkedin">LinkedIn</a>
+        <span class="sep">·</span>
+        <a href="mailto:peter@vitrina.bg">peter@vitrina.bg</a>
+        <span class="sep">·</span>
+        <a href="mailto:hello@vitrina.bg">hello@vitrina.bg</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="logo footer-logo">vitrina<span class="dot">.</span></div>
+  <p class="footer-text" data-i18n="footer.tagline">
+    Personalised grocery from small producers, picked up around the corner.
+  </p>
+  <div class="footer-legal">
+    <p data-i18n="footer.commitment">
+      <strong>We're committed to doing this properly.</strong>
+    </p>
+    <p data-i18n="footer.registration">
+      Vitrina is currently <strong>pending registration</strong> with the Bulgarian Food Safety
+      Agency (БАБХ) and the Commission for Consumer Protection (КЗП). The first customers come
+      in the moment those clear — we'd rather take the time to get the producers, the chain,
+      and the rules right than rush a launch that disappoints.
+    </p>
+    <nav class="footer-links" aria-label="Legal">
+      <a href="#privacy" onclick="event.preventDefault();openLegal('privacy')" data-i18n="footer.privacy">Privacy</a>
+      <span class="sep">·</span>
+      <a href="#terms" onclick="event.preventDefault();openLegal('terms')" data-i18n="footer.terms">Terms</a>
+      <span class="sep">·</span>
+      <a href="mailto:hello@vitrina.bg">hello@vitrina.bg</a>
+    </nav>
+  </div>
+</footer>
+
+<!-- LEGAL MODAL (privacy / terms — generic stubs while we register) -->
+<div class="legal-overlay" id="legal-overlay" onclick="if(event.target===this)closeLegal()">
+  <div class="legal-sheet">
+    <button class="legal-close" onclick="closeLegal()" aria-label="Close">×</button>
+    <h2 id="legal-title"></h2>
+    <div id="legal-body"></div>
+  </div>
+</div>
+
+<!-- STICKY BAR -->
+<div class="sticky-bar" id="sticky-bar">
+  <div class="sticky-bar-left" data-i18n="home.sticky.left">Sofia waitlist · <strong>open</strong></div>
+  <button class="sticky-bar-cta" onclick="openSignup()"><span data-i18n="common.cta.access">Get access</span> <span class="arrow">→</span></button>
+</div>
+
+<!-- SIGNUP MODAL -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeSignup()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeSignup()" aria-label="Close">×</button>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// State
+// ============================================================
+const state = {
+  step: 'contact', // 'contact' | 'in' | 'quiz'
+  email: '',
+  phone: '',
+  dial: '+359',
+  position: 0,
+  referralCode: '',
+  done: { call: false, quiz: false },
+  invitedCount: 0,
+  quiz: { buy: '', wish: '', when: '' },
+};
+
+// ============================================================
+// Modal lifecycle
+// ============================================================
+// Referral capture — runs once on every page load. The user's share
+// link is `vitrina.bg/?r=CODE`; the rewrite serves this homepage but
+// the URL still carries the `?r=`. We persist the code into
+// localStorage so it survives any subsequent navigation (Get access →
+// /waitlist), refreshes, or deep-links into other surfaces. Whitelist
+// the format to neutralise abuse via crafted querystrings.
+(function captureRef() {
+  try {
+    const u = new URL(window.location.href);
+    const r = (u.searchParams.get('r') || '').trim();
+    if (r && /^[A-Za-z0-9_-]{1,64}$/.test(r)) {
+      localStorage.setItem('atelier_vitrina_ref', r);
+      localStorage.setItem('atelier_vitrina_ref_at', String(Date.now()));
+    }
+  } catch (e) {}
+})();
+function getStoredRef() {
+  try {
+    const u = new URL(window.location.href);
+    const r = (u.searchParams.get('r') || '').trim();
+    if (r && /^[A-Za-z0-9_-]{1,64}$/.test(r)) return r;
+    const stored = (localStorage.getItem('atelier_vitrina_ref') || '').trim();
+    if (stored && /^[A-Za-z0-9_-]{1,64}$/.test(stored)) return stored;
+  } catch (e) {}
+  return '';
+}
+
+function openSignup() {
+  // v13: redirect to the dedicated /waitlist page. Preserve ?r= so the
+  // referral chain survives the hop — without this, every signup that
+  // came in via a friend's link was attributed to nobody.
+  const lang = (window.__vitrinaLang || localStorage.getItem('atelier_vitrina_lang') || 'bg');
+  window.vph?.capture('home.cta_clicked', { lang });
+  const ref = getStoredRef();
+  const refQ = ref ? '&r=' + encodeURIComponent(ref) : '';
+  window.location.href = '/waitlist?lang=' + lang + refQ;
+}
+function openSignupModal() {
+  // legacy fallback kept for bug-bash/dev only
+  state.step = state.referralCode ? 'in' : 'contact';
+  document.getElementById('modal').classList.add('visible');
+  document.body.style.overflow = 'hidden';
+  render();
+}
+function closeSignup() {
+  document.getElementById('modal').classList.remove('visible');
+  document.body.style.overflow = '';
+}
+
+function render() {
+  const body = document.getElementById('modal-body');
+  if (state.step === 'contact') body.innerHTML = stepContact();
+  else if (state.step === 'in') body.innerHTML = stepIn();
+  else if (state.step === 'quiz') body.innerHTML = stepQuiz();
+  bindEvents();
+}
+
+// ============================================================
+// Step 1 — contact
+// ============================================================
+function stepContact() {
+  return `
+    <div class="modal-eyebrow">Step 1 · Contact</div>
+    <h2 class="modal-title">Get on the <em>Sofia</em> waitlist.</h2>
+    <p class="modal-sub">
+      We'll email when your wave opens, plus your share link. Phone is required so we can reach you about the first drop.
+    </p>
+    <label class="modal-label">Email</label>
+    <input class="modal-input" id="email" type="email" inputmode="email"
+      placeholder="you@email.com" value="${esc(state.email)}" autocomplete="email" />
+    <label class="modal-label">Phone <span style="color:var(--rust);">· required</span></label>
+    <div style="display:grid;grid-template-columns:110px 1fr;gap:8px;">
+      <select class="modal-select" id="dial">
+        <option value="+359">BG +359</option>
+        <option value="+34">ES +34</option>
+        <option value="+39">IT +39</option>
+        <option value="+33">FR +33</option>
+        <option value="+30">GR +30</option>
+        <option value="+44">UK +44</option>
+      </select>
+      <input class="modal-input" id="phone" type="tel" inputmode="numeric"
+        placeholder="888 123 456" value="${esc(state.phone)}" />
+    </div>
+    <p style="font-family:'Archivo',sans-serif;font-style:italic;font-size:13px;color:var(--ink-mid);margin:-4px 0 16px;line-height:1.45;">
+      No marketing emails. Just a "you're in" + a "your wave is open" later.
+    </p>
+    <div class="modal-actions" style="justify-content:flex-end;">
+      <button class="modal-next" id="next" ${isContactValid() ? '' : 'disabled'}>Get access →</button>
+    </div>`;
+}
+
+function isContactValid() {
+  const emailOk = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(state.email);
+  const phoneOk = /^[0-9]{6,}$/.test((state.phone || '').replace(/\D/g,''));
+  return emailOk && phoneOk;
+}
+
+// ============================================================
+// Step 2 — you're in
+// ============================================================
+function stepIn() {
+  const ref = state.referralCode || '—';
+  const refUrl = `vitrina.bg/?r=${ref}`;
+  const bumps = (state.invitedCount * 50) + (state.done.call ? 30 : 0) + (state.done.quiz ? 15 : 0);
+  const total = (typeof state.totalSignups === 'number' && state.totalSignups > state.position) ? state.totalSignups : state.position + 154;
+  const behind = Math.max(0, total - state.position);
+  return `
+    <div class="pos-card">
+      <div class="lbl">Your spot on the Sofia waitlist</div>
+      <div class="num">#${state.position}</div>
+      <div class="pos-behind"><strong>${behind.toLocaleString()}</strong> people are behind you in the queue.</div>
+      ${bumps ? `<div class="pos-climbed">▲ climbed ${bumps} spot${bumps===1?'':'s'} so far</div>` : ''}
+    </div>
+
+    <!-- INVITE HERO — most-valuable action, top placement -->
+    <div class="invite-hero">
+      <div class="invite-hero-head">
+        <div class="invite-hero-eyebrow">About getting access first</div>
+        <h3 class="invite-hero-title">Invite friends — <em>+50 spots each.</em></h3>
+        <p class="invite-hero-sub">Each friend who joins with your link bumps you up the queue. We'll email this same link to you so you can share it from anywhere.</p>
+        
+      </div>
+      <div class="invite-link" onclick="copyInviteLink('${refUrl}')" title="Tap to copy">
+        <span class="invite-link-url">${refUrl}</span>
+        <span class="invite-link-copy" id="invite-copy-state">Copy</span>
+      </div>
+      <div class="invite-share-row">
+        <button class="invite-share-btn whatsapp" onclick="doInvite('whatsapp')">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+          WhatsApp
+        </button>
+        <button class="invite-share-btn viber" onclick="doInvite('viber')">Viber</button>
+        <button class="invite-share-btn native" onclick="doInvite('native')">More…</button>
+      </div>
+      ${state.invitedCount ? `<div class="invite-tally">✓ ${state.invitedCount} friend${state.invitedCount===1?'':'s'} joined · ${state.invitedCount * 50} spots climbed</div>` : ''}
+    </div>
+
+    <div class="climb-section-head">Move up the queue</div>
+
+    <div class="climb-list">
+      <button class="climb-row" onclick="doCopyAndShare()">
+        <span class="climb-action">Invite friends</span>
+        <span class="climb-bump">+25 each</span>
+      </button>
+      <button class="climb-row ${state.done.call ? 'done' : ''}" onclick="doCall()">
+        <span class="climb-action">Have a quick chat with Peter</span>
+        <span class="climb-bump">+15</span>
+      </button>
+      <button class="climb-row ${state.done.quiz ? 'done' : ''}" onclick="if(!state.done.quiz){state.step='quiz';render();}">
+        <span class="climb-action">60-second taste quiz</span>
+        <span class="climb-bump">+5</span>
+      </button>
+    </div>
+
+    <div class="climb-hint">Climb the queue to eat sooner.</div>`;
+}
+
+// ============================================================
+// Step 3 — taste quiz (3 questions)
+// ============================================================
+function stepQuiz() {
+  return `
+    <div class="modal-eyebrow">+15 · 60-second quiz</div>
+    <h2 class="modal-title">Three quick <em>questions.</em></h2>
+    <p class="modal-sub">Helps us understand who's behind the Sofia waitlist — and how you currently eat.</p>
+
+    <div class="climb-quiz">
+      <div class="q">
+        <div class="qlabel">Where do you buy most of your food?</div>
+        <div class="qchips" data-q="buy">
+          ${chipSet(['Supermarket','Corner shop','Farmers market','Boutique','Online (eBag etc.)'], state.quiz.buy)}
+        </div>
+      </div>
+      <div class="q">
+        <div class="qlabel">What do you most wish was better near you?</div>
+        <div class="qchips" data-q="wish">
+          ${chipSet(['Real cheese','Honest meat','Tomato that smells of tomato','Bread','Honey','Eggs'], state.quiz.wish)}
+        </div>
+      </div>
+      <div class="q">
+        <div class="qlabel">When do you cook the most?</div>
+        <div class="qchips" data-q="when">
+          ${chipSet(['Weekends','Weeknights','Most days','Rarely — eat out'], state.quiz.when)}
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-back" onclick="state.step='in';render();">← Back</button>
+      <button class="modal-next" id="next">Submit · +15 spots →</button>
+    </div>`;
+}
+function chipSet(labels, current) {
+  return labels.map(l => `<button class="qchip ${current===l?'on':''}" data-v="${esc(l)}">${esc(l)}</button>`).join('');
+}
+
+// ============================================================
+// Bindings
+// ============================================================
+function bindEvents() {
+  if (state.step === 'contact') {
+    const email = document.getElementById('email');
+    const phone = document.getElementById('phone');
+    const dial = document.getElementById('dial');
+    const next = document.getElementById('next');
+    const refresh = () => { next.disabled = !isContactValid(); };
+    if (email) email.addEventListener('input', e => { state.email = e.target.value.trim(); refresh(); });
+    if (phone) phone.addEventListener('input', e => { state.phone = e.target.value.replace(/[^\d]/g,''); });
+    if (dial) dial.addEventListener('change', e => { state.dial = e.target.value; });
+    if (next) next.addEventListener('click', () => { if (isContactValid()) submitSignup(); });
+  } else if (state.step === 'quiz') {
+    document.querySelectorAll('.climb-quiz .qchips').forEach(group => {
+      const q = group.getAttribute('data-q');
+      group.querySelectorAll('.qchip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          state.quiz[q] = chip.getAttribute('data-v');
+          group.querySelectorAll('.qchip').forEach(c => c.classList.remove('on'));
+          chip.classList.add('on');
+        });
+      });
+    });
+    const next = document.getElementById('next');
+    if (next) next.addEventListener('click', () => {
+      const filled = state.quiz.buy && state.quiz.wish && state.quiz.when;
+      if (!filled) { alert('Pick one option per row to submit.'); return; }
+      state.done.quiz = true;
+      state.position = Math.max(1, state.position - 15);
+      submitQuiz();
+      state.step = 'in';
+      render();
+    });
+  }
+}
+
+// ============================================================
+// Backend stubs — POST to existing /api/drop-01-signup, fall through if missing
+// ============================================================
+async function submitSignup() {
+  const next = document.getElementById('next');
+  if (next) { next.disabled = true; next.textContent = 'Joining…'; }
+  let pos = 347 + Math.floor(Math.random() * 30);
+  let code = randCode();
+  try {
+    const r = await fetch('/api/drop-01-signup', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        source: 'drop-01-v7',
+        email: state.email,
+        phone: state.phone ? (state.dial + state.phone) : '',
+        city: 'Sofia',
+      }),
+    });
+    if (r.ok) {
+      const j = await r.json().catch(() => ({}));
+      if (j.position) pos = j.position;
+      if (j.referralCode) code = j.referralCode;
+    }
+  } catch (e) {}
+  state.position = pos;
+  state.referralCode = code;
+  state.step = 'in';
+  render();
+}
+
+async function submitQuiz() {
+  try {
+    await fetch('/api/drop-01-signup', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        source: 'drop-01-v7',
+        email: state.email,
+        action: 'quiz',
+        quiz: state.quiz,
+      }),
+    });
+  } catch (e) {}
+}
+
+// ============================================================
+// Climb actions
+// ============================================================
+function copyInviteLink(url) {
+  const full = url.startsWith('http') ? url : 'https://' + url;
+  navigator.clipboard.writeText(full).then(() => {
+    const el = document.getElementById('invite-copy-state');
+    if (el) {
+      el.textContent = 'Copied ✓';
+      el.classList.add('copied');
+      setTimeout(() => { if (el) { el.textContent = 'Copy'; el.classList.remove('copied'); } }, 2200);
+    }
+  }).catch(() => prompt('Copy this link:', full));
+}
+
+function doInvite(channel) {
+  const url = `https://vitrina.bg/?r=${state.referralCode}`;
+  const text = "I'm on the Sofia waitlist for Vitrina. Personalised grocery from small producers, picked up around the corner. Join with my link and we both move up:";
+  if (channel === 'whatsapp') {
+    window.open(`https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`, '_blank');
+  } else if (channel === 'viber') {
+    window.open(`viber://forward?text=${encodeURIComponent(text + ' ' + url)}`, '_blank');
+  } else if (channel === 'native') {
+    if (navigator.share) {
+      navigator.share({ title: 'Vitrina · Sofia waitlist', text, url }).catch(() => {});
+    } else {
+      copyInviteLink(url);
+    }
+  }
+  // Note: real attribution waits for the friend to actually sign up via ?r= — backend reconciles
+  // and bumps `invitedCount` then. We don't optimistically credit shares.
+}
+
+function doCopyAndShare() {
+  copyInviteLink('vitrina.bg/?r=' + (state.referralCode || ''));
+}
+
+function doCall() {
+  if (state.done.call) return;
+  // Send to the dedicated chat-options screen (WhatsApp / Viber)
+  window.location.href = '/waitlist?step=chat&lang=' + (window.__vitrinaLang || 'bg');
+  state.done.call = true;
+  state.position = Math.max(1, state.position - 15);
+  render();
+}
+
+// ============================================================
+// Helpers
+// ============================================================
+function randCode() {
+  const A = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+  const arr = new Uint32Array(6);
+  crypto.getRandomValues(arr);
+  let out = '';
+  for (let i = 0; i < 6; i++) out += A[arr[i] % A.length];
+  return out;
+}
+function esc(s) { return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+// ============================================================
+// Sticky bar
+// ============================================================
+const stickyBar = document.getElementById('sticky-bar');
+let barShown = false;
+window.addEventListener('scroll', () => {
+  const should = window.scrollY > 240;
+  if (should !== barShown) { barShown = should; stickyBar.classList.toggle('visible', should); }
+}, { passive: true });
+
+// Live countdown for the slot card (step B) — feeds the .slot-timer in the
+// top-right of the card. Format follows whichever segment is most useful:
+// Xd Yh while > 1 day, Yh Zm in the final day, Zm in the last hour.
+(function(){
+  const wrap = document.querySelector('.slot-progress-time[data-deadline], .slot-progress-time[data-deadline-offset-min]');
+  if(!wrap) return;
+  const numEl = wrap.querySelector('.t-num');
+  if(!numEl) return;
+  const offsetMin = wrap.getAttribute('data-deadline-offset-min');
+  const deadline = offsetMin
+    ? Date.now() + parseInt(offsetMin, 10) * 60000
+    : new Date(wrap.getAttribute('data-deadline')).getTime();
+  function tick(){
+    const ms = deadline - Date.now();
+    if(ms <= 0){ numEl.textContent = '0m'; return; }
+    const days = Math.floor(ms / 86400000);
+    const hours = Math.floor((ms % 86400000) / 3600000);
+    const mins = Math.floor((ms % 3600000) / 60000);
+    if(days > 0) numEl.textContent = `${days}d ${hours}h`;
+    else if(hours > 0) numEl.textContent = `${hours}h ${mins}m`;
+    else numEl.textContent = `${mins}m`;
+  }
+  tick();
+  setInterval(tick, 30000);
+})();
+
+// Legal stubs (privacy + terms) — generic placeholders while we register.
+// Two language tracks; we pick the active one off <html lang>, so the
+// modal stays in BG when the rest of the page is in BG (Peter caught
+// these two leaking back to English in v13.17).
+const LEGAL_COPY = {
+  en: {
+    privacy: {
+      title: 'Privacy notice',
+      body: `
+        <p><strong>Last updated: 7 May 2026.</strong> This notice tells you exactly what personal data we collect when you join the Vitrina waitlist, why we collect it, who can see it, how long we keep it, and how to make us stop. We have written it in plain language because the people reading it are our future customers.</p>
+
+        <h3>1. Who is the controller</h3>
+        <p><strong>Leo Casa Ltd</strong> (the company) operates Vitrina. We are a UK-incorporated company at Suite 402, 2 Old Brompton Road, London SW7 3DQ, United Kingdom. We are running a closed beta in Bulgaria pending registration with the Bulgarian Food Safety Agency (БАБХ) and the Commission for Consumer Protection (КЗП). Because we offer goods to people in Bulgaria the EU GDPR (Regulation 2016/679) applies to this processing in addition to UK GDPR. The Bulgarian Personal Data Protection Act (ЗЗЛД) also applies.</p>
+        <p>We have not appointed a Data Protection Officer because we are not required to under Article 37 GDPR. The founder, Peter Neyra, is the single human inside the company who handles personal data. Reach him at <a href="mailto:hello@vitrina.bg">hello@vitrina.bg</a>.</p>
+
+        <h3>2. What we collect</h3>
+        <ul>
+          <li><strong>Identity &amp; contact:</strong> first name, phone number (E.164), email, your preferred contact channel (WhatsApp, Viber, SMS, call, email), language preference.</li>
+          <li><strong>Location for delivery:</strong> home address (street + neighbourhood) and, if you give it, your work address; the rough lat/long pin we get from the address picker.</li>
+          <li><strong>Workplace:</strong> if you ask us to deliver to work, the company name at that address.</li>
+          <li><strong>Taste &amp; preferences:</strong> the answers you give to our short product survey.</li>
+          <li><strong>Conversation:</strong> if you message us on Instagram, your IG username and the messages themselves; if you book or accept a call, the notes Peter writes after.</li>
+          <li><strong>How you found us:</strong> the referral code you came in on (if any).</li>
+          <li><strong>Server logs:</strong> IP address, browser user-agent, and request timestamps. Standard for any website. We use these only for security and debugging.</li>
+        </ul>
+
+        <h3>3. Why we collect it &amp; the legal basis (Art. 6 GDPR)</h3>
+        <ul>
+          <li><strong>To run the waitlist queue and tell you your position</strong> — your <em>consent</em> (Art. 6(1)(a)), given by submitting the form.</li>
+          <li><strong>To contact you about openings in your neighbourhood</strong>, on the channel(s) you ticked at signup — your <em>consent</em>, plus the soft opt-in under Art. 13(2) of the EU e-Privacy Directive as transposed into Bulgaria's Electronic Communications Act for marketing of similar products.</li>
+          <li><strong>To deliver products if/when you actually order</strong> — performance of a <em>contract</em> (Art. 6(1)(b)).</li>
+          <li><strong>To prevent abuse, fraud, and to keep the system secure</strong> — our <em>legitimate interest</em> (Art. 6(1)(f)).</li>
+          <li><strong>To comply with Bulgarian commercial / tax / consumer-protection law</strong> when applicable — <em>legal obligation</em> (Art. 6(1)(c)).</li>
+        </ul>
+        <p>We do <strong>not</strong> use your data for automated decisions with legal or significant effect on you (Art. 22). No profiling for advertising. No price discrimination.</p>
+
+        <h3>4. Who can see your data</h3>
+        <p><strong>Inside Leo Casa Ltd:</strong> only the founder, Peter Neyra. There are no other employees today.</p>
+        <p><strong>Service providers (processors) who store or transmit data on our instructions, each under a Data Processing Agreement (Art. 28 GDPR):</strong></p>
+        <ul>
+          <li><strong>Supabase Inc.</strong> — Postgres database + auth. EU region (Frankfurt, eu-central-1). DPA Q1 2026, EU SCCs cover any US affiliate access.</li>
+          <li><strong>Resend Inc.</strong> — sends our transactional emails. US-based; certified under the EU-US Data Privacy Framework (since March 2025) and EU SCCs.</li>
+          <li><strong>Vercel Inc.</strong> — hosts this website and our serverless API. US-based with EU edge regions; DPA + SCCs.</li>
+          <li><strong>Hetzner Online GmbH</strong> — hosts our backend services. EU/US regions; DPA in place. Our backend currently runs in Ashburn, Virginia, USA, behind EU-fronting domains.</li>
+          <li><strong>Meta Platforms Ireland Ltd</strong> — only if you message us on Instagram; we receive your message via the Instagram Graph API.</li>
+          <li><strong>Stripe Payments Europe Ltd</strong> — <em>only</em> when you actually pay for an order, which does not happen on the waitlist.</li>
+          <li><strong>PostHog Inc.</strong> — product analytics; EU host (eu.i.posthog.com). We do not share your contact data with PostHog; only product-usage events.</li>
+          <li><strong>Mem0, Inc.</strong> — semantic memory of past conversations, used only when you chat with us.</li>
+          <li><strong>Notion Labs Inc.</strong> &amp; <strong>Slack (Salesforce)</strong> — internal note-taking and notifications about new signups.</li>
+          <li><strong>LLM providers</strong> (Anthropic, OpenAI, AWS Bedrock, OpenRouter — depending on configuration) — receive only the conversation content when you chat with our agent. Never the waitlist contact data.</li>
+        </ul>
+        <p>We do <strong>not</strong> sell, rent, swap, or share your data with advertisers, data brokers, marketing networks, or anyone else. There are no third-party advertising pixels on this site.</p>
+
+        <h3>5. International transfers</h3>
+        <p>Some of our processors are based outside the EEA (mostly in the US). For each such transfer we rely on (a) the European Commission's adequacy decision for the EU-US Data Privacy Framework where the processor is certified (Resend), and/or (b) the European Commission's Standard Contractual Clauses (Module 2, Controller-to-Processor). Copies are available on request at <a href="mailto:hello@vitrina.bg">hello@vitrina.bg</a>.</p>
+
+        <h3>6. How long we keep it</h3>
+        <ul>
+          <li><strong>Waitlist row</strong> (name, phone, email, address, taste answers): until you ask us to delete it, or 24 months after your last interaction with us — whichever comes first.</li>
+          <li><strong>Call notes &amp; transcripts</strong>: 12 months after the last contact, then deleted.</li>
+          <li><strong>Instagram conversation history</strong>: 24 months from the last message.</li>
+          <li><strong>Server logs</strong> (IP, user-agent): 90 days.</li>
+          <li><strong>Order records</strong>, when you eventually place one: 10 years, because Bulgarian commercial and tax law requires it.</li>
+        </ul>
+        <p>When you ask us to delete you, we erase from our primary database and from semantic-memory (Mem0) within 30 days. Encrypted backups roll over within a further 30 days.</p>
+
+        <h3>7. Your rights (Arts. 15–22 GDPR)</h3>
+        <p>You can, free of charge:</p>
+        <ul>
+          <li><strong>Access</strong> a copy of the data we hold about you.</li>
+          <li><strong>Rectify</strong> anything that is wrong.</li>
+          <li><strong>Erase</strong> your data ("the right to be forgotten").</li>
+          <li><strong>Restrict</strong> our processing while a question is being resolved.</li>
+          <li><strong>Receive</strong> your data in a machine-readable format and ask us to transmit it to another controller (data portability).</li>
+          <li><strong>Object</strong> to processing based on legitimate interests, or to direct marketing — at any time, no reason needed.</li>
+          <li><strong>Withdraw consent</strong> at any time — withdrawal does not affect anything we did before.</li>
+        </ul>
+        <p>To exercise any of these, email <a href="mailto:hello@vitrina.bg">hello@vitrina.bg</a>. We will respond within one calendar month (Art. 12(3) GDPR), and almost always within a few days because there is one of us.</p>
+
+        <h3>8. Right to lodge a complaint</h3>
+        <p>If you think we are mishandling your data you can complain to the Bulgarian supervisory authority:</p>
+        <p><strong>Commission for Personal Data Protection (КЗЛД / CPDP)</strong><br>
+        2 Prof. Tsvetan Lazarov Blvd., Sofia 1592, Bulgaria<br>
+        kzld@cpdp.bg · +359 2 915 3519 · <a href="https://cpdp.bg/en/" rel="noopener" target="_blank">cpdp.bg</a></p>
+        <p>UK residents may instead complain to the UK Information Commissioner's Office (<a href="https://ico.org.uk" rel="noopener" target="_blank">ico.org.uk</a>).</p>
+
+        <h3>9. Cookies and tracking</h3>
+        <p>This website sets <em>only first-party functional storage</em> (a small piece of localStorage to remember your language choice and your waitlist token). We do not run third-party advertising cookies, fingerprinting, or cross-site trackers. PostHog, when enabled, sets a first-party cookie/localStorage entry to count anonymous product-usage events on our EU host.</p>
+
+        <h3>10. Children</h3>
+        <p>The waitlist is for adults. Bulgarian law sets the age of consent for information-society services at 14 (ZZLD Art. 25b). We do not knowingly collect data on anyone younger; if you are a parent and believe we have, email us and we will delete immediately.</p>
+
+        <h3>11. Changes to this notice</h3>
+        <p>If we change anything material we will (a) update the "Last updated" date at the top, (b) keep the previous version in our records, and (c) email everyone on the waitlist when the change matters to them.</p>
+
+        <h3>12. Contact</h3>
+        <p>Leo Casa Ltd (operating Vitrina)<br>
+        Suite 402, 2 Old Brompton Road, London SW7 3DQ, United Kingdom<br>
+        <a href="mailto:hello@vitrina.bg">hello@vitrina.bg</a></p>
+      `,
+    },
+    terms: {
+      title: 'Terms (closed beta)',
+      body: `
+        <p><strong>Last updated: 7 May 2026.</strong> Vitrina is run by <strong>Leo Casa Ltd</strong> (UK), operating a closed beta in Sofia. By joining the waitlist you agree to these terms. They are short on purpose.</p>
+
+        <h3>1. What this is</h3>
+        <p>You are joining a queue. We are not yet selling to the public — we are pending registration with the Bulgarian Food Safety Agency (БАБХ) and the Commission for Consumer Protection (КЗП). Joining the waitlist costs you nothing and obliges you to nothing.</p>
+
+        <h3>2. Communications you are agreeing to</h3>
+        <p>By submitting the form and ticking your preferred channels (WhatsApp, Viber, SMS, phone call, email) you consent to us contacting you on those channels about: (a) your position in the queue, (b) the first drops opening in your neighbourhood, and (c) related practical information (delivery windows, registration milestones, beta access). You can withdraw consent at any time by replying STOP, telling us in conversation, or emailing <a href="mailto:hello@vitrina.bg">hello@vitrina.bg</a> — and we will stop within 48 hours.</p>
+
+        <h3>3. No payment is taken at signup</h3>
+        <p>Joining the waitlist is free and never asks for a card. Money only changes hands if you actively confirm an order in a future drop that reaches its minimum.</p>
+
+        <h3>4. How a future "drop" will work (preview, not yet operational)</h3>
+        <p>Each drop has a minimum number of orders and a deadline. If we hit the minimum, your card is charged at wholesale price and the order ships. If we don't, the slot rolls — your card is never charged and nothing is shipped.</p>
+
+        <h3>5. Limitation of liability</h3>
+        <p>While we are in closed beta we provide the waitlist "as is". We are not liable for missed notifications caused by carrier or platform outages (WhatsApp, Viber, SMS, email). For statutory consumer rights under Bulgarian law: nothing in these terms reduces them.</p>
+
+        <h3>6. Governing law</h3>
+        <p>These beta terms are governed by the laws of England and Wales (the controller's home jurisdiction). Bulgarian consumers retain all mandatory protections of Bulgarian consumer-protection law.</p>
+
+        <h3>7. Company</h3>
+        <p>Leo Casa Ltd · UK-incorporated · Suite 402, 2 Old Brompton Road, London SW7 3DQ, United Kingdom · pending Bulgarian operating registrations (БАБХ + КЗП) · <a href="mailto:hello@vitrina.bg">hello@vitrina.bg</a></p>
+      `,
+    },
+  },
+  bg: {
+    privacy: {
+      title: 'Политика за поверителност',
+      body: `
+        <p><strong>Последна редакция: 7 май 2026 г.</strong> Този документ ти казва точно какви лични данни събираме, когато се запишеш в списъка с чакащи на Vitrina, защо ги събираме, кой може да ги вижда, колко дълго ги пазим и как да ни накараш да спрем. Написан е на разбираем език, защото хората, които го четат, са нашите бъдещи клиенти.</p>
+
+        <h3>1. Кой е администраторът</h3>
+        <p><strong>Leo Casa Ltd</strong> оперира Vitrina. Дружеството е регистрирано в Обединеното кралство — Suite 402, 2 Old Brompton Road, London SW7 3DQ. В момента работим в затворен бета режим в България, докато се регистрираме в Българската агенция по безопасност на храните (БАБХ) и Комисията за защита на потребителите (КЗП). Тъй като предлагаме стоки на хора в България, обработката попада под Регламент (ЕС) 2016/679 (GDPR), а също и под британския UK GDPR. Прилага се и българският Закон за защита на личните данни (ЗЗЛД).</p>
+        <p>Не сме назначили длъжностно лице по защита на данните, защото не сме задължени по член 37 от GDPR. Основателят Петър Нейра е единственият човек в дружеството, който работи с лични данни. Можеш да го намериш на <a href="mailto:hello@vitrina.bg">hello@vitrina.bg</a>.</p>
+
+        <h3>2. Какво събираме</h3>
+        <ul>
+          <li><strong>Идентификация и контакт:</strong> малко име, телефонен номер (във формат E.164), имейл, предпочитан канал за връзка (WhatsApp, Viber, SMS, обаждане, имейл), език.</li>
+          <li><strong>Локация за доставка:</strong> домашен адрес (улица + квартал) и, ако пожелаеш, работен адрес; приблизителни координати, които вземаме от избора на адрес.</li>
+          <li><strong>Работно място:</strong> ако искаш доставка на работа — името на фирмата на този адрес.</li>
+          <li><strong>Вкус и предпочитания:</strong> отговорите ти на нашия кратък продуктов въпросник.</li>
+          <li><strong>Кореспонденция:</strong> ако ни пишеш в Instagram — твоят IG потребител и самите съобщения; ако имаме разговор по телефона или среща, бележките, които Петър си води след това.</li>
+          <li><strong>Как си ни намерил/а:</strong> реферален код, ако има.</li>
+          <li><strong>Сървърни логове:</strong> IP адрес, user-agent на браузъра, времеви маркери. Стандартни за всеки уеб сайт. Използваме ги само за сигурност и отстраняване на грешки.</li>
+        </ul>
+
+        <h3>3. Защо ги събираме и на какво правно основание (чл. 6 GDPR)</h3>
+        <ul>
+          <li><strong>За да поддържаме опашката и да ти кажем мястото ти</strong> — твоето <em>съгласие</em> (чл. 6, ал. 1, б. „а“), дадено с попълването на формата.</li>
+          <li><strong>За да се свържем с теб, когато отворим слот в твоя квартал</strong>, по канала/каналите, които си избрал/а — твоето <em>съгласие</em> плюс „soft opt-in“ изключението по чл. 13, ал. 2 от Директивата за електронната неприкосновеност, транспонирано в българския Закон за електронните съобщения, за маркетинг на сходни продукти.</li>
+          <li><strong>За да ти доставим продукти, ако/когато направиш реална поръчка</strong> — изпълнение на <em>договор</em> (чл. 6, ал. 1, б. „б“).</li>
+          <li><strong>За предотвратяване на злоупотреби и сигурност на системата</strong> — наш <em>законен интерес</em> (чл. 6, ал. 1, б. „е“).</li>
+          <li><strong>За изпълнение на търговското, данъчното и потребителското законодателство</strong>, когато е приложимо — <em>законово задължение</em> (чл. 6, ал. 1, б. „в“).</li>
+        </ul>
+        <p><strong>Не</strong> използваме данните ти за автоматизирани решения с правен или значителен ефект върху теб (чл. 22). Без профилиране за реклама. Без ценова дискриминация.</p>
+
+        <h3>4. Кой вижда данните ти</h3>
+        <p><strong>Вътре в Leo Casa Ltd:</strong> само основателят Петър Нейра. В момента няма други служители.</p>
+        <p><strong>Доставчици на услуги (обработващи лични данни), които съхраняват или предават данни по наше указание, всеки по силата на Споразумение за обработка (чл. 28 GDPR):</strong></p>
+        <ul>
+          <li><strong>Supabase Inc.</strong> — Postgres база данни + автентикация. Регион ЕС (Франкфурт, eu-central-1). DPA Q1 2026, стандартни договорни клаузи (SCCs) на ЕС покриват евентуален достъп от американски филиал.</li>
+          <li><strong>Resend Inc.</strong> — изпраща нашите транзакционни имейли. Базирана в САЩ; сертифицирана по EU-US Data Privacy Framework (от март 2025) и EU SCCs.</li>
+          <li><strong>Vercel Inc.</strong> — хоства уеб сайта и serverless API. Базирана в САЩ с edge региони в ЕС; DPA + SCCs.</li>
+          <li><strong>Hetzner Online GmbH</strong> — хоства backend услугите. EU/US региони; DPA. Текущо backend-ът ни работи в Ashburn, Virginia, САЩ, зад домейни с фронт в ЕС.</li>
+          <li><strong>Meta Platforms Ireland Ltd</strong> — само ако ни пишеш в Instagram; получаваме съобщението ти през Instagram Graph API.</li>
+          <li><strong>Stripe Payments Europe Ltd</strong> — <em>само</em> когато реално платиш поръчка, което не се случва на етапа на списъка с чакащи.</li>
+          <li><strong>PostHog Inc.</strong> — продуктова аналитика; ЕС хост (eu.i.posthog.com). Не споделяме контактните ти данни с PostHog; само анонимни събития за ползване.</li>
+          <li><strong>Mem0, Inc.</strong> — семантична памет за минали разговори, използвана само когато си говорим.</li>
+          <li><strong>Notion Labs Inc.</strong> и <strong>Slack (Salesforce)</strong> — вътрешни бележки и нотификации за нови записвания.</li>
+          <li><strong>LLM доставчици</strong> (Anthropic, OpenAI, AWS Bedrock, OpenRouter — според конфигурацията) — получават само съдържанието на разговора, когато си чатиш с нашия агент. Никога контактните ти данни от списъка.</li>
+        </ul>
+        <p><strong>Не</strong> продаваме, не отдаваме и не разменяме твоите данни с рекламодатели, брокери на данни, маркетинг мрежи или други. На сайта няма пиксели за реклама от трети страни.</p>
+
+        <h3>5. Международни трансфери</h3>
+        <p>Някои от нашите обработващи са извън ЕИП (предимно в САЩ). За всеки такъв трансфер разчитаме на (а) решението на Европейската комисия за адекватност по Data Privacy Framework, когато доставчикът е сертифициран (Resend), и/или (б) Стандартните договорни клаузи (Модул 2, администратор-обработващ). Копия — при поискване на <a href="mailto:hello@vitrina.bg">hello@vitrina.bg</a>.</p>
+
+        <h3>6. Колко дълго пазим данните</h3>
+        <ul>
+          <li><strong>Запис в списъка с чакащи</strong> (име, телефон, имейл, адрес, отговори от въпросника): докато не поискаш изтриване или 24 месеца след последното ти взаимодействие — което настъпи първо.</li>
+          <li><strong>Бележки и транскрипции от разговори</strong>: 12 месеца след последния контакт.</li>
+          <li><strong>История на Instagram чатове</strong>: 24 месеца от последното съобщение.</li>
+          <li><strong>Сървърни логове</strong> (IP, user-agent): 90 дни.</li>
+          <li><strong>Поръчки</strong>, ако направиш такава в бъдеще: 10 години, защото българското търговско и данъчно законодателство го изисква.</li>
+        </ul>
+        <p>Когато поискаш изтриване, премахваме данните от основната база и от семантичната памет (Mem0) в рамките на 30 дни. Криптираните резервни копия се обновяват в следващите 30 дни.</p>
+
+        <h3>7. Твоите права (чл. 15–22 GDPR)</h3>
+        <p>Безплатно можеш да:</p>
+        <ul>
+          <li><strong>Достъпиш</strong> копие на данните, които пазим за теб.</li>
+          <li><strong>Поправиш</strong> неточно записаното.</li>
+          <li><strong>Изтриеш</strong> данните си („право да бъдеш забравен“).</li>
+          <li><strong>Ограничиш</strong> обработката, докато се решава спор.</li>
+          <li><strong>Получиш</strong> данните си в машинно четим формат и да поискаш да ги прехвърлим към друг администратор (преносимост).</li>
+          <li><strong>Възразиш</strong> срещу обработка на основание законен интерес или директен маркетинг — по всяко време, без причина.</li>
+          <li><strong>Оттеглиш съгласието си</strong> по всяко време — оттеглянето не засяга вече извършена обработка.</li>
+        </ul>
+        <p>За да упражниш което и да е от тези права, пиши на <a href="mailto:hello@vitrina.bg">hello@vitrina.bg</a>. Отговаряме в рамките на един календарен месец (чл. 12, ал. 3 GDPR), а почти винаги — в рамките на няколко дни, защото сме един човек.</p>
+
+        <h3>8. Право на жалба</h3>
+        <p>Ако смяташ, че обработваме данните ти неправилно, можеш да подадеш жалба до българския надзорен орган:</p>
+        <p><strong>Комисия за защита на личните данни (КЗЛД / CPDP)</strong><br>
+        бул. „Проф. Цветан Лазаров“ 2, София 1592<br>
+        kzld@cpdp.bg · +359 2 915 3519 · <a href="https://cpdp.bg/" rel="noopener" target="_blank">cpdp.bg</a></p>
+
+        <h3>9. Бисквитки и проследяване</h3>
+        <p>Сайтът използва <em>само първостранна функционална памет</em> (малко localStorage, за да помни езика и токена ти за списъка с чакащи). Не използваме рекламни бисквитки от трети страни, fingerprinting или cross-site трекери. PostHog, когато е включен, поставя първостранна бисквитка/localStorage за анонимно отчитане на продуктово ползване на нашия ЕС хост.</p>
+
+        <h3>10. Деца</h3>
+        <p>Списъкът е за пълнолетни. Българското законодателство (чл. 25б ЗЗЛД) определя 14 години като възраст на съгласие за услуги на информационното общество. Не събираме съзнателно данни на по-млади лица; ако сте родител и смятате, че сме го направили, пишете ни и ще ги изтрием незабавно.</p>
+
+        <h3>11. Промени в политиката</h3>
+        <p>Ако променим нещо съществено, ще (а) обновим датата „Последна редакция“ горе, (б) запазим предишната версия в архива си и (в) уведомим по имейл всички в списъка с чакащи, когато промяната ги касае.</p>
+
+        <h3>12. Контакти</h3>
+        <p>Leo Casa Ltd (оперира Vitrina)<br>
+        Suite 402, 2 Old Brompton Road, London SW7 3DQ, Обединено кралство<br>
+        <a href="mailto:hello@vitrina.bg">hello@vitrina.bg</a></p>
+      `,
+    },
+    terms: {
+      title: 'Общи условия (затворена бета)',
+      body: `
+        <p><strong>Последна редакция: 7 май 2026 г.</strong> Vitrina се оперира от <strong>Leo Casa Ltd</strong> (Обединено кралство) — затворен бета режим в София. С присъединяването си към списъка с чакащи приемаш тези условия. Кратки са нарочно.</p>
+
+        <h3>1. Какво представлява</h3>
+        <p>Записваш се в опашка. Все още не продаваме на широката публика — в очакване сме на регистрации в БАБХ и КЗП. Записването е безплатно и не те задължава с нищо.</p>
+
+        <h3>2. Комуникации, с които се съгласяваш</h3>
+        <p>С попълването на формата и избора на предпочитани канали (WhatsApp, Viber, SMS, телефон, имейл) се съгласяваш да се свързваме с теб по тези канали относно: (а) мястото ти в опашката, (б) първите доставки, които отварят в твоя квартал, и (в) практическа информация (часове за доставка, етапи на регистрацията, бета достъп). Можеш да оттеглиш съгласието си по всяко време — отговор STOP, в разговор, или имейл на <a href="mailto:hello@vitrina.bg">hello@vitrina.bg</a> — и спираме в рамките на 48 часа.</p>
+
+        <h3>3. На етапа на записване не се взема плащане</h3>
+        <p>Записването е безплатно и никога не иска карта. Пари се движат само ако активно потвърдиш поръчка в бъдеща група, която достигне минимума си.</p>
+
+        <h3>4. Как ще работят бъдещите групови поръчки (преглед, още не е активно)</h3>
+        <p>Всяка група има минимален брой поръчки и краен срок. Ако стигнем минимума, картата ти се таксува на цена на едро и поръчката се изпраща. Ако не — слотът се прехвърля, картата ти не се таксува и нищо не се праща.</p>
+
+        <h3>5. Ограничение на отговорността</h3>
+        <p>През затворената бета предоставяме списъка „както е“. Не носим отговорност за пропуснати нотификации поради проблеми при оператори или платформи (WhatsApp, Viber, SMS, имейл). Никое от тези условия не намалява задължителните права на потребителите по българското законодателство.</p>
+
+        <h3>6. Приложимо право</h3>
+        <p>Тези бета условия се уреждат от правото на Англия и Уелс (юрисдикцията на администратора). Българските потребители запазват всички задължителни защити на българското потребителско право.</p>
+
+        <h3>7. Дружество</h3>
+        <p>Leo Casa Ltd · регистрирано в Обединеното кралство · Suite 402, 2 Old Brompton Road, London SW7 3DQ · в очакване на българските регистрации (БАБХ + КЗП) · <a href="mailto:hello@vitrina.bg">hello@vitrina.bg</a></p>
+      `,
+    },
+  },
+};
+function openLegal(kind){
+  const lang = (document.documentElement.getAttribute('lang') || 'bg').toLowerCase().startsWith('bg') ? 'bg' : 'en';
+  const data = (LEGAL_COPY[lang] && LEGAL_COPY[lang][kind]) || LEGAL_COPY.en[kind];
+  if(!data) return;
+  document.getElementById('legal-title').textContent = data.title;
+  document.getElementById('legal-body').innerHTML = data.body;
+  document.getElementById('legal-overlay').classList.add('visible');
+}
+function closeLegal(){ document.getElementById('legal-overlay').classList.remove('visible'); }
+
+// If the user flips EN↔BG with the legal modal open, re-render the
+// active stub in the new language so they don't see a half-translated
+// surface. We track the active kind via dataset on the overlay.
+const _legalOverlay = document.getElementById('legal-overlay');
+const _origOpenLegal = openLegal;
+openLegal = function(kind) { _legalOverlay.dataset.kind = kind; _origOpenLegal(kind); };
+window.addEventListener('vitrina:langchange', () => {
+  if (_legalOverlay.classList.contains('visible') && _legalOverlay.dataset.kind) {
+    _origOpenLegal(_legalOverlay.dataset.kind);
+  }
+});
+</script>
+<script src="/live/i18n.v14.js" defer></script>
+</body>
+</html>
