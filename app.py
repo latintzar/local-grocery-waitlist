@@ -58,7 +58,7 @@ GUEST_LEGAL="Demo sessions are held privately in server memory for up to one hou
 @app.get(prefix+'/',response_class=HTMLResponse)
 def home():
     html=(PUBLIC/'live/index.html').read_text()
-    html=html.replace('</head>', '<style>@media(max-width:560px){.hero-title{font-size:clamp(25px,8vw,44px)}}</style></head>',1)
+    html=html.replace('</head>', '<style>@media(max-width:560px){.hero-title{font-size:clamp(25px,8vw,44px)}}@media(max-width:360px){.nav{padding-left:10px;padding-right:10px}.nav .logo{font-size:22px}.nav-right{gap:4px}.nav-cta{font-size:9px;letter-spacing:.04em;padding:9px 7px;gap:4px}}</style></head>',1)
     if guest:
         html=html.replace('<body>', '<body>'+GUEST_NOTICE,1)
         html=html.replace('function openLegal(kind){', 'function openLegal(kind){ alert('+repr(GUEST_LEGAL)+'); return;')
