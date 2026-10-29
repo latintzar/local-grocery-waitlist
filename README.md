@@ -27,3 +27,5 @@ The interface is retained as a historical product example. It includes original 
 Run `python tools.py configure --env-file /private/path.env` to enter your own provider credentials through hidden input. `python tools.py doctor --env-file /private/path.env` checks configuration without provider calls; `python tools.py serve --env-file /private/path.env` starts the server.
 
 Run `python -m pytest -q` for isolated guest signup, quiz and access-boundary tests. See [architecture](docs/architecture.md).
+
+[made by atelier neyra](https://atelierneyra.com)
