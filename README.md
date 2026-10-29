@@ -4,6 +4,8 @@ Local grocery waitlist is a landing page and multi-step signup application for a
 
 The guest mode runs the original FastAPI waitlist handlers with a private, short-lived in-memory store per browser session. Entries expire after one hour of inactivity and disappear on restart. Use sample details. Email, external geocoding and community AI are disabled in guest mode; the original form accepts an address as free text. The guest store is for exploring the app, and does not represent a shared waitlist.
 
+![Vitrina Sofia waitlist guest signup in English](docs/assets/readme-hero.png)
+
 ## Run
 
 ```sh
